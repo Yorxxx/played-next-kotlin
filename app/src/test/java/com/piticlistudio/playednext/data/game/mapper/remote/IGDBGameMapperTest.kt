@@ -25,7 +25,7 @@ class IGDBGameMapperTest {
         inner class mapFromRemote {
 
             val model = IGDBGameModel(10, "name", "summary", "storyline",
-                    20, 30, 95, listOf(1, 2, 3), listOf(), listOf(10), 1000)
+                    20, 30, 95.2f, listOf(1, 2, 3), listOf(), listOf(10), 1000)
             var result: GameModel? = null
 
             @BeforeEach

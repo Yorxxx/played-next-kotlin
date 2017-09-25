@@ -29,6 +29,8 @@ android {
 
         buildConfigField("String", "POKEAPI_API_URL",
                 "\"${PokeapiApiUrl}\"")
+        buildConfigField("String", "IGDB_API_URL", "\"${IGDBApiUrl}\"")
+        buildConfigField("String", "IGDB_API_KEY", "\"${IGDBApiKey}\"")
 
         multiDexEnabled true
     }

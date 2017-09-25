@@ -21,7 +21,7 @@ class GameEntityMapperTest {
         @DisplayName("When we call mapFromRemote")
         inner class mapFromRemote {
 
-            val model = GameModel(10, "name", "summary", "storyline", 10, 11, 12)
+            val model = GameModel(10, "name", "summary", "storyline", 10, 11, 12.0f)
             var result: Game? = null
 
             @BeforeEach

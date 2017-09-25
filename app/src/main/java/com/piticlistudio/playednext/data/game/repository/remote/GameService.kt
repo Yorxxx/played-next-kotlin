@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.game.repository.remote
 
+import com.piticlistudio.playednext.BuildConfig
 import com.piticlistudio.playednext.data.game.model.remote.IGDBGameModel
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -13,14 +14,14 @@ import retrofit2.http.Query
  */
 interface GameService {
 
-    @Headers("Accept: application/json", "X-Mashape-Key: foo")
+    @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/")
     fun search(@Query("offset") offset: Int,
                @Query("search") query: String,
                @Query("fields") fields: String,
                @Query("limit") limit: Int): Single<List<IGDBGameModel>>
 
-    @Headers("Accept: application/json", "X-Mashape-Key: foo")
+    @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/{id}/")
     fun load(@Path("id") id: Int, @Query("fields") fields: String): Single<List<IGDBGameModel>>
 }

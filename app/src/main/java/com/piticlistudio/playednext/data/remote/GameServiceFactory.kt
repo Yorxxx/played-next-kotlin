@@ -25,7 +25,7 @@ object GameServiceFactory {
 
     private fun makeGameService(gson: Gson): GameService {
         val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.POKEAPI_API_URL)
+                .baseUrl(BuildConfig.IGDB_API_URL)
                 .client(makeOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

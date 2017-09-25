@@ -43,8 +43,8 @@ class GameRemoteImplTest {
         inner class Load {
 
             var result: TestObserver<GameModel>? = null
-            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2)
-            val entity = GameModel(10, "name", "summary", "storyline", 0, 1, 2)
+            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
+            val entity = GameModel(10, "name", "summary", "storyline", 0, 1, 2f)
 
             @BeforeEach
             fun setup() {
@@ -108,8 +108,8 @@ class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    val response = listOf(IGDBGameModel(10, "name", "summary", "story", 0, 1, 2),
-                            IGDBGameModel(10, "name2", "summary2", "story2", 0, 1, 2))
+                    val response = listOf(IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f),
+                            IGDBGameModel(10, "name2", "summary2", "story2", 0, 1, 2f))
                     `when`(service.load(10, "*"))
                             .thenReturn(Single.just(response))
                     result = repositoryImpl?.load(10)?.test()
@@ -131,11 +131,11 @@ class GameRemoteImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2)
-            val model2 = IGDBGameModel(11, "name2", "summary2", "story2", 1, 2, 3)
+            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
+            val model2 = IGDBGameModel(11, "name2", "summary2", "story2", 1, 2, 3f)
             val response = listOf(model, model2)
-            val entity1 = GameModel(10, "name", "summary", "story", 1, 2, 3)
-            val entity2 = GameModel(10, "name", "summary", "story", 1, 2, 3)
+            val entity1 = GameModel(10, "name", "summary", "story", 1, 2, 3f)
+            val entity2 = GameModel(10, "name", "summary", "story", 1, 2, 3f)
             var result: TestObserver<List<GameModel>>? = null
 
             @BeforeEach

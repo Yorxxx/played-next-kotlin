@@ -47,7 +47,7 @@ class GameRepositoryImplTest {
         @Nested
         @DisplayName("When we call load")
         inner class Load {
-            val response = GameModel(10, "name", "summary", "storyline", 1, 2, 3)
+            val response = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
             val entity = Game(10, "name", "summary", "storyline")
             var result: TestObserver<Game>? = null
 
@@ -90,8 +90,8 @@ class GameRepositoryImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model1 = GameModel(10, "name", "summary", "storyline", 1, 2, 3)
-            val model2 = GameModel(10, "name", "summary", "storyline", 1, 2, 3)
+            val model1 = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
+            val model2 = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
             var result: TestObserver<List<Game>>? = null
             val entity = Game(10, "name", "summary", "storyline")
             val entity2 = Game(10, "name", "summary", "storyline")
