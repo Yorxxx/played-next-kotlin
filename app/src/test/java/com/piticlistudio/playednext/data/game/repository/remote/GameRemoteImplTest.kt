@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.game.repository.remote
 
 import com.piticlistudio.playednext.data.game.mapper.remote.IGDBGameMapper
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.model.remote.IGDBGameModel
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
@@ -42,9 +42,9 @@ class GameRemoteImplTest {
         @DisplayName("When we call load")
         inner class Load {
 
-            var result: TestObserver<GameModel>? = null
+            var result: TestObserver<GameEntity>? = null
             val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
-            val entity = GameModel(10, "name", "summary", "storyline", 0, 1, 2f)
+            val entity = GameEntity(10, "name", "summary", "storyline", 0, 1, 2f)
 
             @BeforeEach
             fun setup() {
@@ -134,9 +134,9 @@ class GameRemoteImplTest {
             val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
             val model2 = IGDBGameModel(11, "name2", "summary2", "story2", 1, 2, 3f)
             val response = listOf(model, model2)
-            val entity1 = GameModel(10, "name", "summary", "story", 1, 2, 3f)
-            val entity2 = GameModel(10, "name", "summary", "story", 1, 2, 3f)
-            var result: TestObserver<List<GameModel>>? = null
+            val entity1 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
+            val entity2 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
+            var result: TestObserver<List<GameEntity>>? = null
 
             @BeforeEach
             fun setup() {
@@ -171,6 +171,30 @@ class GameRemoteImplTest {
                     assertComplete()
                     assertValueCount(1)
                     assertValue(listOf(entity1, entity2))
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call save")
+        inner class Save {
+
+            val entity1 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                observer = repositoryImpl?.save(entity1)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should emit notAllowedException")
+            fun throwsError() {
+                assertNotNull(observer)
+                with(observer) {
+                    this!!.assertNotComplete()
+                    assertNoValues()
+                    assertError(Throwable::class.java)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.domain.repository.game
 
 import com.piticlistudio.playednext.domain.model.game.Game
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -12,4 +13,6 @@ interface GameRepository {
     fun load(id: Int): Single<Game>
 
     fun search(query: String): Single<List<Game>>
+
+    fun save(game: Game): Completable
 }

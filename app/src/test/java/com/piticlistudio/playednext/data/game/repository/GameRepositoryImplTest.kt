@@ -1,10 +1,12 @@
 package com.piticlistudio.playednext.data.game.repository
 
 import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
+import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
 import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
 import com.piticlistudio.playednext.domain.model.game.Game
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertNotNull
@@ -34,6 +36,8 @@ class GameRepositoryImplTest {
         @Mock
         private lateinit var remoteImpl: GameRemoteImpl
         @Mock
+        private lateinit var localImpl: GameLocalImpl
+        @Mock
         private lateinit var mapper: GameEntityMapper
 
         private var repository: GameRepositoryImpl? = null
@@ -41,13 +45,13 @@ class GameRepositoryImplTest {
         @BeforeEach
         fun setUp() {
             MockitoAnnotations.initMocks(this)
-            repository = GameRepositoryImpl(remoteImpl, mapper)
+            repository = GameRepositoryImpl(remoteImpl, localImpl, mapper)
         }
 
         @Nested
         @DisplayName("When we call load")
         inner class Load {
-            val response = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
+            val response = GameEntity(10, "name", "summary", "storyline", 1, 2, 3f)
             val entity = Game(10, "name", "summary", "storyline")
             var result: TestObserver<Game>? = null
 
@@ -90,8 +94,8 @@ class GameRepositoryImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model1 = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
-            val model2 = GameModel(10, "name", "summary", "storyline", 1, 2, 3f)
+            val model1 = GameEntity(10, "name", "summary", "storyline", 1, 2, 3f)
+            val model2 = GameEntity(10, "name", "summary", "storyline", 1, 2, 3f)
             var result: TestObserver<List<Game>>? = null
             val entity = Game(10, "name", "summary", "storyline")
             val entity2 = Game(10, "name", "summary", "storyline")
@@ -126,6 +130,45 @@ class GameRepositoryImplTest {
                     this?.assertComplete()
                     this?.assertValueCount(1)
                     this?.assertValue(listOf(entity, entity2))
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call save")
+        inner class Save {
+
+            val entity = Game(10, "name", "summary", "storyline")
+            val data = GameEntity(10, "name", "summary", "storyline")
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                Mockito.`when`(mapper.mapFromDomain(entity)).thenReturn(data)
+                Mockito.`when`(localImpl.save(data)).thenReturn(Completable.complete())
+                observer = repository?.save(entity)?.test()
+            }
+
+            @Test
+            @DisplayName("Then maps domain model into data model")
+            fun isSavesLocally() {
+                verify(mapper).mapFromDomain(entity)
+            }
+
+            @Test
+            @DisplayName("Then saves data model")
+            fun dataIsSaved() {
+                verify(localImpl).save(data)
+            }
+
+            @Test
+            @DisplayName("Then emits without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                with(observer) {
+                    this!!.assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
                 }
             }
         }

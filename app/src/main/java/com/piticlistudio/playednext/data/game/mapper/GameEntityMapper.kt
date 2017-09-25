@@ -1,15 +1,21 @@
 package com.piticlistudio.playednext.data.game.mapper
 
 import com.piticlistudio.playednext.data.EntityMapper
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.domain.model.game.Game
 
 /**
- * Maps a [GameModel] into a [Game] entity
+ * Maps a [GameEntity] into a [Game] entity
  */
-open class GameEntityMapper: EntityMapper<GameModel, Game> {
+open class GameEntityMapper: EntityMapper<GameEntity, Game> {
 
-    override fun mapFromRemote(type: GameModel): Game {
+    override fun mapFromRemote(type: GameEntity): Game {
         return Game(type.id, type.name, type.summary, type.storyline)
+    }
+
+    fun mapFromDomain(data: Game): GameEntity {
+        with(data) {
+            return GameEntity(id, name, summary, storyline)
+        }
     }
 }

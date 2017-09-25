@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.game.repository
 
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -9,7 +10,9 @@ import io.reactivex.Single
  */
 interface GameDatasourceRepository {
 
-    fun load(id: Int): Single<GameModel>
+    fun load(id: Int): Single<GameEntity>
 
-    fun search(query: String): Single<List<GameModel>>
+    fun search(query: String): Single<List<GameEntity>>
+
+    fun save(entity: GameEntity): Completable
 }

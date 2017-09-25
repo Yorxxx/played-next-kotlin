@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.game.mapper.remote
 
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.model.remote.IGDBGameModel
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -26,7 +26,7 @@ class IGDBGameMapperTest {
 
             val model = IGDBGameModel(10, "name", "summary", "storyline",
                     20, 30, 95.2f, listOf(1, 2, 3), listOf(), listOf(10), 1000)
-            var result: GameModel? = null
+            var result: GameEntity? = null
 
             @BeforeEach
             fun setup() {

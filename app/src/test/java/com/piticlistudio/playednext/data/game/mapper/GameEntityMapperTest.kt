@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.game.mapper
 
-import com.piticlistudio.playednext.data.game.model.GameModel
+import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.domain.model.game.Game
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -21,7 +21,7 @@ class GameEntityMapperTest {
         @DisplayName("When we call mapFromRemote")
         inner class mapFromRemote {
 
-            val model = GameModel(10, "name", "summary", "storyline", 10, 11, 12.0f)
+            val model = GameEntity(10, "name", "summary", "storyline", 10, 11, 12.0f)
             var result: Game? = null
 
             @BeforeEach
@@ -43,6 +43,31 @@ class GameEntityMapperTest {
                     assertEquals(model.name, this?.name)
                     assertEquals(model.summary, this?.summary)
                     assertEquals(model.storyline, this?.storyline)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call mapFromDomain")
+        inner class mapFromDomain {
+
+            val domain = Game(10, "name", "summary", "storyline")
+            var result: GameEntity? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                result = mapper.mapFromDomain(domain)
+            }
+
+            @Test
+            @DisplayName("Then returns data model")
+            fun dataModel() {
+                assertNotNull(result)
+                with(result) {
+                    assertEquals(domain.id, this!!.id)
+                    assertEquals(domain.name, name)
+                    assertEquals(domain.summary, summary)
+                    assertEquals(domain.storyline, storyline)
                 }
             }
         }
