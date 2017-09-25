@@ -1,7 +1,11 @@
 package com.piticlistudio.playednext.data.game.mapper.remote
 
+import com.piticlistudio.playednext.data.game.model.GameModel
 import com.piticlistudio.playednext.data.game.model.remote.IGDBGameModel
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -10,25 +14,44 @@ import kotlin.test.assertNotNull
  */
 class IGDBGameMapperTest {
 
-    private var mapper = IGDBGameMapper()
+    @Nested
+    @DisplayName("Given a IGDBGameMapper instance")
+    inner class IGDBGameMapperInstance {
 
-    @Test
-    fun shouldMapIntoDataModel() {
+        val mapper = IGDBGameMapper()
 
-        val remote = IGDBGameModel(10, "name", "summary", "storyline",
-                20, 30, 95, listOf(1, 2, 3), listOf(), listOf(10), 1000)
+        @Nested
+        @DisplayName("When we call mapFromRemote")
+        inner class mapFromRemote {
 
-        val result = mapper.mapFromRemote(remote)
+            val model = IGDBGameModel(10, "name", "summary", "storyline",
+                    20, 30, 95, listOf(1, 2, 3), listOf(), listOf(10), 1000)
+            var result: GameModel? = null
 
-        assertNotNull(result)
-        with(result) {
-            assertEquals(remote.id, id)
-            assertEquals(remote.name, name)
-            assertEquals(remote.summary, summary)
-            assertEquals(remote.storyline, storyline)
-            assertEquals(remote.collection, collection)
-            assertEquals(remote.franchise, franchise)
-            assertEquals(remote.rating, rating)
+            @BeforeEach
+            fun setup() {
+                result = mapper.mapFromRemote(model)
+            }
+
+            @Test
+            @DisplayName("Then returns a data model")
+            fun domainModelNotNull() {
+                assertNotNull(result)
+            }
+
+            @Test
+            @DisplayName("Then maps values into model")
+            fun valuesAreMapped() {
+                with(result) {
+                    assertEquals(model.id, this!!.id)
+                    assertEquals(model.name, name)
+                    assertEquals(model.summary, summary)
+                    assertEquals(model.storyline, storyline)
+                    assertEquals(model.collection, collection)
+                    assertEquals(model.franchise, franchise)
+                    assertEquals(model.rating, rating)
+                }
+            }
         }
     }
 }

@@ -23,7 +23,6 @@ import org.mockito.MockitoAnnotations
  */
 class GameRepositoryImplTest {
 
-
     @Nested
     @DisplayName("Given a GameRepository instance")
     inner class GameRepositoryImplInstance {
