@@ -1,0 +1,34 @@
+buildscript {
+    ext.support_version = '26.0.2'
+    ext.kotlin_version = '1.1.4-3'
+    ext.anko_version = '0.10.0'
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url 'https://maven.fabric.io/public' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //noinspection GradleDynamicVersion
+        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+        classpath 'de.mannodermaus.gradle.plugins:android-junit5:1.0.0-M6'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://maven.fabric.io/public' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

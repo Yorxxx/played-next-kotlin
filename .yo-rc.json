@@ -1,0 +1,9 @@
+{
+  "generator-kotlin-android": {
+    "promptValues": {
+      "name": "PlayedNext",
+      "targetSdk": 26,
+      "minSdk": 19
+    }
+  }
+}
