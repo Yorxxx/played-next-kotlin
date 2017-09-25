@@ -1,29 +1,50 @@
 package com.piticlistudio.playednext.data.game.mapper
 
 import com.piticlistudio.playednext.data.game.model.GameModel
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Test
+import com.piticlistudio.playednext.domain.model.game.Game
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-/**
- * Test cases for [GameEntityMapper]
- */
 class GameEntityMapperTest {
 
-    private val mapper = GameEntityMapper()
+    @Nested
+    @DisplayName("Given a GameEntityMapper instance")
+    inner class GameEntityMapperInstance {
 
-    @Test
-    fun shouldMapIntoDomainModel() {
-        val data = GameModel(10, "name", "summary", "storyline", 10, 11, 90)
+        val mapper = GameEntityMapper()
 
-        val result = mapper.mapFromRemote(data)
+        @Nested
+        @DisplayName("When we call mapFromRemote")
+        inner class mapFromRemote {
 
-        assertNotNull(result)
-        with(result) {
-            assertEquals(data.id, id)
-            assertEquals(data.name, name)
-            assertEquals(data.summary, summary)
-            assertEquals(data.storyline, storyline)
+            val model = GameModel(10, "name", "summary", "storyline", 10, 11, 12)
+            var result: Game? = null
+
+            @BeforeEach
+            fun setup() {
+                result = mapper.mapFromRemote(model)
+            }
+
+            @Test
+            @DisplayName("Then returns a domain model")
+            fun domainModelNotNull() {
+                assertNotNull(result)
+            }
+
+            @Test
+            @DisplayName("Then maps values into domain model")
+            fun valuesAreMapped() {
+                with(result) {
+                    assertEquals(model.id, this?.id)
+                    assertEquals(model.name, this?.name)
+                    assertEquals(model.summary, this?.summary)
+                    assertEquals(model.storyline, this?.storyline)
+                }
+            }
         }
     }
 }
