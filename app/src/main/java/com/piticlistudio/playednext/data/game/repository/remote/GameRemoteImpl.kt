@@ -28,9 +28,10 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
 
     override fun search(query: String): Single<List<GameEntity>> {
         return service.search(0, query, "*", 20)
-                .flatMap { Observable.fromIterable(it)
-                        .map { mapper.mapFromRemote(it) }
-                        .toList()
+                .flatMap {
+                    Observable.fromIterable(it)
+                            .map { mapper.mapFromRemote(it) }
+                            .toList()
                 }
     }
 

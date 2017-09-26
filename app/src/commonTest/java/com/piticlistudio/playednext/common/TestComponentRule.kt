@@ -1,10 +1,5 @@
 package com.piticlistudio.playednext.common
 
-import com.piticlistudio.playednext.MvpStarterApplication
-import com.piticlistudio.playednext.common.injection.component.DaggerTestComponent
-import com.piticlistudio.playednext.common.injection.component.TestComponent
-import com.piticlistudio.playednext.common.injection.module.ApplicationTestModule
-import com.piticlistudio.playednext.data.DataManager
 import android.content.Context
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -19,26 +14,30 @@ import org.junit.runners.model.Statement
  */
 class TestComponentRule(val context: Context) : TestRule {
 
-    val testComponent: TestComponent
+//    val testComponent: TestComponent
+//
+//    init {
+//        val application = MvpStarterApplication.get(context)
+//        testComponent = DaggerTestComponent.builder()
+//                .applicationTestModule(ApplicationTestModule(application))
+//                .build()
+//    }
+////
+////    val mockDataManager: DataManager
+////        get() = testComponent.dataManager()
+//
+//    override fun apply(base: Statement, description: Description): Statement {
+//        return object : Statement() {
+//            @Throws(Throwable::class)
+//            override fun evaluate() {
+//                val application = MvpStarterApplication.get(context)
+//                application.component = testComponent
+//                base.evaluate()
+//            }
+//        }
+//    }
 
-    init {
-        val application = MvpStarterApplication.get(context)
-        testComponent = DaggerTestComponent.builder()
-                .applicationTestModule(ApplicationTestModule(application))
-                .build()
-    }
-
-    val mockDataManager: DataManager
-        get() = testComponent.dataManager()
-
-    override fun apply(base: Statement, description: Description): Statement {
-        return object : Statement() {
-            @Throws(Throwable::class)
-            override fun evaluate() {
-                val application = MvpStarterApplication.get(context)
-                application.component = testComponent
-                base.evaluate()
-            }
-        }
+    override fun apply(base: Statement?, description: Description?): Statement {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

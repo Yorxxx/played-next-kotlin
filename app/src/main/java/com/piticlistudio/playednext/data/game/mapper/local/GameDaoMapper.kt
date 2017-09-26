@@ -3,11 +3,12 @@ package com.piticlistudio.playednext.data.game.mapper.local
 import com.piticlistudio.playednext.data.EntityMapper
 import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.model.local.LocalGame
+import javax.inject.Inject
 
 /**
  * Maps a [LocalGame] into a [GameEntity]
  */
-class GameDaoMapper : EntityMapper<LocalGame, GameEntity> {
+class GameDaoMapper @Inject constructor() : EntityMapper<LocalGame, GameEntity> {
 
     override fun mapFromRemote(type: LocalGame): GameEntity {
         with(type) {

@@ -1,24 +1,35 @@
 package com.piticlistudio.playednext.injection.component
 
-import com.piticlistudio.playednext.data.DataManager
-import com.piticlistudio.playednext.data.remote.MvpStarterService
-import com.piticlistudio.playednext.injection.ApplicationContext
-import com.piticlistudio.playednext.injection.module.ApplicationModule
 import android.app.Application
-import android.content.Context
+import com.piticlistudio.playednext.MvpStarterApplication
+import com.piticlistudio.playednext.injection.builder.ActivityBuilder
+import com.piticlistudio.playednext.injection.module.ApplicationModule
+import dagger.BindsInstance
 import dagger.Component
+import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = arrayOf(ApplicationModule::class))
+@Component(modules = arrayOf(AndroidInjectionModule::class, ApplicationModule::class, ActivityBuilder::class))
 interface ApplicationComponent {
 
-    @ApplicationContext
-    fun context(): Context
+    @Component.Builder
+    interface Builder {
 
-    fun application(): Application
+        @BindsInstance
+        fun application(app: Application): Builder
 
-    fun dataManager(): DataManager
+        fun build(): ApplicationComponent
+    }
 
-    fun mvpBoilerplateService(): MvpStarterService
+    fun inject(app: MvpStarterApplication)
+
+//    @ApplicationContext
+//    fun context(): Context
+//
+//    fun application(): Application
+//
+//    fun dataManager(): DataManager
+//
+//    fun mvpBoilerplateService(): MvpStarterService
 }

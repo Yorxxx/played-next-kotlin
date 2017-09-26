@@ -8,14 +8,13 @@ import com.piticlistudio.playednext.domain.repository.game.GameRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import javax.inject.Inject
 
 /**
  * Repository implementation for the interface defined at the domain layer
  */
-class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteImpl,
-                                             private val localImpl: GameLocalImpl,
-                                             private val mapper: GameEntityMapper) : GameRepository {
+class GameRepositoryImpl constructor(private val remoteImpl: GameRemoteImpl,
+                                     private val localImpl: GameLocalImpl,
+                                     private val mapper: GameEntityMapper) : GameRepository {
 
     override fun load(id: Int): Single<Game> {
         return localImpl.load(id)

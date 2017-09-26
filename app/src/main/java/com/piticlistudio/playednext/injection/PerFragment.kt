@@ -7,4 +7,4 @@ import javax.inject.Scope
  * conform to the life of the Fragment to be memorised in the
  * correct component.
  */
-@Scope @Retention annotation class PerFragment
+@Scope @Retention(AnnotationRetention.RUNTIME) annotation class PerFragment

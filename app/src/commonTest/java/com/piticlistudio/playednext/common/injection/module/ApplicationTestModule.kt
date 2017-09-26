@@ -1,13 +1,10 @@
 package com.piticlistudio.playednext.common.injection.module
 
-import com.piticlistudio.playednext.data.DataManager
-import com.piticlistudio.playednext.data.remote.MvpStarterService
-import com.piticlistudio.playednext.injection.ApplicationContext
 import android.app.Application
 import android.content.Context
+import com.piticlistudio.playednext.injection.ApplicationContext
 import dagger.Module
 import dagger.Provides
-import org.mockito.Mockito.mock
 import javax.inject.Singleton
 
 /**
@@ -33,16 +30,16 @@ class ApplicationTestModule(private val mApplication: Application) {
      * MOCKS
      */
 
-    @Provides
-    @Singleton
-    internal fun providesDataManager(): DataManager {
-        return mock(DataManager::class.java)
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideMvpBoilerplateService(): MvpStarterService {
-        return mock(MvpStarterService::class.java)
-    }
+//    @Provides
+//    @Singleton
+//    internal fun providesDataManager(): DataManager {
+//        return mock(DataManager::class.java)
+//    }
+//
+//    @Provides
+//    @Singleton
+//    internal fun provideMvpBoilerplateService(): MvpStarterService {
+//        return mock(MvpStarterService::class.java)
+//    }
 
 }

@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext
 
+import android.app.Activity
+import android.app.Application
 import android.arch.persistence.room.Room
-import android.content.Context
-import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.facebook.stetho.Stetho
 import com.piticlistudio.playednext.data.AppDatabase
@@ -18,21 +18,34 @@ import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
 import com.piticlistudio.playednext.injection.component.ApplicationComponent
 import com.piticlistudio.playednext.injection.component.DaggerApplicationComponent
-import com.piticlistudio.playednext.injection.module.ApplicationModule
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasActivityInjector
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.toSingle
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class MvpStarterApplication : MultiDexApplication() {
+class MvpStarterApplication : Application(), HasActivityInjector {
+
+    @Inject
+    lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
     internal var mApplicationComponent: ApplicationComponent? = null
 
+    override fun activityInjector(): AndroidInjector<Activity> {
+        return activityInjector
+    }
+
     override fun onCreate() {
         super.onCreate()
+
+        DaggerApplicationComponent.builder()
+                .application(this)
+                .build()
+                .inject(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -58,7 +71,7 @@ class MvpStarterApplication : MultiDexApplication() {
                         },
                         onError = { Log.e("SearchGamesUseCase", it.toString()) },
                         onComplete = { println("SearchGamesUseCase completed!") }
-                )*/
+                )
 
         gamesDao.getAllGames()
                 .subscribeOn(Schedulers.io())
@@ -66,7 +79,7 @@ class MvpStarterApplication : MultiDexApplication() {
                 .toObservable()
                 .subscribeBy(
                         onNext = {
-                            Log.d("gamesDao", "Number of games stored: ${it.size}" )
+                            Log.d("gamesDao", "Number of games stored: ${it.size}")
                         },
                         onError = { Log.e("gamesDao", it.toString()) },
                         onComplete = { println("gamesDao completed") }
@@ -86,29 +99,28 @@ class MvpStarterApplication : MultiDexApplication() {
                         onError = { Log.e("LoadGameUseCase", it.toString()) },
                         onComplete = { println("LoadGameUseCase completed") }
                 )
-
-
+*/
 
     }
 
-    // Needed to replace the component with a test specific one
-    var component: ApplicationComponent
-        get() {
-            if (mApplicationComponent == null) {
-                mApplicationComponent = DaggerApplicationComponent.builder()
-                        .applicationModule(ApplicationModule(this))
-                        .build()
-            }
-            return mApplicationComponent as ApplicationComponent
-        }
-        set(applicationComponent) {
-            mApplicationComponent = applicationComponent
-        }
-
-    companion object {
-
-        operator fun get(context: Context): MvpStarterApplication {
-            return context.applicationContext as MvpStarterApplication
-        }
-    }
+//    // Needed to replace the component with a test specific one
+//    var component: ApplicationComponent
+//        get() {
+//            if (mApplicationComponent == null) {
+//                mApplicationComponent = DaggerApplicationComponent.builder()
+//                        .applicationModule(ApplicationModule(this))
+//                        .build()
+//            }
+//            return mApplicationComponent as ApplicationComponent
+//        }
+//        set(applicationComponent) {
+//            mApplicationComponent = applicationComponent
+//        }
+//
+//    companion object {
+//
+//        operator fun get(context: Context): MvpStarterApplication {
+//            return context.applicationContext as MvpStarterApplication
+//        }
+//    }
 }

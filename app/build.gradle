@@ -13,7 +13,7 @@ android {
     dexOptions {
         maxProcessCount 4
         preDexLibraries false
-        javaMaxHeapSize "8g"
+        javaMaxHeapSize "4g"
     }
 
     defaultConfig {
@@ -114,14 +114,15 @@ dependencies {
     implementation "com.jakewharton:butterknife:$versions.butterKnife"
     implementation 'com.jakewharton.timber:timber:4.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-    implementation "com.google.dagger:dagger:$versions.dagger"
+
+    implementation daggerLibs
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     //Required by Dagger2
     // APT dependencies
     kapt "com.jakewharton:butterknife-compiler:$versions.butterKnife"
-    kapt daggerCompiler
-    kaptTest daggerCompiler
-    kaptAndroidTest daggerCompiler
+    kapt daggerCompiler.values()
+    kaptTest daggerCompiler.values()
+    kaptAndroidTest daggerCompiler.values()
 
     testImplementation unitTestLibs
     androidTestImplementation androidTestsLibs
