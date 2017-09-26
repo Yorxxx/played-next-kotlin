@@ -1,5 +1,8 @@
 package com.piticlistudio.playednext.data.game.repository
 
+import android.arch.persistence.room.EmptyResultSetException
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
 import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
@@ -57,17 +60,21 @@ class GameRepositoryImplTest {
 
             @BeforeEach
             fun setup() {
-                Mockito.`when`(remoteImpl.load(10))
-                        .thenReturn(Single.just(response))
-                Mockito.`when`(mapper.mapFromRemote(response))
-                        .thenReturn(entity)
+                whenever(localImpl.load(10)).thenReturn(Single.just(response))
+                whenever(mapper.mapFromRemote(response)).thenReturn(entity)
                 result = repository?.load(10)?.test()
             }
 
             @Test
-            @DisplayName("Then should request remote repository")
-            fun remoteIsCalled() {
-                verify(remoteImpl).load(10)
+            @DisplayName("Then should request local repository")
+            fun localIsCalled() {
+                verify(localImpl).load(10)
+            }
+
+            @Test
+            @DisplayName("Then should not request remote repository")
+            fun remoteIsNotCalled() {
+                verifyZeroInteractions(remoteImpl)
             }
 
             @Test
@@ -85,6 +92,36 @@ class GameRepositoryImplTest {
                     this?.assertValueCount(1)
                     this?.assertComplete()
                     this?.assertValue(entity)
+                }
+            }
+
+            @Nested
+            @DisplayName("And there is no result in local repository")
+            inner class withoutLocalResult {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(localImpl.load(10)).thenReturn(Single.error(EmptyResultSetException("no results")))
+                    whenever(remoteImpl.load(10)).thenReturn(Single.just(response))
+                    result = repository?.load(10)?.test()
+                }
+
+                @Test
+                @DisplayName("Then should request remote repository")
+                fun remoteIsCalled() {
+                    verify(remoteImpl).load(10)
+                }
+
+                @Test
+                @DisplayName("Then should emit without errors")
+                fun withoutErrors() {
+                    assertNotNull(result)
+                    with(result) {
+                        this?.assertNoErrors()
+                        this?.assertValueCount(1)
+                        this?.assertComplete()
+                        this?.assertValue(entity)
+                    }
                 }
             }
 

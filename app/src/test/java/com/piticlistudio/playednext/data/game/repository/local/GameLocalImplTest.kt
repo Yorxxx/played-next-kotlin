@@ -1,10 +1,12 @@
 package com.piticlistudio.playednext.data.game.repository.local
 
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
 import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.model.local.LocalGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Rule
@@ -115,6 +117,50 @@ internal class GameLocalImplTest {
                     this!!.assertComplete()
                     assertNoValues()
                     assertNoErrors()
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When search is called")
+        inner class SearchCalled {
+
+            private val model1 = LocalGame(10, "name", "summary", "storyline")
+            private val model2 = LocalGame(11, "name1", "summary1", "storyline1")
+            private var observer: TestObserver<List<GameEntity>>? = null
+            private val entity1 = GameEntity(10, "name", "summary", "storyline")
+            private val entity2 = GameEntity(10, "name", "summary", "storyline")
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(dao.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
+                observer = repository.search("foo").test()
+                whenever(mapper.mapFromRemote(model1)).thenReturn(entity1)
+                whenever(mapper.mapFromRemote(model2)).thenReturn(entity2)
+            }
+
+            @Test
+            @DisplayName("Then searches on DAO")
+            fun daoIsCalled() {
+                verify(dao).findByName("foo")
+            }
+
+            @Test
+            @DisplayName("Then maps result into GameEntities")
+            fun isMapped() {
+                verify(mapper.mapFromRemote(model1))
+                verify(mapper.mapFromRemote(model2))
+            }
+
+            @Test
+            @DisplayName("Then emits without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                with(observer) {
+                    this!!.assertNoErrors()
+                    assertValueCount(1)
+                    assertComplete()
+                    assertValue(listOf(entity1, entity2))
                 }
             }
         }

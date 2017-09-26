@@ -18,7 +18,8 @@ class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteI
                                              private val mapper: GameEntityMapper) : GameRepository {
 
     override fun load(id: Int): Single<Game> {
-        return remoteImpl.load(id)
+        return localImpl.load(id)
+                .onErrorResumeNext { remoteImpl.load(id) }
                 .map { mapper.mapFromRemote(it) }
     }
 

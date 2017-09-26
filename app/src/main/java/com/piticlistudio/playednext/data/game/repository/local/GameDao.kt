@@ -2,7 +2,6 @@ package com.piticlistudio.playednext.data.game.repository.local
 
 import android.arch.persistence.room.*
 import com.piticlistudio.playednext.data.game.model.local.LocalGame
-import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -17,6 +16,9 @@ interface GameDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGame(game: LocalGame)
+
+    @Query("select * from game where name LIKE :name")
+    fun findByName(name: String): Flowable<List<LocalGame>>
 //
 //    @Update()
 //    fun updateTask(task: LocalGame)

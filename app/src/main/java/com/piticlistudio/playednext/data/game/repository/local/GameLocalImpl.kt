@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
 import com.piticlistudio.playednext.data.game.model.GameEntity
 import com.piticlistudio.playednext.data.game.repository.GameDatasourceRepository
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 class GameLocalImpl constructor(private val dao: GameDao,
@@ -15,7 +16,9 @@ class GameLocalImpl constructor(private val dao: GameDao,
     }
 
     override fun search(query: String): Single<List<GameEntity>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dao.findByName(query)
+                .firstElement()
+                .flatMapSingle { Observable.fromIterable(it).map { mapper.mapFromRemote(it) }.toList() }
     }
 
     override fun save(entity: GameEntity): Completable {
