@@ -1,8 +1,7 @@
-package com.piticlistudio.playednext.injection.builder
+package com.piticlistudio.playednext.ui.injection.builder
 
 import com.piticlistudio.playednext.features.FooActivity
-import com.piticlistudio.playednext.features.FooModule
-import com.piticlistudio.playednext.injection.PerActivity
+import com.piticlistudio.playednext.ui.injection.PerActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -10,6 +9,6 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivityBuilder {
 
     @PerActivity
-    @ContributesAndroidInjector(modules = arrayOf(FooModule::class))
+    @ContributesAndroidInjector()
     abstract fun bindFooActivity(): FooActivity
 }

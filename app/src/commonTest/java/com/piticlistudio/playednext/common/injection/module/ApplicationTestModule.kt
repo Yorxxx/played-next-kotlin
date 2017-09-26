@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.common.injection.module
 
 import android.app.Application
 import android.content.Context
-import com.piticlistudio.playednext.injection.ApplicationContext
+import com.piticlistudio.playednext.ui.injection.ApplicationContext
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

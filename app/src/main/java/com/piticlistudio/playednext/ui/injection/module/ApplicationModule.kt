@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.injection.module
+package com.piticlistudio.playednext.ui.injection.module
 
 import android.app.Application
 import android.arch.persistence.room.Room

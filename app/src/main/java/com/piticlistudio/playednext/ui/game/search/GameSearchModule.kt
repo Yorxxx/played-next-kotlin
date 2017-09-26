@@ -1,16 +1,16 @@
-package com.piticlistudio.playednext.features
+package com.piticlistudio.playednext.ui.game.search
 
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
 import com.piticlistudio.playednext.features.game.search.GameSearchContract
 import com.piticlistudio.playednext.features.game.search.GameSearchPresenter
-import com.piticlistudio.playednext.injection.PerActivity
+import com.piticlistudio.playednext.ui.injection.PerFragment
 import dagger.Module
 import dagger.Provides
 
-@Module
-class FooModule {
+@Module(subcomponents = arrayOf(GameSearchComponent::class))
+class GameSearchModule {
 
-    @PerActivity
+    @PerFragment
     @Provides
     fun providePresenter(useCase: SearchGamesUseCase): GameSearchContract.Presenter {
         return GameSearchPresenter(useCase)

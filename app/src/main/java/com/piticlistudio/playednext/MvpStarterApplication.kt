@@ -3,7 +3,6 @@ package com.piticlistudio.playednext
 import android.app.Activity
 import android.app.Application
 import android.arch.persistence.room.Room
-import android.util.Log
 import com.facebook.stetho.Stetho
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
@@ -13,18 +12,12 @@ import com.piticlistudio.playednext.data.game.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
 import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
 import com.piticlistudio.playednext.data.remote.GameServiceFactory
-import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
-import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
-import com.piticlistudio.playednext.injection.component.ApplicationComponent
-import com.piticlistudio.playednext.injection.component.DaggerApplicationComponent
+import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
+import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 

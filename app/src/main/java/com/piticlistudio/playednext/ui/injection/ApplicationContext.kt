@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.injection
+package com.piticlistudio.playednext.ui.injection
 
 
 import javax.inject.Qualifier
