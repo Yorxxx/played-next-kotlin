@@ -23,15 +23,15 @@ internal class GameDaoMapperTest {
         }
 
         @Nested
-        @DisplayName("When mapFromRemote is called")
-        inner class mapFromRemoteCalled {
+        @DisplayName("When mapFromModel is called")
+        inner class mapFromModelCalled {
 
             val model = LocalGame(0, "name", null, "storyline", 0, 1, 10f)
             var result: GameEntity? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromRemote(model)
+                result = mapper.mapFromModel(model)
             }
 
             @Test
@@ -51,15 +51,15 @@ internal class GameDaoMapperTest {
         }
 
         @Nested
-        @DisplayName("When mapIntoDaoModel is called")
-        inner class mapIntoDaoModelCalled {
+        @DisplayName("When mapFromEntity is called")
+        inner class mapFromEntityCalled {
 
             val entity = GameEntity(0, "name", "summary", "storyline", 1, 2, 50f)
             var result: LocalGame? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapIntoDaoModel(entity)
+                result = mapper.mapFromEntity(entity)
             }
 
             @Test

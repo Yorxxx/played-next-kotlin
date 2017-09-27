@@ -21,7 +21,7 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map {
-                    mapper.mapFromRemote(it)
+                    mapper.mapFromModel(it)
                 }
                 .toSingle()
     }
@@ -30,7 +30,7 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
         return service.search(0, query, "*", 20)
                 .flatMap {
                     Observable.fromIterable(it)
-                            .map { mapper.mapFromRemote(it) }
+                            .map { mapper.mapFromModel(it) }
                             .toList()
                 }
     }

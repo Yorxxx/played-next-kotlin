@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 open class GameEntityMapper @Inject constructor() : EntityMapper<GameEntity, Game> {
 
-    override fun mapFromRemote(type: GameEntity): Game {
+    override fun mapFromModel(type: GameEntity): Game {
         return Game(type.id, type.name, type.summary, type.storyline)
     }
 

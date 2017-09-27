@@ -19,9 +19,6 @@ interface GameDao {
 
     @Query("select * from game where name LIKE :name")
     fun findByName(name: String): Flowable<List<LocalGame>>
-//
-//    @Update()
-//    fun updateTask(task: LocalGame)
 
     @Delete
     fun deleteGame(game: LocalGame)

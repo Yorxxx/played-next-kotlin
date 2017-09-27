@@ -21,8 +21,8 @@ class IGDBGameMapperTest {
         val mapper = IGDBGameMapper()
 
         @Nested
-        @DisplayName("When we call mapFromRemote")
-        inner class mapFromRemote {
+        @DisplayName("When we call mapFromModel")
+        inner class mapFromModel {
 
             val model = IGDBGameModel(10, "name", "summary", "storyline",
                     20, 30, 95.2f, listOf(1, 2, 3), listOf(), listOf(10), 1000)
@@ -30,7 +30,7 @@ class IGDBGameMapperTest {
 
             @BeforeEach
             fun setup() {
-                result = mapper.mapFromRemote(model)
+                result = mapper.mapFromModel(model)
             }
 
             @Test

@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 class IGDBGameMapper @Inject constructor() : EntityMapper<IGDBGameModel, GameEntity> {
 
-    override fun mapFromRemote(type: IGDBGameModel): GameEntity {
+    override fun mapFromModel(type: IGDBGameModel): GameEntity {
         return GameEntity(type.id, type.name, type.summary, type.storyline, type.collection, type.franchise, type.rating)
     }
 }

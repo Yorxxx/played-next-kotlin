@@ -61,7 +61,7 @@ class GameRepositoryImplTest {
             @BeforeEach
             fun setup() {
                 whenever(localImpl.load(10)).thenReturn(Single.just(response))
-                whenever(mapper.mapFromRemote(response)).thenReturn(entity)
+                whenever(mapper.mapFromModel(response)).thenReturn(entity)
                 result = repository?.load(10)?.test()
             }
 
@@ -80,7 +80,7 @@ class GameRepositoryImplTest {
             @Test
             @DisplayName("Then should map emission into domain model")
             fun isMapped() {
-                verify(mapper).mapFromRemote(response)
+                verify(mapper).mapFromModel(response)
             }
 
             @Test
@@ -140,8 +140,8 @@ class GameRepositoryImplTest {
             @BeforeEach
             fun setup() {
                 Mockito.`when`(remoteImpl.search("query")).thenReturn(Single.just(listOf(model1, model2)))
-                Mockito.`when`(mapper.mapFromRemote(model1)).thenReturn(entity)
-                Mockito.`when`(mapper.mapFromRemote(model2)).thenReturn(entity2)
+                Mockito.`when`(mapper.mapFromModel(model1)).thenReturn(entity)
+                Mockito.`when`(mapper.mapFromModel(model2)).thenReturn(entity2)
                 result = repository?.search("query")?.test()
             }
 
@@ -154,8 +154,8 @@ class GameRepositoryImplTest {
             @Test
             @DisplayName("Then should map returned results")
             fun mapIsCalled() {
-                verify(mapper).mapFromRemote(model1)
-                verify(mapper).mapFromRemote(model2)
+                verify(mapper).mapFromModel(model1)
+                verify(mapper).mapFromModel(model2)
             }
 
             @Test

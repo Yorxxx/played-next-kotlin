@@ -6,17 +6,17 @@ import com.piticlistudio.playednext.data.game.model.local.LocalGame
 import javax.inject.Inject
 
 /**
- * Maps a [LocalGame] into a [GameEntity]
+ * Mapper between [LocalGame] and [GameEntity]
  */
 class GameDaoMapper @Inject constructor() : EntityMapper<LocalGame, GameEntity> {
 
-    override fun mapFromRemote(type: LocalGame): GameEntity {
+    override fun mapFromModel(type: LocalGame): GameEntity {
         with(type) {
             return GameEntity(id.toInt(), name, summary, storyline, collection, franchise, rating)
         }
     }
 
-    fun mapIntoDaoModel(entity: GameEntity): LocalGame {
+    fun mapFromEntity(entity: GameEntity): LocalGame {
         with(entity) {
             return LocalGame(id.toLong(), name, summary, storyline, collection, franchise, rating);
         }

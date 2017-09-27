@@ -19,14 +19,14 @@ class GameRepositoryImpl constructor(private val remoteImpl: GameRemoteImpl,
     override fun load(id: Int): Single<Game> {
         return localImpl.load(id)
                 .onErrorResumeNext { remoteImpl.load(id) }
-                .map { mapper.mapFromRemote(it) }
+                .map { mapper.mapFromModel(it) }
     }
 
     override fun search(query: String): Single<List<Game>> {
         return remoteImpl.search(query)
                 .flatMap {
                     Observable.fromIterable(it)
-                            .map { mapper.mapFromRemote(it) }
+                            .map { mapper.mapFromModel(it) }
                             .toList()
                 }
     }

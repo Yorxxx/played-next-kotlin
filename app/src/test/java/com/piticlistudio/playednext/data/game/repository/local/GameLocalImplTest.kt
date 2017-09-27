@@ -54,7 +54,7 @@ internal class GameLocalImplTest {
             internal fun setUp() {
                 Mockito.`when`(dao.findGameById(10))
                         .thenReturn(Single.just(model))
-                Mockito.`when`(mapper.mapFromRemote(model)).thenReturn(entity)
+                Mockito.`when`(mapper.mapFromModel(model)).thenReturn(entity)
                 observer = repository.load(10).test()
             }
 
@@ -67,7 +67,7 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then should map dao result")
             fun mapIsCalled() {
-                verify(mapper).mapFromRemote(model)
+                verify(mapper).mapFromModel(model)
             }
 
             @Test
@@ -93,14 +93,14 @@ internal class GameLocalImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                Mockito.`when`(mapper.mapIntoDaoModel(entity)).thenReturn(model)
+                Mockito.`when`(mapper.mapFromEntity(entity)).thenReturn(model)
                 observer = repository.save(entity).test()
             }
 
             @Test
             @DisplayName("Then maps entity into Dao model")
             fun mapsEntity() {
-                verify(mapper).mapIntoDaoModel(entity)
+                verify(mapper).mapFromEntity(entity)
             }
 
             @Test
@@ -134,8 +134,8 @@ internal class GameLocalImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(dao.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
-                whenever(mapper.mapFromRemote(model1)).thenReturn(entity1)
-                whenever(mapper.mapFromRemote(model2)).thenReturn(entity2)
+                whenever(mapper.mapFromModel(model1)).thenReturn(entity1)
+                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
                 observer = repository.search("foo").test()
             }
 
@@ -148,8 +148,8 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then maps result into GameEntities")
             fun isMapped() {
-                verify(mapper).mapFromRemote(model1)
-                verify(mapper).mapFromRemote(model2)
+                verify(mapper).mapFromModel(model1)
+                verify(mapper).mapFromModel(model2)
             }
 
             @Test

@@ -18,15 +18,15 @@ class GameEntityMapperTest {
         val mapper = GameEntityMapper()
 
         @Nested
-        @DisplayName("When we call mapFromRemote")
-        inner class mapFromRemote {
+        @DisplayName("When we call mapFromModel")
+        inner class mapFromModel {
 
             val model = GameEntity(10, "name", "summary", "storyline", 10, 11, 12.0f)
             var result: Game? = null
 
             @BeforeEach
             fun setup() {
-                result = mapper.mapFromRemote(model)
+                result = mapper.mapFromModel(model)
             }
 
             @Test

@@ -13,18 +13,18 @@ class GameLocalImpl @Inject constructor(private val dao: GameDao,
 
     override fun load(id: Int): Single<GameEntity> {
         return dao.findGameById(id.toLong())
-                .map { mapper.mapFromRemote(it) }
+                .map { mapper.mapFromModel(it) }
     }
 
     override fun search(query: String): Single<List<GameEntity>> {
         return dao.findByName(query)
                 .firstElement()
-                .flatMapSingle { Observable.fromIterable(it).map { mapper.mapFromRemote(it) }.toList() }
+                .flatMapSingle { Observable.fromIterable(it).map { mapper.mapFromModel(it) }.toList() }
     }
 
     override fun save(entity: GameEntity): Completable {
         return Completable.defer {
-            dao.insertGame(mapper.mapIntoDaoModel(entity))
+            dao.insertGame(mapper.mapFromEntity(entity))
             Completable.complete()
         }
     }

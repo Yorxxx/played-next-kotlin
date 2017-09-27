@@ -7,7 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
 /**
- * Presenter implementation of [GameSearchContract.Presenter]
+ * MvPPresenter implementation of [GameSearchContract.Presenter]
  */
 class GameSearchPresenter constructor(private val searchCase: SearchGamesUseCase) : BasePresenter<GameSearchContract.View>(), GameSearchContract.Presenter {
 

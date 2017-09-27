@@ -52,7 +52,7 @@ class GameRemoteImplTest {
 
                 `when`(service.load(10, "*"))
                         .thenReturn(Single.just(response))
-                `when`(mapper.mapFromRemote(model)).thenReturn(entity)
+                `when`(mapper.mapFromModel(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
 
@@ -65,7 +65,7 @@ class GameRemoteImplTest {
             @Test
             @DisplayName("Then should map service response")
             fun mapIsCalled() {
-                verify(mapper).mapFromRemote(model)
+                verify(mapper).mapFromModel(model)
             }
 
             @Test
@@ -142,9 +142,9 @@ class GameRemoteImplTest {
             fun setup() {
                 `when`(service.search(0, "query", "*", 20))
                         .thenReturn(Single.just(response))
-                `when`(mapper.mapFromRemote(model))
+                `when`(mapper.mapFromModel(model))
                         .thenReturn(entity1)
-                `when`(mapper.mapFromRemote(model2))
+                `when`(mapper.mapFromModel(model2))
                         .thenReturn(entity2)
                 result = repositoryImpl?.search("query")?.test()
             }
@@ -158,8 +158,8 @@ class GameRemoteImplTest {
             @Test
             @DisplayName("Then maps result into data model")
             fun mapIsCalled() {
-                verify(mapper).mapFromRemote(model)
-                verify(mapper).mapFromRemote(model2)
+                verify(mapper).mapFromModel(model)
+                verify(mapper).mapFromModel(model2)
             }
 
             @Test
