@@ -20,6 +20,9 @@ jobs:
       - run:
           name: Run Tests
           command: ./gradlew testDebugUnitTest
+      - run:
+          name: Assemble
+          command: ./gradlew check
       - store_artifacts:
           path: app/build/reports
           destination: reports
