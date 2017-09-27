@@ -22,7 +22,7 @@ jobs:
           command: ./gradlew testDebugUnitTest
       - run:
           name: Assemble
-          command: ./gradlew assemble
+          command: ./gradlew assemble --info
       - store_artifacts:
           path: app/build/reports
           destination: reports
