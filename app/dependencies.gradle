@@ -70,7 +70,8 @@ ext {
             espressoIntents: "com.android.support.test.espresso:espresso-intents:$versions.espresso",
             testRunner     : "com.android.support.test:runner:$versions.espressoRunner",
             testRules      : "com.android.support.test:rules:$versions.espressoRunner",
-            room           : "android.arch.persistence.room:testing:$versions.archComp"
+            room           : "android.arch.persistence.room:testing:$versions.archComp",
+            archcore       : "android.arch.core:core-testing:$versions.archComp"
     ] + mockito
 
     supportLibs = supportDeps.values()

@@ -134,9 +134,9 @@ internal class GameLocalImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(dao.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
-                observer = repository.search("foo").test()
                 whenever(mapper.mapFromRemote(model1)).thenReturn(entity1)
                 whenever(mapper.mapFromRemote(model2)).thenReturn(entity2)
+                observer = repository.search("foo").test()
             }
 
             @Test
@@ -148,8 +148,8 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then maps result into GameEntities")
             fun isMapped() {
-                verify(mapper.mapFromRemote(model1))
-                verify(mapper.mapFromRemote(model2))
+                verify(mapper).mapFromRemote(model1)
+                verify(mapper).mapFromRemote(model2)
             }
 
             @Test

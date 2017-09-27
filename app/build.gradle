@@ -43,12 +43,8 @@ android {
 
     sourceSets {
         def commonTestDir = 'src/commonTest/java'
-        test {
-            java.srcDir commonTestDir
-        }
-        androidTest {
-            java.srcDir commonTestDir
-        }
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     lintOptions {
@@ -89,6 +85,7 @@ configurations.all {
         force 'com.squareup.okio:okio:1.11.0'
         force "com.squareup.okhttp3:okhttp:3.5.0"
         force 'org.jetbrains.kotlin:kotlin-stdlib:1.1.2-3'
+        force 'com.google.code.gson:gson:2.8.0'
     }
 }
 
@@ -141,4 +138,21 @@ dependencies {
 // Log out test results to console
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
+}
+
+afterEvaluate {
+    testReleaseUnitTest.dependsOn copyKotlinReleaseUnitTestClasses
+}
+
+task copyKotlinReleaseUnitTestClasses(type: Copy) {
+    from "build/tmp/kotlin-classes/releaseUnitTest"
+    into "build/intermediates/classes/test/release"
+}
+
+task runUnitTests(dependsOn: [':app:junitPlatformTestRelease']) {
+    description 'Run all unit tests'
+}
+
+task runAcceptanceTests(dependsOn: [':app:connectedAndroidTest']) {
+    description 'Run all acceptance tests.'
 }

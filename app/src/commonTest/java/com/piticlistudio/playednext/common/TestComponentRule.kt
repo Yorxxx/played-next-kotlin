@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.common
 
 import android.content.Context
+import com.piticlistudio.playednext.MvpStarterApplication
+import com.piticlistudio.playednext.common.injection.component.TestComponent
+import com.piticlistudio.playednext.common.injection.module.ApplicationTestModule
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement

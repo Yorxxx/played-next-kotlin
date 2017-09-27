@@ -15,7 +15,7 @@ interface GameDao {
     fun findGameById(id: Long): Single<LocalGame>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertGame(game: LocalGame)
+    fun insertGame(game: LocalGame): Long
 
     @Query("select * from game where name LIKE :name")
     fun findByName(name: String): Flowable<List<LocalGame>>
@@ -24,5 +24,5 @@ interface GameDao {
 //    fun updateTask(task: LocalGame)
 
     @Delete
-    fun deleteTask(task: LocalGame)
+    fun deleteGame(game: LocalGame)
 }
