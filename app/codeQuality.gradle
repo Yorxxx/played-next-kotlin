@@ -1,5 +1,9 @@
 apply plugin: "jacoco"
 
+jacoco {
+    toolVersion = "0.7.9"
+}
+
 // Creates tasks based on the application build variant (productFlavor + buildType = variant)
 android.applicationVariants.all { variant ->
     def variantName = variant.name.capitalize()

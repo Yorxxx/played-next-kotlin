@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'de.mannodermaus.android-junit5'
+apply from: rootProject.file("app/codeQuality.gradle")
+apply plugin: 'jacoco'
 //apply plugin: 'io.fabric'
 
 android {
@@ -35,6 +37,9 @@ android {
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -42,9 +47,15 @@ android {
     }
 
     sourceSets {
-        def commonTestDir = 'src/commonTest/java'
-        test.java.srcDirs += 'src/test/kotlin'
-        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main {
+            java.srcDirs += 'src/main/kotlin'
+        }
+        test {
+            java.srcDirs += 'src/test/kotlin'
+        }
+        androidTest {
+            java.srcDirs += 'src/androidTest/kotlin'
+        }
     }
 
     lintOptions {
@@ -135,24 +146,18 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:$versions.archComp"
 }
 
+// Tests copy
+task copyTestClasses(type: Copy) {
+    from "build/tmp/kotlin-classes/debugUnitTest"
+    into "build/intermediates/classes/debug"
+}
+
+
 // Log out test results to console
 tasks.matching { it instanceof Test }.all {
     testLogging.events = ["failed", "passed", "skipped"]
 }
 
 afterEvaluate {
-    testReleaseUnitTest.dependsOn copyKotlinReleaseUnitTestClasses
-}
-
-task copyKotlinReleaseUnitTestClasses(type: Copy) {
-    from "build/tmp/kotlin-classes/releaseUnitTest"
-    into "build/intermediates/classes/test/release"
-}
-
-task runUnitTests(dependsOn: [':app:junitPlatformTestRelease']) {
-    description 'Run all unit tests'
-}
-
-task runAcceptanceTests(dependsOn: [':app:connectedAndroidTest']) {
-    description 'Run all acceptance tests.'
+    testDebugUnitTest.dependsOn copyTestClasses
 }
