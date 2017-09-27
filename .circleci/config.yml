@@ -1,0 +1,35 @@
+machine:
+    java:
+        version: oraclejdk8
+    environment:
+        ANDROID_HOME: /usr/local/android-sdk-linux
+        JAVA_OPTS: "-Xms512m -Xmx1024m"
+        _JAVA_OPTS: "-Xms512m -Xmx1024m"
+        GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+        QEMU_AUDIO_DRV: none
+
+dependencies:
+  pre:
+    - echo y | android update sdk --no-ui --all --filter "platform-tools, tools"
+    - echo y | android update sdk --no-ui --all --filter "android-25, build-tools-25.0.2"
+    - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
+    - echo y | android update sdk --no-ui --all --filter "extra-android-support"
+
+test:
+  pre:
+    - mv gradle/init.gradle $HOME/.gradle/
+  override:
+    # start the emulator
+    - emulator -avd circleci-android22 -no-window:
+        background: true
+        parallel: true
+    # wait for it to have booted
+    - circle-android wait-for-boot
+    # run tests  against the emulator.
+    - sleep 30
+    - adb shell input keyevent 82
+    - ./gradlew createDebugCoverageReport
+    - ./gradlew jacocoDebugReport
+
+  post:
+    - bash <(curl -s https://codecov.io/bash)
