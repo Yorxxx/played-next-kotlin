@@ -7,6 +7,7 @@ import com.piticlistudio.playednext.data.entity.dao.CoverCache
 import com.piticlistudio.playednext.data.entity.dao.GameCache
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatCache
 import com.piticlistudio.playednext.data.entity.net.*
+import com.piticlistudio.playednext.domain.model.game.Game
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
@@ -20,8 +21,12 @@ class GameFactory {
 
     companion object Factory {
 
-        fun makeGameCache(): GameCache {
-            return GameCache(randomInt(), randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGame(): Game {
+            return Game(randomInt(), randomString(), randomString(), randomString())
+        }
+
+        fun makeGameCache(id: Int = randomInt()): GameCache {
+            return GameCache(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache())

@@ -1,24 +1,27 @@
-package com.piticlistudio.playednext.data.game.repository.local
+package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.GameEntity
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Rule
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertNotNull
 
 internal class GameLocalImplTest {
 
-    /*@Nested
+    @Nested
     @DisplayName("Given GameLocalImpl instance")
     inner class localImplInstance {
 
@@ -44,14 +47,14 @@ internal class GameLocalImplTest {
         inner class loadIsCalled {
 
             private var observer: TestObserver<GameEntity>? = null
-            private val model = LocalGame(10, "name", "storyline", "summary")
-            private val entity = GameEntity(10, "name", "storyline", "summary", 0, 1, 5f)
+            private val model = makeGameCache()
+            private val entity = makeGameEntity()
 
             @BeforeEach
             internal fun setUp() {
-                Mockito.`when`(dao.findGameById(10))
+                whenever(dao.findGameById(10))
                         .thenReturn(Single.just(model))
-                Mockito.`when`(mapper.mapFromModel(model)).thenReturn(entity)
+                whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 observer = repository.load(10).test()
             }
 
@@ -71,8 +74,8 @@ internal class GameLocalImplTest {
             @DisplayName("Then should emit without errors")
             fun withoutErrors() {
                 assertNotNull(observer)
-                with(observer) {
-                    this!!.assertComplete()
+                observer?.apply {
+                    assertComplete()
                     assertValueCount(1)
                     assertNoErrors()
                     assertValue(entity)
@@ -84,13 +87,13 @@ internal class GameLocalImplTest {
         @DisplayName("When save is called")
         inner class saveIsCalled {
 
-            private val entity = GameEntity(10, "name", "storyline", "summary", 0, 1, 5f)
-            private val model = LocalGame(10, "name", "storyline", "summary")
+            private val entity = makeGameEntity()
+            private val model = makeGameCache()
             private var observer: TestObserver<Void>? = null
 
             @BeforeEach
             internal fun setUp() {
-                Mockito.`when`(mapper.mapFromEntity(entity)).thenReturn(model)
+                whenever(mapper.mapFromEntity(entity)).thenReturn(model)
                 observer = repository.save(entity).test()
             }
 
@@ -110,8 +113,8 @@ internal class GameLocalImplTest {
             @DisplayName("Then emits completion")
             fun emitsComplete() {
                 assertNotNull(observer)
-                with(observer) {
-                    this!!.assertComplete()
+                observer?.apply {
+                    assertComplete()
                     assertNoValues()
                     assertNoErrors()
                 }
@@ -122,11 +125,11 @@ internal class GameLocalImplTest {
         @DisplayName("When search is called")
         inner class SearchCalled {
 
-            private val model1 = LocalGame(10, "name", "summary", "storyline")
-            private val model2 = LocalGame(11, "name1", "summary1", "storyline1")
+            private val model1 = makeGameCache()
+            private val model2 = makeGameCache()
             private var observer: TestObserver<List<GameEntity>>? = null
-            private val entity1 = GameEntity(10, "name", "summary", "storyline")
-            private val entity2 = GameEntity(10, "name", "summary", "storyline")
+            private val entity1 = makeGameEntity()
+            private val entity2 = makeGameEntity()
 
             @BeforeEach
             internal fun setUp() {
@@ -161,5 +164,5 @@ internal class GameLocalImplTest {
                 }
             }
         }
-    }*/
+    }
 }

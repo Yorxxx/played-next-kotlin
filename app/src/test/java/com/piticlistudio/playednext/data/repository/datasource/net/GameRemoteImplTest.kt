@@ -1,22 +1,26 @@
-package com.piticlistudio.playednext.data.game.repository.remote
+package com.piticlistudio.playednext.data.repository.datasource.net
 
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.GameEntity
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Rule
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertNotNull
 
-class GameRemoteImplTest {
+internal class GameRemoteImplTest {
 
-    /*@Nested
+    @Nested
     @DisplayName("Given a GameRemoteImpl instance")
     inner class GameRemoteImplInstance {
 
@@ -25,7 +29,7 @@ class GameRemoteImplTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock lateinit var service: GameService
-        @Mock lateinit var mapper: IGDBGameMapper
+        @Mock lateinit var mapper: GameRemoteMapper
 
         private var repositoryImpl: GameRemoteImpl? = null
 
@@ -40,16 +44,16 @@ class GameRemoteImplTest {
         inner class Load {
 
             var result: TestObserver<GameEntity>? = null
-            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
-            val entity = GameEntity(10, "name", "summary", "storyline", 0, 1, 2f)
+            val model = makeGameRemote()
+            val entity = makeGameEntity()
 
             @BeforeEach
             fun setup() {
                 val response = listOf(model)
 
-                `when`(service.load(10, "*"))
+                whenever(service.load(10, "*"))
                         .thenReturn(Single.just(response))
-                `when`(mapper.mapFromModel(model)).thenReturn(entity)
+                whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
 
@@ -83,7 +87,7 @@ class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    `when`(service.load(10, "*"))
+                    whenever(service.load(10, "*"))
                             .thenReturn(Single.just(listOf()))
                     result = repositoryImpl?.load(10)?.test()
                 }
@@ -105,9 +109,8 @@ class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    val response = listOf(IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f),
-                            IGDBGameModel(10, "name2", "summary2", "story2", 0, 1, 2f))
-                    `when`(service.load(10, "*"))
+                    val response = listOf(makeGameRemote(), makeGameRemote())
+                    whenever(service.load(10, "*"))
                             .thenReturn(Single.just(response))
                     result = repositoryImpl?.load(10)?.test()
                 }
@@ -128,20 +131,20 @@ class GameRemoteImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model = IGDBGameModel(10, "name", "summary", "story", 0, 1, 2f)
-            val model2 = IGDBGameModel(11, "name2", "summary2", "story2", 1, 2, 3f)
+            val model = makeGameRemote()
+            val model2 = makeGameRemote()
             val response = listOf(model, model2)
-            val entity1 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
-            val entity2 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
+            val entity1 = makeGameEntity()
+            val entity2 = makeGameEntity()
             var result: TestObserver<List<GameEntity>>? = null
 
             @BeforeEach
             fun setup() {
-                `when`(service.search(0, "query", "*", 20))
+                whenever(service.search(0, "query", "*", 20))
                         .thenReturn(Single.just(response))
-                `when`(mapper.mapFromModel(model))
+                whenever(mapper.mapFromModel(model))
                         .thenReturn(entity1)
-                `when`(mapper.mapFromModel(model2))
+                whenever(mapper.mapFromModel(model2))
                         .thenReturn(entity2)
                 result = repositoryImpl?.search("query")?.test()
             }
@@ -176,7 +179,7 @@ class GameRemoteImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = GameEntity(10, "name", "summary", "story", 1, 2, 3f)
+            val entity1 = makeGameEntity()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -195,5 +198,5 @@ class GameRemoteImplTest {
                 }
             }
         }
-    }*/
+    }
 }
