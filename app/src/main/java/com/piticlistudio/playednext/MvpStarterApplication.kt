@@ -2,17 +2,7 @@ package com.piticlistudio.playednext
 
 import android.app.Activity
 import android.app.Application
-import android.arch.persistence.room.Room
 import com.facebook.stetho.Stetho
-import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
-import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
-import com.piticlistudio.playednext.data.game.mapper.remote.IGDBGameMapper
-import com.piticlistudio.playednext.data.game.repository.GameRepositoryImpl
-import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
-import com.piticlistudio.playednext.data.remote.GameServiceFactory
-import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
 import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
@@ -45,14 +35,14 @@ class MvpStarterApplication : Application(), HasActivityInjector {
             Stetho.initializeWithDefaults(this)
         }
 
-        val database = Room.databaseBuilder(this.applicationContext, AppDatabase::class.java, "my-todo-db").build()
+        /*val database = Room.databaseBuilder(this.applicationContext, AppDatabase::class.java, "my-todo-db").build()
         val service = GameServiceFactory.makeGameService()
         val gamesDao = database.gamesDao()
 
         val localRepository = GameLocalImpl(gamesDao, GameDaoMapper())
         val repository = GameRepositoryImpl(GameRemoteImpl(service, IGDBGameMapper()), localRepository, GameEntityMapper())
         val search = SearchGamesUseCase(repository)
-        /*search.execute("zelda")
+        search.execute("zelda")
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()

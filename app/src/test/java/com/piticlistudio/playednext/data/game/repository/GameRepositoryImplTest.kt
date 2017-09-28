@@ -3,10 +3,7 @@ package com.piticlistudio.playednext.data.game.repository
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
-import com.piticlistudio.playednext.data.game.model.GameEntity
-import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
+
 import com.piticlistudio.playednext.domain.model.game.Game
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
@@ -28,7 +25,7 @@ import org.mockito.MockitoAnnotations
  */
 class GameRepositoryImplTest {
 
-    @Nested
+    /*@Nested
     @DisplayName("Given a GameRepository instance")
     inner class GameRepositoryImplInstance {
 
@@ -209,5 +206,5 @@ class GameRepositoryImplTest {
                 }
             }
         }
-    }
+    }*/
 }

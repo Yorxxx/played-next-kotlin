@@ -1,7 +1,8 @@
 package com.piticlistudio.playednext.data.game.mapper.remote
 
-import com.piticlistudio.playednext.data.game.model.GameEntity
-import com.piticlistudio.playednext.data.game.model.remote.IGDBGameModel
+import com.piticlistudio.playednext.data.entity.GameEntity
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.data.entity.net.GameRemote
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -14,18 +15,18 @@ import kotlin.test.assertNotNull
  */
 class IGDBGameMapperTest {
 
-    @Nested
+    /*@Nested
     @DisplayName("Given a IGDBGameMapper instance")
     inner class IGDBGameMapperInstance {
 
-        val mapper = IGDBGameMapper()
+        val mapper = GameRemoteMapper()
 
         @Nested
         @DisplayName("When we call mapFromModel")
         inner class mapFromModel {
 
-            val model = IGDBGameModel(10, "name", "summary", "storyline",
-                    20, 30, 95.2f, listOf(1, 2, 3), listOf(), listOf(10), 1000)
+            val model = GameRemote(10, "name", "summary", "storyline",
+                    20, 30)
             var result: GameEntity? = null
 
             @BeforeEach
@@ -52,6 +53,14 @@ class IGDBGameMapperTest {
                     assertEquals(model.rating, rating)
                 }
             }
+
+            @Nested
+            @DisplayName("And has cover")
+            inner class hasCover {
+
+//                @Test
+//                @DisplayName("Then maps cover")
+            }
         }
-    }
+    }*/
 }

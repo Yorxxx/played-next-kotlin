@@ -2,9 +2,6 @@ package com.piticlistudio.playednext.data.game.repository.local
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
-import com.piticlistudio.playednext.data.game.model.GameEntity
-import com.piticlistudio.playednext.data.game.model.local.LocalGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -21,7 +18,7 @@ import kotlin.test.assertNotNull
 
 internal class GameLocalImplTest {
 
-    @Nested
+    /*@Nested
     @DisplayName("Given GameLocalImpl instance")
     inner class localImplInstance {
 
@@ -164,5 +161,5 @@ internal class GameLocalImplTest {
                 }
             }
         }
-    }
+    }*/
 }

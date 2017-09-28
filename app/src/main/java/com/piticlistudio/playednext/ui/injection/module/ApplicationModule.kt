@@ -4,15 +4,15 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
-import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
-import com.piticlistudio.playednext.data.game.mapper.remote.IGDBGameMapper
-import com.piticlistudio.playednext.data.game.repository.GameRepositoryImpl
-import com.piticlistudio.playednext.data.game.repository.local.GameDao
-import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameService
-import com.piticlistudio.playednext.data.remote.GameServiceFactory
+import com.piticlistudio.playednext.data.entity.mapper.GameEntityToDomainMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.dao.GameDao
+import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
+import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
+import com.piticlistudio.playednext.data.repository.datasource.net.GameService
+import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
 import com.piticlistudio.playednext.domain.repository.game.GameRepository
 import dagger.Module
 import dagger.Provides
@@ -53,13 +53,13 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGameRemoteRepository(service: GameService, mapper: IGDBGameMapper): GameRemoteImpl {
+    fun provideGameRemoteRepository(service: GameService, mapper: GameRemoteMapper): GameRemoteImpl {
         return GameRemoteImpl(service, mapper)
     }
 
     @Provides
     @Singleton
-    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl, mapper: GameEntityMapper): GameRepository {
+    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl, mapper: GameEntityToDomainMapper): GameRepository {
         return GameRepositoryImpl(remoteImpl, localImpl, mapper)
     }
 }
