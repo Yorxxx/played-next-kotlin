@@ -64,6 +64,17 @@ internal class GameEntityToDomainMapperTest {
                     assertEquals(model.cover?.url, url)
                 }
             }
+
+            @Test
+            @DisplayName("Then should map timeToBeat")
+            fun timeToBeatMapped() {
+                assertNotNull(response!!.timeToBeat)
+                response!!.timeToBeat?.apply {
+                    assertEquals(model.timeToBeat?.completely, completely)
+                    assertEquals(model.timeToBeat?.hastly, quick)
+                    assertEquals(model.timeToBeat?.normally, normally)
+                }
+            }
         }
     }
 }

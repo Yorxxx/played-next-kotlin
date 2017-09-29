@@ -2,8 +2,10 @@ package com.piticlistudio.playednext.data.entity.mapper
 
 import com.piticlistudio.playednext.data.entity.CoverDomainModel
 import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.TimeToBeatDomainModel
 import com.piticlistudio.playednext.domain.model.game.Cover
 import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.game.TimeToBeat
 import javax.inject.Inject
 
 /**
@@ -14,7 +16,8 @@ open class GameEntityToDomainMapper @Inject constructor() : LayerDataMapper<Game
     override fun mapFromModel(type: GameDomainModel): Game {
         with(type) {
             return Game(id, name, summary, storyline, url, rating, ratingCount, aggregatedRating,
-                    aggregatedRatingCount, totalRating, totalRatingCount, firstReleaseAt, mapFromCoverModel(cover))
+                    aggregatedRatingCount, totalRating, totalRatingCount, firstReleaseAt,
+                    mapFromCoverModel(cover), mapFromTimeToBeatModel(timeToBeat))
         }
     }
 
@@ -25,6 +28,13 @@ open class GameEntityToDomainMapper @Inject constructor() : LayerDataMapper<Game
     private fun mapFromCoverModel(type: CoverDomainModel?): Cover? {
         type?.apply {
             return Cover(url, width, height)
+        }
+        return null
+    }
+
+    private fun mapFromTimeToBeatModel(type: TimeToBeatDomainModel?): TimeToBeat? {
+        type?.apply {
+            return TimeToBeat(hastly, normally, completely)
         }
         return null
     }
