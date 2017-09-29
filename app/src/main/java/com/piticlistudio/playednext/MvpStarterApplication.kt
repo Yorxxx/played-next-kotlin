@@ -56,15 +56,15 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val localRepository = GameLocalImpl(gamesDao, GameDaoMapper())
         val repository = GameRepositoryImpl(GameRemoteImpl(service, GameDTOMapper()), localRepository, GameEntityToDomainMapper())
         val load = LoadGameUseCase(repository)
-        load.execute(450)
+        load.execute(650)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
                 .subscribeBy(
                         onNext = {
-                            Log.d("LoadGameUseCase", "foo")
+                            Log.d("LoadGameUseCase", "Retrieved game ${it}")
                         },
-                        onError = { Log.e("LoadGameUseCase", it.toString()) },
+                        onError = { Log.e("LoadGameUseCase", "Failed loading game ${it}") },
                         onComplete = { println("LoadGameUseCase completed") }
                 )
     }

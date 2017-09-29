@@ -43,6 +43,25 @@ internal class GameEntityToDomainMapperTest {
                     assertEquals(model.name, name)
                     assertEquals(model.storyline, storyline)
                     assertEquals(model.summary, summary)
+                    assertEquals(model.url, url)
+                    assertEquals(model.rating, rating)
+                    assertEquals(model.ratingCount, ratingCount)
+                    assertEquals(model.aggregatedRating, aggregatedRating)
+                    assertEquals(model.aggregatedRatingCount, aggregatedRatingCount)
+                    assertEquals(model.totalRating, totalRating)
+                    assertEquals(model.totalRatingCount, totalRatingCount)
+                    assertEquals(model.firstReleaseAt, releasedAt)
+                }
+            }
+
+            @Test
+            @DisplayName("Then should map cover")
+            fun coverIsMapped() {
+                assertNotNull(response!!.cover)
+                response!!.cover?.apply {
+                    assertEquals(model.cover?.height, height)
+                    assertEquals(model.cover?.width, width)
+                    assertEquals(model.cover?.url, url)
                 }
             }
         }

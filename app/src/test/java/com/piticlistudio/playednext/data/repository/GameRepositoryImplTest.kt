@@ -57,15 +57,15 @@ internal class GameRepositoryImplTest {
 
             @BeforeEach
             fun setup() {
-                whenever(localImpl.load(10)).thenReturn(Single.just(response))
+                whenever(localImpl.load(response.id)).thenReturn(Single.just(response))
                 whenever(mapper.mapFromModel(response)).thenReturn(entity)
-                result = repository?.load(10)?.test()
+                result = repository?.load(response.id)?.test()
             }
 
             @Test
             @DisplayName("Then should request local repository")
             fun localIsCalled() {
-                verify(localImpl).load(10)
+                verify(localImpl).load(response.id)
             }
 
             @Test
@@ -98,15 +98,16 @@ internal class GameRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(localImpl.load(10)).thenReturn(Single.error(EmptyResultSetException("no results")))
-                    whenever(remoteImpl.load(10)).thenReturn(Single.just(response))
-                    result = repository?.load(10)?.test()
+                    whenever(localImpl.load(response.id)).thenReturn(Single.error(EmptyResultSetException("no results")))
+                    whenever(remoteImpl.load(response.id)).thenReturn(Single.just(response))
+                    whenever(localImpl.save(response)).thenReturn(Completable.complete())
+                    result = repository?.load(response.id)?.test()
                 }
 
                 @Test
                 @DisplayName("Then should request remote repository")
                 fun remoteIsCalled() {
-                    verify(remoteImpl).load(10)
+                    verify(remoteImpl).load(response.id)
                 }
 
                 @Test
