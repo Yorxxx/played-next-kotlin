@@ -9,6 +9,7 @@ import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.net.*
 import com.piticlistudio.playednext.domain.model.game.Cover
 import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.game.TimeToBeat
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
@@ -25,11 +26,15 @@ class GameFactory {
         fun makeGame(): Game {
             return Game(randomInt(), randomString(), randomString(), randomString(), randomString(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeCover())
+                    randomLong(), makeCover(), makeTimeToBeat())
         }
 
         fun makeCover(): Cover {
             return Cover(randomString(), randomInt(), randomInt())
+        }
+
+        fun makeTimeToBeat(): TimeToBeat {
+            return TimeToBeat(randomInt(), randomInt(), randomInt())
         }
 
         fun makeGameCache(id: Int = randomInt()): GameDao {
