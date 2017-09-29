@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -14,9 +14,9 @@ import javax.inject.Inject
  * store implementation can carry out.
  */
 class GameRemoteImpl @Inject constructor(private val service: GameService,
-                                         private val mapper: GameRemoteMapper) : GameDatasourceRepository {
+                                         private val mapper: GameDTOMapper) : GameDatasourceRepository {
 
-    override fun load(id: Int): Single<GameEntity> {
+    override fun load(id: Int): Single<GameDomainModel> {
         return service.load(id, "*")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
@@ -26,7 +26,7 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
                 .toSingle()
     }
 
-    override fun search(query: String): Single<List<GameEntity>> {
+    override fun search(query: String): Single<List<GameDomainModel>> {
         return service.search(0, query, "*", 20)
                 .flatMap {
                     Observable.fromIterable(it)
@@ -35,7 +35,7 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
                 }
     }
 
-    override fun save(entity: GameEntity): Completable {
+    override fun save(domainModel: GameDomainModel): Completable {
         return Completable.error(Throwable("Not allowed"))
     }
 }

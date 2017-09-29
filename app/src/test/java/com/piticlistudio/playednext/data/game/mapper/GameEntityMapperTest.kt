@@ -1,15 +1,5 @@
 package com.piticlistudio.playednext.data.game.mapper
 
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.mapper.GameEntityToDomainMapper
-import com.piticlistudio.playednext.domain.model.game.Game
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-
 class GameEntityMapperTest {
 
     /*@Nested
@@ -22,7 +12,7 @@ class GameEntityMapperTest {
         @DisplayName("When we call mapFromModel")
         inner class mapFromModel {
 
-            val model = GameEntity(10, "name", "summary", "storyline", 10, 11, 12.0)
+            val model = GameDomainModel(10, "name", "summary", "storyline", 10, 11, 12.0)
             var result: Game? = null
 
             @BeforeEach
@@ -53,7 +43,7 @@ class GameEntityMapperTest {
         inner class mapFromDomain {
 
             val domain = Game(10, "name", "summary", "storyline")
-            var result: GameEntity? = null
+            var result: GameDomainModel? = null
 
             @BeforeEach
             internal fun setUp() {

@@ -2,8 +2,8 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
@@ -29,7 +29,7 @@ internal class GameRemoteImplTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock lateinit var service: GameService
-        @Mock lateinit var mapper: GameRemoteMapper
+        @Mock lateinit var mapper: GameDTOMapper
 
         private var repositoryImpl: GameRemoteImpl? = null
 
@@ -43,7 +43,7 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call load")
         inner class Load {
 
-            var result: TestObserver<GameEntity>? = null
+            var result: TestObserver<GameDomainModel>? = null
             val model = makeGameRemote()
             val entity = makeGameEntity()
 
@@ -136,7 +136,7 @@ internal class GameRemoteImplTest {
             val response = listOf(model, model2)
             val entity1 = makeGameEntity()
             val entity2 = makeGameEntity()
-            var result: TestObserver<List<GameEntity>>? = null
+            var result: TestObserver<List<GameDomainModel>>? = null
 
             @BeforeEach
             fun setup() {

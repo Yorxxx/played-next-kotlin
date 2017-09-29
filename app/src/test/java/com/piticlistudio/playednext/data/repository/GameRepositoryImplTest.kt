@@ -120,6 +120,12 @@ internal class GameRepositoryImplTest {
                         this?.assertValue(entity)
                     }
                 }
+
+                @Test
+                @DisplayName("Then should cache retrieved data")
+                fun cacheResponse() {
+                    verify(localImpl).save(response)
+                }
             }
 
         }

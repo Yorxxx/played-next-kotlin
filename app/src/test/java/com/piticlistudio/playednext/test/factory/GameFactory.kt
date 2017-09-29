@@ -1,11 +1,11 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.CoverEntity
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.TimeToBeatEntity
-import com.piticlistudio.playednext.data.entity.dao.CoverCache
-import com.piticlistudio.playednext.data.entity.dao.GameCache
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatCache
+import com.piticlistudio.playednext.data.entity.CoverDomainModel
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.TimeToBeatDomainModel
+import com.piticlistudio.playednext.data.entity.dao.CoverDao
+import com.piticlistudio.playednext.data.entity.dao.GameDao
+import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.net.*
 import com.piticlistudio.playednext.domain.model.game.Game
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
@@ -25,38 +25,38 @@ class GameFactory {
             return Game(randomInt(), randomString(), randomString(), randomString())
         }
 
-        fun makeGameCache(id: Int = randomInt()): GameCache {
-            return GameCache(id, randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGameCache(id: Int = randomInt()): GameDao {
+            return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache())
         }
 
-        fun makeCoverCache(): CoverCache {
-            return CoverCache(randomString(), randomInt(), randomInt())
+        fun makeCoverCache(): CoverDao {
+            return CoverDao(randomString(), randomInt(), randomInt())
         }
 
-        fun makeTimeToBeatCache(): TimeToBeatCache {
-            return TimeToBeatCache(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatCache(): TimeToBeatDao {
+            return TimeToBeatDao(randomInt(), randomInt(), randomInt())
         }
 
-        fun makeGameEntity(): GameEntity {
-            return GameEntity(randomInt(), randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGameEntity(): GameDomainModel {
+            return GameDomainModel(randomInt(), randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatEntity(), makeCoverEntity())
         }
 
-        fun makeCoverEntity(): CoverEntity {
-            return CoverEntity(randomString(), randomInt(), randomInt())
+        fun makeCoverEntity(): CoverDomainModel {
+            return CoverDomainModel(randomString(), randomInt(), randomInt())
         }
 
-        fun makeTimeToBeatEntity(): TimeToBeatEntity {
-            return TimeToBeatEntity(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatEntity(): TimeToBeatDomainModel {
+            return TimeToBeatDomainModel(randomInt(), randomInt(), randomInt())
         }
 
-        fun makeGameRemote(): GameRemote {
-            return GameRemote(randomInt(), randomString(), randomString(), randomString(), randomLong(),
+        fun makeGameRemote(): GameDTO {
+            return GameDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
                     randomLong(), randomString(), randomString(), randomInt(), randomInt(), randomInt(),
                     randomDouble(), randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomIntList(), randomIntList(), randomIntList(), makeTimeToBeatRemote(),
@@ -65,20 +65,20 @@ class GameFactory {
                     listOf(makeVideoRemote()), makeImageRemote(), randomIntList())
         }
 
-        fun makeTimeToBeatRemote(): TimeToBeatRemote {
-            return TimeToBeatRemote(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatRemote(): TimeToBeatDTO {
+            return TimeToBeatDTO(randomInt(), randomInt(), randomInt())
         }
 
-        fun makeReleaseDateRemote(): ReleaseDateRemote {
-            return ReleaseDateRemote(randomInt(), randomInt(), randomInt(), randomString())
+        fun makeReleaseDateRemote(): ReleaseDateDTO {
+            return ReleaseDateDTO(randomInt(), randomInt(), randomInt(), randomString())
         }
 
-        fun makeImageRemote(): ImageRemote {
-            return ImageRemote(randomString(), randomString(), randomInt(), randomInt())
+        fun makeImageRemote(): ImageDTO {
+            return ImageDTO(randomString(), randomString(), randomInt(), randomInt())
         }
 
-        fun makeVideoRemote(): VideoRemote {
-            return VideoRemote(randomString(), randomString())
+        fun makeVideoRemote(): VideoDTO {
+            return VideoDTO(randomString(), randomString())
         }
     }
 }

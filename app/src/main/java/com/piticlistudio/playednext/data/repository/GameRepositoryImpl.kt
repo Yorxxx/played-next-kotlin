@@ -18,7 +18,10 @@ class GameRepositoryImpl constructor(private val remoteImpl: GameRemoteImpl,
 
     override fun load(id: Int): Single<Game> {
         return localImpl.load(id)
-                .onErrorResumeNext { remoteImpl.load(id) }
+                .onErrorResumeNext {
+                    remoteImpl.load(id)
+                            .flatMap { localImpl.save(it).andThen(Single.just(it)) }
+                }
                 .map { mapper.mapFromModel(it) }
     }
 

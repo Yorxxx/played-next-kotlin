@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.CoverCache
-import com.piticlistudio.playednext.data.entity.dao.GameCache
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatCache
+import com.piticlistudio.playednext.data.entity.dao.CoverDao
+import com.piticlistudio.playednext.data.entity.dao.GameDao
+import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.domain.model.game.Game
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
@@ -43,19 +43,19 @@ class DomainFactory {
             return items
         }
 
-        fun makeGameCache(id: Int = randomInt()): GameCache {
-            return GameCache(id, randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGameCache(id: Int = randomInt()): GameDao {
+            return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache())
         }
 
-        fun makeCoverCache(): CoverCache {
-            return CoverCache(randomString(), randomInt(), randomInt())
+        fun makeCoverCache(): CoverDao {
+            return CoverDao(randomString(), randomInt(), randomInt())
         }
 
-        fun makeTimeToBeatCache(): TimeToBeatCache {
-            return TimeToBeatCache(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatCache(): TimeToBeatDao {
+            return TimeToBeatDao(randomInt(), randomInt(), randomInt())
         }
     }
 }

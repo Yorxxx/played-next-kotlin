@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.GameEntity
+import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
@@ -30,7 +30,7 @@ internal class GameLocalImplTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock
-        private lateinit var dao: GameDao
+        private lateinit var daoService: GameDaoService
         @Mock
         private lateinit var mapper: GameDaoMapper
 
@@ -39,20 +39,20 @@ internal class GameLocalImplTest {
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            repository = GameLocalImpl(dao, mapper)
+            repository = GameLocalImpl(daoService, mapper)
         }
 
         @Nested
         @DisplayName("When load is called")
         inner class loadIsCalled {
 
-            private var observer: TestObserver<GameEntity>? = null
+            private var observer: TestObserver<GameDomainModel>? = null
             private val model = makeGameCache()
             private val entity = makeGameEntity()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findGameById(10))
+                whenever(daoService.findGameById(10))
                         .thenReturn(Single.just(model))
                 whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 observer = repository.load(10).test()
@@ -61,11 +61,11 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then should request DAO")
             fun daoIsCalled() {
-                verify(dao).findGameById(10)
+                verify(daoService).findGameById(10)
             }
 
             @Test
-            @DisplayName("Then should map dao result")
+            @DisplayName("Then should map daoService result")
             fun mapIsCalled() {
                 verify(mapper).mapFromModel(model)
             }
@@ -106,7 +106,7 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then inserts into DAO")
             fun isInserted() {
-                verify(dao).insertGame(model)
+                verify(daoService).insertGame(model)
             }
 
             @Test
@@ -127,13 +127,13 @@ internal class GameLocalImplTest {
 
             private val model1 = makeGameCache()
             private val model2 = makeGameCache()
-            private var observer: TestObserver<List<GameEntity>>? = null
+            private var observer: TestObserver<List<GameDomainModel>>? = null
             private val entity1 = makeGameEntity()
             private val entity2 = makeGameEntity()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
+                whenever(daoService.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
                 whenever(mapper.mapFromModel(model1)).thenReturn(entity1)
                 whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
                 observer = repository.search("foo").test()
@@ -142,7 +142,7 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then searches on DAO")
             fun daoIsCalled() {
-                verify(dao).findByName("foo")
+                verify(daoService).findByName("foo")
             }
 
             @Test

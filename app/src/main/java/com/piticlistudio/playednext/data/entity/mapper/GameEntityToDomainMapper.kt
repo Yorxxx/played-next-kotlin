@@ -1,19 +1,21 @@
 package com.piticlistudio.playednext.data.entity.mapper
 
-import com.piticlistudio.playednext.data.entity.GameEntity
+import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.domain.model.game.Game
 import javax.inject.Inject
 
 /**
- * Maps a [GameEntity] into a [Game] entity
+ * Maps a [GameDomainModel] into a [Game] entity
  */
-open class GameEntityToDomainMapper @Inject constructor() : LayerDataMapper<GameEntity, Game> {
+open class GameEntityToDomainMapper @Inject constructor() : LayerDataMapper<GameDomainModel, Game> {
 
-    override fun mapFromModel(type: GameEntity): Game {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun mapFromModel(type: GameDomainModel): Game {
+        with(type) {
+            return Game(id, name, summary, storyline)
+        }
     }
 
-    override fun mapFromEntity(type: Game): GameEntity {
+    override fun mapFromEntity(type: Game): GameDomainModel {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

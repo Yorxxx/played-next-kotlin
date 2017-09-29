@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.piticlistudio.playednext.BuildConfig
-import com.piticlistudio.playednext.data.entity.net.GameRemote
+import com.piticlistudio.playednext.data.entity.net.GameDTO
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -19,9 +19,9 @@ interface GameService {
     fun search(@Query("offset") offset: Int,
                @Query("search") query: String,
                @Query("fields") fields: String,
-               @Query("limit") limit: Int): Single<List<GameRemote>>
+               @Query("limit") limit: Int): Single<List<GameDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/{id}/")
-    fun load(@Path("id") id: Int, @Query("fields") fields: String): Single<List<GameRemote>>
+    fun load(@Path("id") id: Int, @Query("fields") fields: String): Single<List<GameDTO>>
 }

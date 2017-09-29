@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.net.GameRemote
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import org.junit.jupiter.api.Assertions.*
@@ -12,20 +12,20 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertNull
 
 
-internal class GameRemoteMapperTest {
+internal class GameDTOMapperTest {
 
     @Nested
-    @DisplayName("Given a GameRemoteMapper instance")
-    inner class GameRemoteMapperInstance {
+    @DisplayName("Given a GameDTOMapper instance")
+    inner class GameDTOMapperInstance {
 
-        val mapper = GameRemoteMapper()
+        val mapper = GameDTOMapper()
 
         @Nested
         @DisplayName("When we call mapFromModel")
         inner class mapFromModel {
 
             val model = makeGameRemote()
-            var result: GameEntity? = null
+            var result: GameDomainModel? = null
 
             @BeforeEach
             fun setup() {
@@ -57,14 +57,14 @@ internal class GameRemoteMapperTest {
                     assertEquals(model.first_release_date, firstReleaseAt)
                     /**
                      *
-                    val timeToBeat: TimeToBeatEntity?,
-                    val cover: CoverEntity?
+                    val timeToBeat: TimeToBeatDomainModel?,
+                    val cover: CoverDomainModel?
                      */
                 }
             }
 
             @Test
-            @DisplayName("Then maps into TimeToBeatEntity")
+            @DisplayName("Then maps into TimeToBeatDomainModel")
             fun intoTimeToBeatEntity() {
                 model.time_to_beat?.apply {
                     assertNotNull(result!!.timeToBeat)
@@ -75,7 +75,7 @@ internal class GameRemoteMapperTest {
             }
 
             @Test
-            @DisplayName("Then maps into CoverEntity")
+            @DisplayName("Then maps into CoverDomainModel")
             fun intoCoverEntity() {
                 model.cover?.apply {
                     assertNotNull(result!!.cover)
@@ -91,7 +91,7 @@ internal class GameRemoteMapperTest {
         inner class mapFromEntity {
 
             private val entity = makeGameEntity()
-            private var result: GameRemote? = null
+            private var result: GameDTO? = null
 
             @Test
             @DisplayName("Then throws error")

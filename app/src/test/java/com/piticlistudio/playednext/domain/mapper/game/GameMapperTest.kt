@@ -17,7 +17,7 @@ internal class GameMapperTest {
         @DisplayName("When mapFromModel is called")
         inner class mapFromModel {
 
-            private val entity = GameEntity(1, "name", "summary", "storyline",
+            private val entity = GameDomainModel(1, "name", "summary", "storyline",
                     10, 20, 95f, null)
             private var result: Game? = null
 

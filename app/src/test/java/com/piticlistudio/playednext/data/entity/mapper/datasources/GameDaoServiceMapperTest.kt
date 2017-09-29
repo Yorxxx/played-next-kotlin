@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.dao.GameCache
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,11 +11,11 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class GameDaoMapperTest {
+internal class GameDaoServiceMapperTest {
 
     @Nested
     @DisplayName("Given a GameDaoMapper instance")
-    inner class GameDaoMapperInstance {
+    inner class GameDaoServiceMapperInstance {
 
         private lateinit var mapper: GameDaoMapper
 
@@ -29,7 +29,7 @@ internal class GameDaoMapperTest {
         inner class mapFromModelCalled {
 
             val model = makeGameCache()
-            var result: GameEntity? = null
+            var result: GameDomainModel? = null
 
             @BeforeEach
             internal fun setUp() {
@@ -37,7 +37,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into GameEntity")
+            @DisplayName("Then should map into GameDomainModel")
             fun shouldMap() {
                 assertNotNull(result)
                 result?.apply {
@@ -60,7 +60,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into CoverEntity")
+            @DisplayName("Then should map into CoverDomainModel")
             fun intoCoverEntity() {
                 model.cover?.apply {
                     assertNotNull(result!!.cover)
@@ -71,7 +71,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into TimeToBeatEntity")
+            @DisplayName("Then should map into TimeToBeatDomainModel")
             fun intoTimeToBeatEntity() {
                 model.timeToBeat?.apply {
                     assertNotNull(result!!.timeToBeat)
@@ -87,7 +87,7 @@ internal class GameDaoMapperTest {
         inner class mapFromEntityCalled {
 
             val entity = makeGameEntity()
-            var result: GameCache? = null
+            var result: GameDao? = null
 
             @BeforeEach
             internal fun setUp() {
@@ -118,7 +118,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into CoverCache")
+            @DisplayName("Then should map into CoverDao")
             fun intoCoverCache() {
                 entity.cover?.apply {
                     assertNotNull(result!!.cover)
@@ -129,7 +129,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into TimeToBeatCache")
+            @DisplayName("Then should map into TimeToBeatDao")
             fun intoTimeToBeatEntity() {
                 entity.timeToBeat?.apply {
                     assertNotNull(result!!.timeToBeat)

@@ -6,9 +6,9 @@ import android.content.Context
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.mapper.GameEntityToDomainMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameRemoteMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.GameDao
+import com.piticlistudio.playednext.data.repository.datasource.dao.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameService
@@ -35,7 +35,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGamesDao(db: AppDatabase): GameDao {
+    fun provideGamesDao(db: AppDatabase): GameDaoService {
         return db.gamesDao()
     }
 
@@ -47,13 +47,13 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGameLocalRepository(dao: GameDao, mapper: GameDaoMapper): GameLocalImpl {
+    fun provideGameLocalRepository(dao: GameDaoService, mapper: GameDaoMapper): GameLocalImpl {
         return GameLocalImpl(dao, mapper)
     }
 
     @Provides
     @Singleton
-    fun provideGameRemoteRepository(service: GameService, mapper: GameRemoteMapper): GameRemoteImpl {
+    fun provideGameRemoteRepository(service: GameService, mapper: GameDTOMapper): GameRemoteImpl {
         return GameRemoteImpl(service, mapper)
     }
 

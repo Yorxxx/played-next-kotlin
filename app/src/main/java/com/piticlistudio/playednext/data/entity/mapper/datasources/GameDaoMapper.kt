@@ -1,59 +1,59 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.CoverEntity
-import com.piticlistudio.playednext.data.entity.GameEntity
-import com.piticlistudio.playednext.data.entity.TimeToBeatEntity
-import com.piticlistudio.playednext.data.entity.dao.CoverCache
-import com.piticlistudio.playednext.data.entity.dao.GameCache
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatCache
+import com.piticlistudio.playednext.data.entity.CoverDomainModel
+import com.piticlistudio.playednext.data.entity.GameDomainModel
+import com.piticlistudio.playednext.data.entity.TimeToBeatDomainModel
+import com.piticlistudio.playednext.data.entity.dao.CoverDao
+import com.piticlistudio.playednext.data.entity.dao.GameDao
+import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import javax.inject.Inject
 
 /**
- * Mapper between [GameCache] and [GameEntity]
+ * Mapper between [GameDao] and [GameDomainModel]
  */
-class GameDaoMapper @Inject constructor() : LayerDataMapper<GameCache, GameEntity> {
+class GameDaoMapper @Inject constructor() : LayerDataMapper<GameDao, GameDomainModel> {
 
-    override fun mapFromModel(type: GameCache): GameEntity {
+    override fun mapFromModel(type: GameDao): GameDomainModel {
         with(type) {
-            return GameEntity(id, name, url, createdAt, updatedAt, summary, storyline, collection,
+            return GameDomainModel(id, name, url, createdAt, updatedAt, summary, storyline, collection,
                     franchise, hypes, popularity, rating, ratingCount, agregatedRating, aggregatedRatingCount,
                     totalRating, totalRatingCount, firstReleaseAt, mapFromTimeToBeatModel(timeToBeat), mapFromCoverModel(cover))
         }
     }
 
-    override fun mapFromEntity(type: GameEntity): GameCache {
+    override fun mapFromEntity(type: GameDomainModel): GameDao {
         with(type) {
-            return GameCache(id, name, url, createdAt, updatedAt, summary, storyline, collectionId,
+            return GameDao(id, name, url, createdAt, updatedAt, summary, storyline, collectionId,
                     franchiseId, hypes, popularity, rating, ratingCount, aggregatedRating, aggregatedRatingCount,
                     totalRating, totalRatingCount, firstReleaseAt, mapFromTimeToBeatEntity(timeToBeat), mapFromCoverEntity(cover))
         }
     }
 
-    private fun mapFromCoverModel(type: CoverCache?): CoverEntity? {
+    private fun mapFromCoverModel(type: CoverDao?): CoverDomainModel? {
         type?.apply {
-            return CoverEntity(url, width, height)
+            return CoverDomainModel(url, width, height)
         }
         return null
     }
 
-    private fun mapFromTimeToBeatModel(type: TimeToBeatCache?): TimeToBeatEntity? {
+    private fun mapFromTimeToBeatModel(type: TimeToBeatDao?): TimeToBeatDomainModel? {
         type?.apply {
-            return TimeToBeatEntity(hastly, normally, completely)
+            return TimeToBeatDomainModel(hastly, normally, completely)
         }
         return null
     }
 
-    private fun mapFromCoverEntity(type: CoverEntity?): CoverCache? {
+    private fun mapFromCoverEntity(type: CoverDomainModel?): CoverDao? {
         type?.apply {
-            return CoverCache(url, width, height)
+            return CoverDao(url, width, height)
         }
         return null
     }
 
-    private fun mapFromTimeToBeatEntity(type: TimeToBeatEntity?): TimeToBeatCache? {
+    private fun mapFromTimeToBeatEntity(type: TimeToBeatDomainModel?): TimeToBeatDao? {
         type?.apply {
-            return TimeToBeatCache(hastly, normally, completely)
+            return TimeToBeatDao(hastly, normally, completely)
         }
         return null
     }
