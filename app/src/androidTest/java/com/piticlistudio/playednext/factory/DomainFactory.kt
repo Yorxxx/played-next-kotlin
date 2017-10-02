@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.test.factory
 
+import com.piticlistudio.playednext.data.entity.dao.CompanyDao
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
@@ -12,7 +13,9 @@ class DomainFactory {
     companion object Factory {
 
         fun makeGame(): Game {
-            return Game(randomInt(), randomString(), randomString(), randomString())
+            return Game(randomInt(), randomString(), randomString(), randomString(), randomString(),
+                    randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
+                    randomLong(), null)
         }
 
         fun randomInt(): Int {
@@ -48,6 +51,10 @@ class DomainFactory {
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache())
+        }
+
+        fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
+            return CompanyDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
         }
 
         fun makeCoverCache(): CoverDao {

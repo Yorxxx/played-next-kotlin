@@ -1,9 +1,6 @@
 package com.piticlistudio.playednext.data.entity.dao
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 
 @Entity(tableName = "game")
 data class GameDao(@PrimaryKey val id: Int,
@@ -35,13 +32,20 @@ data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
                     @ColumnInfo(name = "cover_width") val width: Int?,
                     @ColumnInfo(name = "cover_height") val height: Int?)
 
+@Entity(tableName = "company")
+data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
+
+@Entity(tableName = "game_developer",
+        foreignKeys = arrayOf(
+                (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
+                (ForeignKey(entity = CompanyDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("companyId"), onDelete = ForeignKey.CASCADE))))
+data class GameDeveloperDao(@PrimaryKey(autoGenerate = true) val id: Int, val gameId: Int, val companyId: Int)
+
 //@Entity(tableName = "time_to_beat",
 //        foreignKeys = arrayOf(ForeignKey(entity = GameDao::class,
 //                parentColumns = arrayOf("id"),
 //                childColumns = arrayOf("gameId"),
 //                onDelete = ForeignKey.CASCADE)))
-
-
 
 
 /**
