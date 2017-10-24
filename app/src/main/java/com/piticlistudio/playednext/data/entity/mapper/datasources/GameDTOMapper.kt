@@ -1,38 +1,38 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.CoverDomainModel
-import com.piticlistudio.playednext.data.entity.GameDomainModel
-import com.piticlistudio.playednext.data.entity.TimeToBeatDomainModel
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.data.entity.net.ImageDTO
 import com.piticlistudio.playednext.data.entity.net.TimeToBeatDTO
+import com.piticlistudio.playednext.domain.model.Cover
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.TimeToBeat
 import javax.inject.Inject
 
-class GameDTOMapper @Inject constructor() : LayerDataMapper<GameDTO, GameDomainModel> {
+class GameDTOMapper @Inject constructor() : LayerDataMapper<GameDTO, Game> {
 
-    override fun mapFromModel(type: GameDTO): GameDomainModel {
+    override fun mapFromModel(type: GameDTO): Game {
         with(type) {
-            return GameDomainModel(id, name, url, created_at, updated_at, summary, storyline, collection,
-                    franchise, hypes, popularity, rating, rating_count, aggregated_rating, aggregated_rating_count,
-                    total_rating, total_rating_count, first_release_date, mapTimeToBeatModel(time_to_beat), mapCoverModel(cover))
+            return Game(id, name, created_at, updated_at, summary, storyline, url, rating,
+                    rating_count, aggregated_rating, aggregated_rating_count, total_rating,
+                    total_rating_count, first_release_date, mapCoverModel(cover), mapTimeToBeatModel(time_to_beat))
         }
     }
 
-    override fun mapFromEntity(type: GameDomainModel): GameDTO {
+    override fun mapFromEntity(type: Game): GameDTO {
         throw Throwable("Forbidden")
     }
 
-    private fun mapTimeToBeatModel(type: TimeToBeatDTO?): TimeToBeatDomainModel? {
+    private fun mapTimeToBeatModel(type: TimeToBeatDTO?): TimeToBeat? {
         type?.apply {
-            return TimeToBeatDomainModel(hastly, normally, completely)
+            return TimeToBeat(hastly, normally, completely)
         }
         return null
     }
 
-    private fun mapCoverModel(type: ImageDTO?): CoverDomainModel? {
+    private fun mapCoverModel(type: ImageDTO?): Cover? {
         type?.apply {
-            return CoverDomainModel(url, width, height)
+            return Cover(url, width, height)
         }
         return null
     }

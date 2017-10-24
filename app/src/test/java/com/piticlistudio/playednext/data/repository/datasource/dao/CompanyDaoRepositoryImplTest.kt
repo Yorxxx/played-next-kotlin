@@ -1,0 +1,104 @@
+package com.piticlistudio.playednext.data.repository.datasource.dao
+
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
+import com.piticlistudio.playednext.domain.model.Company
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDao
+import io.reactivex.Single
+import io.reactivex.observers.TestObserver
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
+
+internal class CompanyDaoRepositoryImplTest {
+
+    @Nested
+    @DisplayName("Given a CompanyDaoRepositoryImpl instance")
+    inner class instance {
+
+        private lateinit var repository: CompanyDaoRepositoryImpl
+        @Mock
+        private lateinit var dao: CompanyDaoService
+        @Mock
+        private lateinit var mapper: CompanyDaoMapper
+
+        @BeforeEach
+        internal fun setUp() {
+            MockitoAnnotations.initMocks(this)
+            repository = CompanyDaoRepositoryImpl(dao, mapper)
+        }
+
+        @Nested
+        @DisplayName("When we call load")
+        inner class loadCalled {
+
+            private var observer: TestObserver<Company>? = null
+            private val source = makeCompanyDao()
+            private val result = makeCompany()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(dao.findCompanyById(10)).thenReturn(Single.just(source))
+                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                observer = repository.load(10).test();
+            }
+
+            @Test
+            @DisplayName("Then should request dao service")
+            fun shouldRequestRepository() {
+                verify(dao).findCompanyById(10)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertValueCount(1)
+                    assertValue(result)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call save")
+        inner class saveCalled {
+
+            private var observer: TestObserver<Void>? = null
+            private val source = makeCompany()
+            private val result = makeCompanyDao()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(mapper.mapFromEntity(source)).thenReturn(result)
+                whenever(dao.insertCompany(result)).thenReturn(10)
+                observer = repository.save(source).test()
+            }
+
+            @Test
+            @DisplayName("Then should request dao service")
+            fun shouldRequestDao() {
+                verify(dao).insertCompany(result)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,7 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.domain.model.game.Game
-import com.piticlistudio.playednext.domain.repository.game.GameRepository
+import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.Completable
 import io.reactivex.observers.TestObserver

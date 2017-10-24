@@ -4,12 +4,10 @@ import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.GameEntityToDomainMapper
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
-import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -37,47 +35,38 @@ internal class GameRepositoryImplTest {
         private lateinit var remoteImpl: GameRemoteImpl
         @Mock
         private lateinit var localImpl: GameLocalImpl
-        @Mock
-        private lateinit var mapper: GameEntityToDomainMapper
 
         private var repository: GameRepositoryImpl? = null
 
         @BeforeEach
         fun setUp() {
             MockitoAnnotations.initMocks(this)
-            repository = GameRepositoryImpl(remoteImpl, localImpl, mapper)
+            repository = GameRepositoryImpl(remoteImpl, localImpl)
         }
 
         @Nested
         @DisplayName("When we call load")
         inner class Load {
-            val response = makeGameEntity()
+            val id = 10
             val entity = makeGame()
             var result: TestObserver<Game>? = null
 
             @BeforeEach
             fun setup() {
-                whenever(localImpl.load(response.id)).thenReturn(Single.just(response))
-                whenever(mapper.mapFromModel(response)).thenReturn(entity)
-                result = repository?.load(response.id)?.test()
+                whenever(localImpl.load(id)).thenReturn(Single.just(entity))
+                result = repository?.load(id)?.test()
             }
 
             @Test
             @DisplayName("Then should request local repository")
             fun localIsCalled() {
-                verify(localImpl).load(response.id)
+                verify(localImpl).load(id)
             }
 
             @Test
             @DisplayName("Then should not request remote repository")
             fun remoteIsNotCalled() {
                 verifyZeroInteractions(remoteImpl)
-            }
-
-            @Test
-            @DisplayName("Then should map emission into domain model")
-            fun isMapped() {
-                verify(mapper).mapFromModel(response)
             }
 
             @Test
@@ -98,16 +87,16 @@ internal class GameRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(localImpl.load(response.id)).thenReturn(Single.error(EmptyResultSetException("no results")))
-                    whenever(remoteImpl.load(response.id)).thenReturn(Single.just(response))
-                    whenever(localImpl.save(response)).thenReturn(Completable.complete())
-                    result = repository?.load(response.id)?.test()
+                    whenever(localImpl.load(id)).thenReturn(Single.error(EmptyResultSetException("no results")))
+                    whenever(remoteImpl.load(id)).thenReturn(Single.just(entity))
+                    whenever(localImpl.save(entity)).thenReturn(Completable.complete())
+                    result = repository?.load(id)?.test()
                 }
 
                 @Test
                 @DisplayName("Then should request remote repository")
                 fun remoteIsCalled() {
-                    verify(remoteImpl).load(response.id)
+                    verify(remoteImpl).load(id)
                 }
 
                 @Test
@@ -125,7 +114,7 @@ internal class GameRepositoryImplTest {
                 @Test
                 @DisplayName("Then should cache retrieved data")
                 fun cacheResponse() {
-                    verify(localImpl).save(response)
+                    verify(localImpl).save(entity)
                 }
             }
 
@@ -135,17 +124,13 @@ internal class GameRepositoryImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model1 = makeGameEntity()
-            val model2 = makeGameEntity()
+            val model1 = makeGame()
+            val model2 = makeGame()
             var result: TestObserver<List<Game>>? = null
-            val entity = makeGame()
-            val entity2 = makeGame()
 
             @BeforeEach
             fun setup() {
                 whenever(remoteImpl.search("query")).thenReturn(Single.just(listOf(model1, model2)))
-                whenever(mapper.mapFromModel(model1)).thenReturn(entity)
-                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
                 result = repository?.search("query")?.test()
             }
 
@@ -156,13 +141,6 @@ internal class GameRepositoryImplTest {
             }
 
             @Test
-            @DisplayName("Then should map returned results")
-            fun mapIsCalled() {
-                verify(mapper).mapFromModel(model1)
-                verify(mapper).mapFromModel(model2)
-            }
-
-            @Test
             @DisplayName("Then should emit without errors")
             fun emissionWithoutErrors() {
                 assertNotNull(result)
@@ -170,7 +148,7 @@ internal class GameRepositoryImplTest {
                     this?.assertNoErrors()
                     this?.assertComplete()
                     this?.assertValueCount(1)
-                    this?.assertValue(listOf(entity, entity2))
+                    this?.assertValue(listOf(model1, model2))
                 }
             }
         }
@@ -180,26 +158,18 @@ internal class GameRepositoryImplTest {
         inner class Save {
 
             val entity = makeGame()
-            val data = makeGameEntity()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromEntity(entity)).thenReturn(data)
-                whenever(localImpl.save(data)).thenReturn(Completable.complete())
+                whenever(localImpl.save(entity)).thenReturn(Completable.complete())
                 observer = repository?.save(entity)?.test()
-            }
-
-            @Test
-            @DisplayName("Then maps domain model into data model")
-            fun isSavesLocally() {
-                verify(mapper).mapFromEntity(entity)
             }
 
             @Test
             @DisplayName("Then saves data model")
             fun dataIsSaved() {
-                verify(localImpl).save(data)
+                verify(localImpl).save(entity)
             }
 
             @Test

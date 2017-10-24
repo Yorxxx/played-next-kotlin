@@ -28,3 +28,5 @@ class GameDomainModel(val id: Int,
 data class TimeToBeatDomainModel(val hastly: Int?, val normally: Int?, val completely: Int?)
 
 data class CoverDomainModel(val url: String, val width: Int?, val height: Int?)
+
+data class CompanyDomainModel(val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)

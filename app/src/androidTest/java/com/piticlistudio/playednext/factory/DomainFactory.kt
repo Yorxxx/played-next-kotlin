@@ -4,19 +4,13 @@ import com.piticlistudio.playednext.data.entity.dao.CompanyDao
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
-import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.Game
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
 
 class DomainFactory {
 
     companion object Factory {
-
-        fun makeGame(): Game {
-            return Game(randomInt(), randomString(), randomString(), randomString(), randomString(),
-                    randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), null)
-        }
 
         fun randomInt(): Int {
             return ThreadLocalRandom.current().nextInt(0, 1000 + 1)

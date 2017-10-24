@@ -1,15 +1,12 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.CoverDomainModel
-import com.piticlistudio.playednext.data.entity.GameDomainModel
-import com.piticlistudio.playednext.data.entity.TimeToBeatDomainModel
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.net.*
-import com.piticlistudio.playednext.domain.model.game.Cover
-import com.piticlistudio.playednext.domain.model.game.Game
-import com.piticlistudio.playednext.domain.model.game.TimeToBeat
+import com.piticlistudio.playednext.domain.model.Cover
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
@@ -24,9 +21,9 @@ class GameFactory {
     companion object Factory {
 
         fun makeGame(): Game {
-            return Game(randomInt(), randomString(), randomString(), randomString(), randomString(),
-                    randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeCover(), makeTimeToBeat())
+            return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
+                    randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
+                    randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(), makeTimeToBeat())
         }
 
         fun makeCover(): Cover {
@@ -50,21 +47,6 @@ class GameFactory {
 
         fun makeTimeToBeatCache(): TimeToBeatDao {
             return TimeToBeatDao(randomInt(), randomInt(), randomInt())
-        }
-
-        fun makeGameEntity(): GameDomainModel {
-            return GameDomainModel(randomInt(), randomString(), randomString(), randomLong(), randomLong(),
-                    randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
-                    randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeTimeToBeatEntity(), makeCoverEntity())
-        }
-
-        fun makeCoverEntity(): CoverDomainModel {
-            return CoverDomainModel(randomString(), randomInt(), randomInt())
-        }
-
-        fun makeTimeToBeatEntity(): TimeToBeatDomainModel {
-            return TimeToBeatDomainModel(randomInt(), randomInt(), randomInt())
         }
 
         fun makeGameRemote(): GameDTO {
