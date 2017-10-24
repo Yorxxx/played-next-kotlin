@@ -7,6 +7,8 @@ import com.piticlistudio.playednext.data.entity.net.*
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTOList
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
@@ -23,7 +25,8 @@ class GameFactory {
         fun makeGame(): Game {
             return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
-                    randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(), makeTimeToBeat())
+                    randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
+                    makeTimeToBeat(), makeCompanyList(), makeCompanyList())
         }
 
         fun makeCover(): Cover {
@@ -51,12 +54,26 @@ class GameFactory {
 
         fun makeGameRemote(): GameDTO {
             return GameDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
-                    randomLong(), randomString(), randomString(), randomInt(), randomInt(), randomInt(),
-                    randomDouble(), randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(),
-                    randomInt(), randomIntList(), randomIntList(), randomIntList(), makeTimeToBeatRemote(),
-                    randomIntList(), randomLong(), listOf(makeReleaseDateRemote(), makeReleaseDateRemote()),
-                    listOf(makeImageRemote(), makeImageRemote(), makeImageRemote()),
+                    randomLong(), randomString(), randomString(), makeEnumeratedEntity(), randomInt(),
+                    randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
+                    randomInt(), randomDouble(), randomInt(), makeCompanyDTOList(),
+                    makeCompanyDTOList(), randomIntList(), makeTimeToBeatRemote(),
+                    makeEnumeratedEntityList(), randomLong(), listOf(makeReleaseDateRemote(),
+                    makeReleaseDateRemote()), listOf(makeImageRemote(), makeImageRemote(), makeImageRemote()),
                     listOf(makeVideoRemote()), makeImageRemote(), randomIntList())
+        }
+
+        fun makeEnumeratedEntityList(size: Int = randomInt()): List<BaseEnumeratedEntity> {
+            val items: MutableList<BaseEnumeratedEntity> = mutableListOf()
+            repeat(size) {
+                items.add(makeEnumeratedEntity())
+            }
+            return items
+        }
+
+        fun makeEnumeratedEntity(): BaseEnumeratedEntity {
+            return BaseEnumeratedEntity(randomInt(), randomString(), randomString(), randomString(),
+                    randomLong(), randomLong())
         }
 
         fun makeTimeToBeatRemote(): TimeToBeatDTO {

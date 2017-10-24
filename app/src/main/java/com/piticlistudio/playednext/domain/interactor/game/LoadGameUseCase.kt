@@ -5,9 +5,10 @@ import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import io.reactivex.Single
 
-class LoadGameUseCase constructor(private val repository: GameRepository): SingleUseCaseWithParameter<Int, Game>{
+class LoadGameUseCase constructor(
+        private val grepository: GameRepository): SingleUseCaseWithParameter<Int, Game>{
 
     override fun execute(parameter: Int): Single<Game> {
-        return repository.load(parameter)
+        return grepository.load(parameter)
     }
 }

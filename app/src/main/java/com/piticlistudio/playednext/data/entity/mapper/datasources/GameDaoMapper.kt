@@ -19,7 +19,8 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         with(type) {
             return Game(id, name, createdAt, updatedAt, summary, storyline, url, rating, ratingCount,
                     agregatedRating, aggregatedRatingCount, totalRating, totalRatingCount,
-                    firstReleaseAt, mapFromCoverModel(cover), mapFromTimeToBeatModel(timeToBeat))
+                    firstReleaseAt, mapFromCoverModel(cover), mapFromTimeToBeatModel(timeToBeat),
+                    null, null)
         }
     }
 

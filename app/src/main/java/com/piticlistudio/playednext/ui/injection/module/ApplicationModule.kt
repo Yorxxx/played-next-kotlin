@@ -4,13 +4,14 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.piticlistudio.playednext.data.AppDatabase
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.GameService
+import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import dagger.Module
@@ -28,7 +29,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun provideGameService(): GameService {
+    internal fun provideGameService(): IGDBService {
         return GameServiceFactory.makeGameService()
     }
 
@@ -52,8 +53,8 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGameRemoteRepository(service: GameService, mapper: GameDTOMapper): GameRemoteImpl {
-        return GameRemoteImpl(service, mapper)
+    fun provideGameRemoteRepository(service: IGDBService, mapper: GameDTOMapper, companyMapper: CompanyDTOMapper): GameRemoteImpl {
+        return GameRemoteImpl(service, mapper, companyMapper)
     }
 
     @Provides

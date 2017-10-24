@@ -56,6 +56,8 @@ internal class GameDaoMapperTest {
                     //assertEquals(model.popularity, popularity)
                     assertEquals(model.ratingCount, ratingCount)
                     assertEquals(model.totalRating, totalRating)
+                    assertNull(developers)
+                    assertNull(publishers)
                 }
             }
 

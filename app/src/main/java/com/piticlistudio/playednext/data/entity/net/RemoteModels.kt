@@ -1,8 +1,5 @@
 package com.piticlistudio.playednext.data.entity.net
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.PrimaryKey
-
 /**
  * Representation of a Remote entities
  */
@@ -14,7 +11,7 @@ data class GameDTO(val id: Int,
                    val updated_at: Long,
                    val summary: String? = null,
                    val storyline: String? = null,
-                   val collection: Int? = null,
+                   val collection: BaseEnumeratedEntity? = null,
                    val franchise: Int? = null,
                    val hypes: Int? = 0,
                    val popularity: Double? = null,
@@ -24,11 +21,11 @@ data class GameDTO(val id: Int,
                    val aggregated_rating_count: Int? = 0,
                    val total_rating: Double? = null,
                    val total_rating_count: Int? = 0,
-                   val developers: List<Int>? = listOf(),
-                   val publishers: List<Int>? = listOf(),
+                   val developers: List<CompanyDTO>? = listOf(),
+                   val publishers: List<CompanyDTO>? = listOf(),
                    val game_engines: List<Int>? = listOf(),
                    val time_to_beat: TimeToBeatDTO?,
-                   val genres: List<Int>? = listOf(),
+                   val genres: List<BaseEnumeratedEntity>? = listOf(),
                    val first_release_date: Long? = null,
                    val release_dates: List<ReleaseDateDTO>? = listOf(),
                    val screenshots: List<ImageDTO>? = listOf(),
@@ -36,16 +33,10 @@ data class GameDTO(val id: Int,
                    val cover: ImageDTO? = null,
                    val games: List<Int>? = listOf())
 
-data class CollectionDTO(val id: Int, val name: String, val slug: String, val url: String,
-                            val created_at: Long, val updated_at: Long)
+open class BaseEnumeratedEntity(val id: Int, val name: String, val slug: String, val url: String,
+                                val created_at: Long, val updated_at: Long)
 
-
-data class CompanyDTO(val id: Int, val name: String, val slug: String, val url: String,
-                         val created_at: Long, val updated_at: Long)
-
-
-data class FranchiseDTO(val id: Int, val name: String, val slug: String, val url: String,
-                           val created_at: Long, val updated_at: Long)
+class CompanyDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
 data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: Int?)
 

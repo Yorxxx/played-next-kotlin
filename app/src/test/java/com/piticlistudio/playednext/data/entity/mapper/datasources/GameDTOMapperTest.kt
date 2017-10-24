@@ -74,6 +74,42 @@ internal class GameDTOMapperTest {
                     assertEquals(height, result!!.cover?.height)
                 }
             }
+
+            @Test
+            @DisplayName("Then maps developers")
+            fun intoDevelopers() {
+                result?.apply {
+                    assertEquals(model.developers?.size, developers?.size)
+                    model.developers?.apply {
+                        for ((index,value) in model.developers!!.withIndex()) {
+                            assertEquals(value.id, developers?.get(index)!!.id)
+                            assertEquals(value.name, developers?.get(index)!!.name)
+                            assertEquals(value.created_at, developers?.get(index)!!.createdAt)
+                            assertEquals(value.updated_at, developers?.get(index)!!.updatedAt)
+                            assertEquals(value.slug, developers?.get(index)!!.slug)
+                            assertEquals(value.url, developers?.get(index)!!.url)
+                        }
+                    }
+                }
+            }
+
+            @Test
+            @DisplayName("Then maps publishers")
+            fun intoPublishers() {
+                result?.apply {
+                    assertEquals(model.publishers?.size, publishers?.size)
+                    model.publishers?.apply {
+                        for ((index,value) in model.publishers!!.withIndex()) {
+                            assertEquals(value.id, publishers?.get(index)!!.id)
+                            assertEquals(value.name, publishers?.get(index)!!.name)
+                            assertEquals(value.created_at, publishers?.get(index)!!.createdAt)
+                            assertEquals(value.updated_at, publishers?.get(index)!!.updatedAt)
+                            assertEquals(value.slug, publishers?.get(index)!!.slug)
+                            assertEquals(value.url, publishers?.get(index)!!.url)
+                        }
+                    }
+                }
+            }
         }
 
         @Nested
