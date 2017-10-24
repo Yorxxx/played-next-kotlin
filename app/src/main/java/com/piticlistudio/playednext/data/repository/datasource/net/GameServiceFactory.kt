@@ -13,23 +13,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 /**
- * Provide "make" methods to create instances of [GameService]
+ * Provide "make" methods to create instances of [IGDBService]
  * and its related dependencies, such as OkHttpClient, Gson, etc.
  */
 object GameServiceFactory {
 
-    fun makeGameService(): GameService {
+    fun makeGameService(): IGDBService {
         return makeGameService(makeGson())
     }
 
-    private fun makeGameService(gson: Gson): GameService {
+    private fun makeGameService(gson: Gson): IGDBService {
         val retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.IGDB_API_URL)
                 .client(makeOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
-        return retrofit.create(GameService::class.java)
+        return retrofit.create(IGDBService::class.java)
     }
 
     private fun makeOkHttpClient(): OkHttpClient {

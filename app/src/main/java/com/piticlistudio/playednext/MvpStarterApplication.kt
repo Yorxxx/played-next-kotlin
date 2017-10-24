@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room
 import android.util.Log
 import com.facebook.stetho.Stetho
 import com.piticlistudio.playednext.data.AppDatabase
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
@@ -53,7 +54,7 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val gamesDao = database.gamesDao()
 
         val localRepository = GameLocalImpl(gamesDao, GameDaoMapper())
-        val repository = GameRepositoryImpl(GameRemoteImpl(service, GameDTOMapper()), localRepository)
+        val repository = GameRepositoryImpl(GameRemoteImpl(service, GameDTOMapper(), CompanyDTOMapper()), localRepository)
         val load = LoadGameUseCase(repository)
         load.execute(650)
                 .subscribeOn(Schedulers.computation())

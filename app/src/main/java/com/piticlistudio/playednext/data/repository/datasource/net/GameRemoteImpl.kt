@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Game
@@ -13,11 +14,12 @@ import javax.inject.Inject
  * the data layers as it is the layers responsibility for defining the operations in which data
  * store implementation can carry out.
  */
-class GameRemoteImpl @Inject constructor(private val service: GameService,
-                                         private val mapper: GameDTOMapper) : GameDatasourceRepository {
+class GameRemoteImpl @Inject constructor(private val service: IGDBService,
+                                         private val mapper: GameDTOMapper,
+                                         private val companymapper: CompanyDTOMapper) : GameDatasourceRepository {
 
     override fun load(id: Int): Single<Game> {
-        return service.load(id, "*")
+        return service.loadGame(id, "*")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map {
@@ -27,7 +29,7 @@ class GameRemoteImpl @Inject constructor(private val service: GameService,
     }
 
     override fun search(query: String): Single<List<Game>> {
-        return service.search(0, query, "*", 20)
+        return service.searchGames(0, query, "*", 20)
                 .flatMap {
                     Observable.fromIterable(it)
                             .map { mapper.mapFromModel(it) }

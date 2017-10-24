@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
@@ -28,15 +29,16 @@ internal class GameRemoteImplTest {
         @JvmField
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
-        @Mock lateinit var service: GameService
+        @Mock lateinit var service: IGDBService
         @Mock lateinit var mapper: GameDTOMapper
+        @Mock lateinit var companymapper: CompanyDTOMapper
 
         private var repositoryImpl: GameRemoteImpl? = null
 
         @BeforeEach
         fun setup() {
             MockitoAnnotations.initMocks(this)
-            repositoryImpl = GameRemoteImpl(service, mapper)
+            repositoryImpl = GameRemoteImpl(service, mapper, companymapper)
         }
 
         @Nested
@@ -51,7 +53,7 @@ internal class GameRemoteImplTest {
             fun setup() {
                 val response = listOf(model)
 
-                whenever(service.load(10, "*"))
+                whenever(service.loadGame(10, "*"))
                         .thenReturn(Single.just(response))
                 whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
@@ -60,7 +62,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should request service")
             fun serviceIsCalled() {
-                verify(service).load(10, "*")
+                verify(service).loadGame(10, "*")
             }
 
             @Test
@@ -87,7 +89,7 @@ internal class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    whenever(service.load(10, "*"))
+                    whenever(service.loadGame(10, "*"))
                             .thenReturn(Single.just(listOf()))
                     result = repositoryImpl?.load(10)?.test()
                 }
@@ -110,7 +112,7 @@ internal class GameRemoteImplTest {
                 @BeforeEach
                 fun setup() {
                     val response = listOf(makeGameRemote(), makeGameRemote())
-                    whenever(service.load(10, "*"))
+                    whenever(service.loadGame(10, "*"))
                             .thenReturn(Single.just(response))
                     result = repositoryImpl?.load(10)?.test()
                 }
@@ -140,7 +142,7 @@ internal class GameRemoteImplTest {
 
             @BeforeEach
             fun setup() {
-                whenever(service.search(0, "query", "*", 20))
+                whenever(service.searchGames(0, "query", "*", 20))
                         .thenReturn(Single.just(response))
                 whenever(mapper.mapFromModel(model))
                         .thenReturn(entity1)
@@ -152,7 +154,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should request service with correct params")
             fun serviceIsCalled() {
-                verify(service).search(0, "query", "*", 20)
+                verify(service).searchGames(0, "query", "*", 20)
             }
 
             @Test
