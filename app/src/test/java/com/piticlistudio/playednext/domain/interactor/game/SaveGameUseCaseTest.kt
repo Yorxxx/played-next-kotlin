@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.Completable
@@ -10,9 +13,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import kotlin.test.assertNotNull
+import kotlin.test.fail
 
 internal class SaveGameUseCaseTest {
 
@@ -22,12 +25,14 @@ internal class SaveGameUseCaseTest {
 
         @Mock
         private lateinit var repository: GameRepository
+        @Mock
+        private lateinit var companyRepository: CompanyRepository
         private var usecase: SaveGameUseCase? = null
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            usecase = SaveGameUseCase(repository)
+            usecase = SaveGameUseCase(repository, companyRepository)
         }
 
         @Nested
@@ -39,7 +44,8 @@ internal class SaveGameUseCaseTest {
 
             @BeforeEach
             internal fun setUp() {
-                Mockito.`when`(repository.save(game)).thenReturn(Completable.complete())
+                whenever(repository.save(game)).thenReturn(Completable.complete())
+                whenever(companyRepository.save(any())).thenReturn(Completable.complete())
                 observer = usecase?.execute(game)?.test()
             }
 
@@ -47,6 +53,12 @@ internal class SaveGameUseCaseTest {
             @DisplayName("Then saves into repository")
             fun requestsRepository() {
                 verify(repository).save(game)
+            }
+
+            @Test
+            @DisplayName("Then saves developers")
+            fun savesDevelopers() {
+                verify(companyRepository).saveDevelopersForGame(game.id, game.developers!!)
             }
 
             @Test
