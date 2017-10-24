@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import kotlin.test.assertTrue
 
 internal class CompanyRepositoryImplTest() {
 
@@ -190,6 +191,45 @@ internal class CompanyRepositoryImplTest() {
                 @DisplayName("Then should cache retrieved data")
                 fun cacheResponse() {
                     verify(localImpl, times(entity.size)).saveDeveloperForGame(anyInt(), any())
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call saveDevelopersForGame")
+        inner class saveDevelopersForGameCalled {
+
+            val companies = makeCompanyList()
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(localImpl.saveDeveloperForGame(anyInt(), any())).thenReturn(Completable.complete())
+                observer = repository?.saveDevelopersForGame(10, companies)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request local repository")
+            fun savesInLocalRepository() {
+                verify(localImpl, times(companies.size)).saveDeveloperForGame(anyInt(), check {
+                    assertTrue(companies.contains(it))
+                })
+            }
+
+            @Test
+            @DisplayName("Then should not request remote repository")
+            fun remoteIsNotCalled() {
+                verifyZeroInteractions(remoteImpl)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
                 }
             }
         }

@@ -39,4 +39,9 @@ class CompanyRepositoryImpl constructor(private val localImpl: CompanyDaoReposit
                     }
                 }
     }
+
+    override fun saveDevelopersForGame(id: Int, developers: List<Company>): Completable {
+        return Observable.fromIterable(developers)
+                .flatMapCompletable { localImpl.saveDeveloperForGame(id, it) }
+    }
 }
