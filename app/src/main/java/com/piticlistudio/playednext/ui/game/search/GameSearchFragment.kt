@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.piticlistudio.playednext.R
-import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.features.game.search.GameSearchContract
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.game_search_fragment.*

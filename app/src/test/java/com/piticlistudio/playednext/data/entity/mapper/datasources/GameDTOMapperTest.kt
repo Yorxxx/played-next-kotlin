@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.net.GameDTO
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +25,7 @@ internal class GameDTOMapperTest {
         inner class mapFromModel {
 
             val model = makeGameRemote()
-            var result: GameDomainModel? = null
+            var result: Game? = null
 
             @BeforeEach
             fun setup() {
@@ -44,27 +44,17 @@ internal class GameDTOMapperTest {
                     assertEquals(model.updated_at, updatedAt)
                     assertEquals(model.summary, summary)
                     assertEquals(model.storyline, storyline)
-                    assertEquals(model.collection, collectionId)
-                    assertEquals(model.franchise, franchiseId)
-                    assertEquals(model.hypes, hypes)
-                    assertEquals(model.popularity, popularity)
                     assertEquals(model.rating, rating)
                     assertEquals(model.rating_count, ratingCount)
                     assertEquals(model.aggregated_rating, aggregatedRating)
                     assertEquals(model.aggregated_rating_count, aggregatedRatingCount)
                     assertEquals(model.total_rating, totalRating)
                     assertEquals(model.total_rating_count, totalRatingCount)
-                    assertEquals(model.first_release_date, firstReleaseAt)
-                    /**
-                     *
-                    val timeToBeat: TimeToBeatDomainModel?,
-                    val cover: CoverDomainModel?
-                     */
                 }
             }
 
             @Test
-            @DisplayName("Then maps into TimeToBeatDomainModel")
+            @DisplayName("Then maps into TimeToBeat")
             fun intoTimeToBeatEntity() {
                 model.time_to_beat?.apply {
                     assertNotNull(result!!.timeToBeat)
@@ -75,7 +65,7 @@ internal class GameDTOMapperTest {
             }
 
             @Test
-            @DisplayName("Then maps into CoverDomainModel")
+            @DisplayName("Then maps into Cover")
             fun intoCoverEntity() {
                 model.cover?.apply {
                     assertNotNull(result!!.cover)
@@ -90,7 +80,7 @@ internal class GameDTOMapperTest {
         @DisplayName("When we call mapFromEntity")
         inner class mapFromEntity {
 
-            private val entity = makeGameEntity()
+            private val entity = makeGame()
             private var result: GameDTO? = null
 
             @Test

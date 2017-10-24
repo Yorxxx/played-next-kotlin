@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.domain.model.game.Game
-import com.piticlistudio.playednext.domain.repository.game.GameRepository
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.repository.GameRepository
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Assert.assertNotNull

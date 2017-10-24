@@ -1,6 +1,6 @@
-package com.piticlistudio.playednext.domain.repository.game
+package com.piticlistudio.playednext.domain.repository
 
-import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.Game
 import io.reactivex.Completable
 import io.reactivex.Single
 

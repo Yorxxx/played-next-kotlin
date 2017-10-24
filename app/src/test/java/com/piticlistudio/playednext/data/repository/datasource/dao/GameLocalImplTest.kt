@@ -2,10 +2,10 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -46,15 +46,15 @@ internal class GameLocalImplTest {
         @DisplayName("When load is called")
         inner class loadIsCalled {
 
-            private var observer: TestObserver<GameDomainModel>? = null
+            private var observer: TestObserver<Game>? = null
             private val model = makeGameCache()
-            private val entity = makeGameEntity()
+            private val entity = makeGame()
 
             @BeforeEach
             internal fun setUp() {
                 whenever(daoService.findGameById(10))
                         .thenReturn(Single.just(model))
-                whenever(mapper.mapFromModel(model)).thenReturn(entity)
+                whenever(mapper.mapFromEntity(model)).thenReturn(entity)
                 observer = repository.load(10).test()
             }
 
@@ -67,7 +67,7 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then should map daoService result")
             fun mapIsCalled() {
-                verify(mapper).mapFromModel(model)
+                verify(mapper).mapFromEntity(model)
             }
 
             @Test
@@ -87,26 +87,26 @@ internal class GameLocalImplTest {
         @DisplayName("When save is called")
         inner class saveIsCalled {
 
-            private val entity = makeGameEntity()
-            private val model = makeGameCache()
+            private val source = makeGame()
+            private val data = makeGameCache()
             private var observer: TestObserver<Void>? = null
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromEntity(entity)).thenReturn(model)
-                observer = repository.save(entity).test()
+                whenever(mapper.mapFromModel(source)).thenReturn(data)
+                observer = repository.save(source).test()
             }
 
             @Test
             @DisplayName("Then maps entity into Dao model")
             fun mapsEntity() {
-                verify(mapper).mapFromEntity(entity)
+                verify(mapper).mapFromModel(source)
             }
 
             @Test
             @DisplayName("Then inserts into DAO")
             fun isInserted() {
-                verify(daoService).insertGame(model)
+                verify(daoService).insertGame(data)
             }
 
             @Test
@@ -125,17 +125,17 @@ internal class GameLocalImplTest {
         @DisplayName("When search is called")
         inner class SearchCalled {
 
-            private val model1 = makeGameCache()
-            private val model2 = makeGameCache()
-            private var observer: TestObserver<List<GameDomainModel>>? = null
-            private val entity1 = makeGameEntity()
-            private val entity2 = makeGameEntity()
+            private val data1 = makeGameCache()
+            private val data2 = makeGameCache()
+            private var observer: TestObserver<List<Game>>? = null
+            private val entity1 = makeGame()
+            private val entity2 = makeGame()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(daoService.findByName("foo")).thenReturn(Flowable.just(listOf(model1, model2)))
-                whenever(mapper.mapFromModel(model1)).thenReturn(entity1)
-                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
+                whenever(daoService.findByName("foo")).thenReturn(Flowable.just(listOf(data1, data2)))
+                whenever(mapper.mapFromEntity(data1)).thenReturn(entity1)
+                whenever(mapper.mapFromEntity(data2)).thenReturn(entity2)
                 observer = repository.search("foo").test()
             }
 
@@ -148,8 +148,8 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then maps result into GameEntities")
             fun isMapped() {
-                verify(mapper).mapFromModel(model1)
-                verify(mapper).mapFromModel(model2)
+                verify(mapper).mapFromEntity(data1)
+                verify(mapper).mapFromEntity(data2)
             }
 
             @Test

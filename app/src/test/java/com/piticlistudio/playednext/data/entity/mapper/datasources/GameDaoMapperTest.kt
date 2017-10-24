@@ -1,17 +1,17 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.test.factory.GameFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.test.assertNull
 
-internal class GameDaoServiceMapperTest {
+internal class GameDaoMapperTest {
 
     @Nested
     @DisplayName("Given a GameDaoMapper instance")
@@ -25,19 +25,19 @@ internal class GameDaoServiceMapperTest {
         }
 
         @Nested
-        @DisplayName("When mapFromModel is called")
-        inner class mapFromModelCalled {
+        @DisplayName("When mapFromEntity is called")
+        inner class mapFromEntityCalled {
 
-            val model = makeGameCache()
-            var result: GameDomainModel? = null
+            val model = GameFactory.makeGameCache()
+            var result: Game? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromModel(model)
+                result = mapper.mapFromEntity(model)
             }
 
             @Test
-            @DisplayName("Then should map into GameDomainModel")
+            @DisplayName("Then should map into Game domain model")
             fun shouldMap() {
                 assertNotNull(result)
                 result?.apply {
@@ -45,22 +45,22 @@ internal class GameDaoServiceMapperTest {
                     assertEquals(model.name, name)
                     assertEquals(model.summary, summary)
                     assertEquals(model.storyline, storyline)
-                    assertEquals(model.collection, collectionId)
-                    assertEquals(model.franchise, franchiseId)
+                    //assertEquals(model.collection, collectionId)
+                    //assertEquals(model.franchise, franchiseId)
                     assertEquals(model.rating, rating)
                     assertEquals(model.aggregatedRatingCount, aggregatedRatingCount)
                     assertEquals(model.agregatedRating, aggregatedRating)
                     assertEquals(model.createdAt, createdAt)
-                    assertEquals(model.firstReleaseAt, firstReleaseAt)
-                    assertEquals(model.hypes, hypes)
-                    assertEquals(model.popularity, popularity)
+                    //assertEquals(model.firstReleaseAt, firstReleaseAt)
+                    //assertEquals(model.hypes, hypes)
+                    //assertEquals(model.popularity, popularity)
                     assertEquals(model.ratingCount, ratingCount)
                     assertEquals(model.totalRating, totalRating)
                 }
             }
 
             @Test
-            @DisplayName("Then should map into CoverDomainModel")
+            @DisplayName("Then should map into Cover")
             fun intoCoverEntity() {
                 model.cover?.apply {
                     assertNotNull(result!!.cover)
@@ -71,7 +71,7 @@ internal class GameDaoServiceMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into TimeToBeatDomainModel")
+            @DisplayName("Then should map into TimeToBeat")
             fun intoTimeToBeatEntity() {
                 model.timeToBeat?.apply {
                     assertNotNull(result!!.timeToBeat)
@@ -83,15 +83,15 @@ internal class GameDaoServiceMapperTest {
         }
 
         @Nested
-        @DisplayName("When mapFromEntity is called")
-        inner class mapFromEntityCalled {
+        @DisplayName("When mapFromModel is called")
+        inner class mapFromModelCalled {
 
-            val entity = makeGameEntity()
+            val entity = GameFactory.makeGame()
             var result: GameDao? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromEntity(entity)
+                result = mapper.mapFromModel(entity)
             }
 
             @Test
@@ -103,15 +103,15 @@ internal class GameDaoServiceMapperTest {
                     assertEquals(entity.name, name)
                     assertEquals(entity.summary, summary)
                     assertEquals(entity.storyline, storyline)
-                    assertEquals(entity.collectionId, collection)
-                    assertEquals(entity.franchiseId, franchise)
+                    assertNull(collection)
+                    assertNull(franchise)
                     assertEquals(entity.rating, rating)
                     assertEquals(entity.aggregatedRatingCount, aggregatedRatingCount)
                     assertEquals(entity.aggregatedRating, agregatedRating)
                     assertEquals(entity.createdAt, createdAt)
-                    assertEquals(entity.firstReleaseAt, firstReleaseAt)
-                    assertEquals(entity.hypes, hypes)
-                    assertEquals(entity.popularity, popularity)
+                    assertNull(firstReleaseAt)
+                    assertNull(hypes)
+                    assertNull(popularity)
                     assertEquals(entity.ratingCount, ratingCount)
                     assertEquals(entity.totalRating, totalRating)
                 }

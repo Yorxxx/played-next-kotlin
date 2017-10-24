@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.features.game.search
 
-import com.piticlistudio.playednext.domain.model.game.Game
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.features.base.MvPPresenter
 import com.piticlistudio.playednext.features.base.MvpView
 

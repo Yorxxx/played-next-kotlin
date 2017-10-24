@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
-import com.piticlistudio.playednext.domain.model.game.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single

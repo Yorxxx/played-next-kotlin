@@ -2,9 +2,9 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameEntity
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
@@ -43,9 +43,9 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call load")
         inner class Load {
 
-            var result: TestObserver<GameDomainModel>? = null
+            var result: TestObserver<Game>? = null
             val model = makeGameRemote()
-            val entity = makeGameEntity()
+            val entity = makeGame()
 
             @BeforeEach
             fun setup() {
@@ -134,9 +134,9 @@ internal class GameRemoteImplTest {
             val model = makeGameRemote()
             val model2 = makeGameRemote()
             val response = listOf(model, model2)
-            val entity1 = makeGameEntity()
-            val entity2 = makeGameEntity()
-            var result: TestObserver<List<GameDomainModel>>? = null
+            val entity1 = makeGame()
+            val entity2 = makeGame()
+            var result: TestObserver<List<Game>>? = null
 
             @BeforeEach
             fun setup() {
@@ -179,8 +179,8 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = makeGameEntity()
-            var observer: TestObserver<Void>? = null
+            val entity1 = makeGame()
+            var                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              observer: TestObserver<Void>? = null
 
             @BeforeEach
             internal fun setUp() {

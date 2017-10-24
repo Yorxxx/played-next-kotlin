@@ -4,16 +4,15 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.mapper.GameEntityToDomainMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameService
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
-import com.piticlistudio.playednext.domain.repository.game.GameRepository
+import com.piticlistudio.playednext.domain.repository.GameRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -59,7 +58,7 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl, mapper: GameEntityToDomainMapper): GameRepository {
-        return GameRepositoryImpl(remoteImpl, localImpl, mapper)
+    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl): GameRepository {
+        return GameRepositoryImpl(remoteImpl, localImpl)
     }
 }

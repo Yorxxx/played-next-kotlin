@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource
 
-import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.Company
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -8,11 +8,9 @@ import io.reactivex.Single
  * Interface defining methods for the games. This is to be implemented by the remote layer, using this
  * interface as a way of communicating
  */
-interface GameDatasourceRepository {
+interface CompanyDatasourceRepository {
 
-    fun load(id: Int): Single<Game>
+    fun load(id: Int): Single<Company>
 
-    fun search(query: String): Single<List<Game>>
-
-    fun save(domainModel: Game): Completable
+    fun save(data: Company): Completable
 }
