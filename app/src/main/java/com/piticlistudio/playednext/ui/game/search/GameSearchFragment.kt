@@ -26,7 +26,7 @@ class GameSearchFragment : Fragment(), GameSearchContract.View {
         super.onActivityCreated(savedInstanceState)
         AndroidInjection.inject(this)
         presenter.attachView(this)
-        this.search("mario")
+        //this.search("mario")
     }
 
     override fun onDestroy() {

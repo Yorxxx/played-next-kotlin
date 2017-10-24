@@ -6,6 +6,8 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMap
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -90,6 +92,64 @@ internal class CompanyRemoteImplTest() {
             @BeforeEach
             internal fun setUp() {
                 observer = repositoryImpl?.save(entity1)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should emit notAllowedException")
+            fun throwsError() {
+                assertNotNull(observer)
+                with(observer) {
+                    this!!.assertNotComplete()
+                    assertNoValues()
+                    assertError(Throwable::class.java)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call loadDevelopersForGame")
+        inner class loadDevelopersForGameCalled {
+
+            var observer: TestObserver<List<Company>>? = null
+            val game = makeGameRemote()
+            val result = makeCompanyList()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(service.loadGame(10, "*")).thenReturn(Single.just(listOf(game)))
+                whenever(mapper.mapFromModel(game.developers)).thenReturn(result)
+                observer = repositoryImpl?.loadDevelopersForGame(10)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request game")
+            fun requestsGame() {
+                verify(service).loadGame(10, "*")
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                with(observer) {
+                    this?.assertValueCount(1)
+                    this?.assertComplete()
+                    this?.assertNoErrors()
+                    this?.assertValue(result)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call saveDeveloperForGame")
+        inner class saveDeveloperForGameCalled {
+
+            val entity1 = makeCompany()
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                observer = repositoryImpl?.saveDeveloperForGame(10, entity1)?.test()
             }
 
             @Test

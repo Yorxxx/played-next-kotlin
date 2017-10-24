@@ -39,7 +39,7 @@ data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: Strin
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
                 (ForeignKey(entity = CompanyDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("companyId"), onDelete = ForeignKey.CASCADE))))
-data class GameDeveloperDao(@PrimaryKey(autoGenerate = true) val id: Int, val gameId: Int, val companyId: Int)
+data class GameDeveloperDao(@PrimaryKey val id: String, val gameId: Int, val companyId: Int)
 
 //@Entity(tableName = "time_to_beat",
 //        foreignKeys = arrayOf(ForeignKey(entity = GameDao::class,

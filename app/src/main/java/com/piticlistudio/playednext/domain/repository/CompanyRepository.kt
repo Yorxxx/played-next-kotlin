@@ -13,4 +13,6 @@ interface CompanyRepository {
     fun load(id: Int): Single<Company>
 
     fun save(company: Company): Completable
+
+    fun loadDevelopersForGameId(id: Int): Single<List<Company>>
 }
