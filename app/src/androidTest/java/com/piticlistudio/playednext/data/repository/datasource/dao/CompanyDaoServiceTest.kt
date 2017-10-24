@@ -49,7 +49,7 @@ class CompanyDaoServiceTest {
     fun insertGameDeveloper() {
         val company = makeCompanyDao()
         val game = makeGameCache()
-        val data = GameDeveloperDao(1, game.id, company.id)
+        val data = GameDeveloperDao("10", game.id, company.id)
 
         database?.gamesDao()?.insertGame(game)
         database?.companyDao()?.insertCompany(company)
@@ -93,8 +93,8 @@ class CompanyDaoServiceTest {
         val game = makeGameCache()
         val company1 = makeCompanyDao()
         val company2 = makeCompanyDao()
-        val data = GameDeveloperDao(1, game.id, company1.id)
-        val data2 = GameDeveloperDao(2, game.id, company2.id)
+        val data = GameDeveloperDao("10", game.id, company1.id)
+        val data2 = GameDeveloperDao("20", game.id, company2.id)
 
         database?.gamesDao()?.insertGame(game)
         database?.companyDao()?.insertCompany(company1)

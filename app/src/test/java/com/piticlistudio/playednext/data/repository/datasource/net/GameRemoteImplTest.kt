@@ -53,8 +53,7 @@ internal class GameRemoteImplTest {
             fun setup() {
                 val response = listOf(model)
 
-                whenever(service.loadGame(10, "*"))
-                        .thenReturn(Single.just(response))
+                whenever(service.loadGame(10)).thenReturn(Single.just(response))
                 whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
@@ -62,7 +61,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should request service")
             fun serviceIsCalled() {
-                verify(service).loadGame(10, "*")
+                verify(service).loadGame(10)
             }
 
             @Test
@@ -89,8 +88,7 @@ internal class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    whenever(service.loadGame(10, "*"))
-                            .thenReturn(Single.just(listOf()))
+                    whenever(service.loadGame(10)).thenReturn(Single.just(listOf()))
                     result = repositoryImpl?.load(10)?.test()
                 }
 
@@ -112,8 +110,7 @@ internal class GameRemoteImplTest {
                 @BeforeEach
                 fun setup() {
                     val response = listOf(makeGameRemote(), makeGameRemote())
-                    whenever(service.loadGame(10, "*"))
-                            .thenReturn(Single.just(response))
+                    whenever(service.loadGame(10)).thenReturn(Single.just(response))
                     result = repositoryImpl?.load(10)?.test()
                 }
 

@@ -41,5 +41,13 @@ class CompanyFactory {
             }
             return items
         }
+
+        fun makeCompanyDaoList(size: Int = randomInt()): List<CompanyDao> {
+            val items: MutableList<CompanyDao> = mutableListOf()
+            repeat(size) {
+                items.add(makeCompanyDao())
+            }
+            return items
+        }
     }
 }

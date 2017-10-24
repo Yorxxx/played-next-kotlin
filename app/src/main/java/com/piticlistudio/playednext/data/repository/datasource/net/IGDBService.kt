@@ -24,7 +24,9 @@ interface IGDBService {
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/{id}/")
-    fun loadGame(@Path("id") id: Int, @Query("fields") fields: String): Single<List<GameDTO>>
+    fun loadGame(@Path("id") id: Int,
+                 @Query("fields") fields: String = "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,developers,publishers,genres,platforms,screenshots,cover",
+                 @Query("expand") expand: String? = "developers,publishers,genres,platforms,collection"): Single<List<GameDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/companies/{id}/")

@@ -8,7 +8,7 @@ import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
 import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameDaoService
 
-@Database(entities = arrayOf(GameDao::class, CompanyDao::class, GameDeveloperDao::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(GameDao::class, CompanyDao::class, GameDeveloperDao::class), version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): GameDaoService

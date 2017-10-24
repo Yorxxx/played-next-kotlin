@@ -1,11 +1,14 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDao
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDaoList
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import kotlin.test.assertEquals
 
 internal class CompanyDaoRepositoryImplTest {
 
@@ -87,6 +91,83 @@ internal class CompanyDaoRepositoryImplTest {
             @DisplayName("Then should request dao service")
             fun shouldRequestDao() {
                 verify(dao).insertCompany(result)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call loadDevelopersForGame")
+        inner class loadDevelopersForGameCalled {
+
+            private var observer: TestObserver<List<Company>>? = null
+            private val source = makeCompanyDaoList()
+            private val result = makeCompanyList()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                whenever(dao.findDeveloperForGame(10)).thenReturn(Single.just(source))
+                observer = repository.loadDevelopersForGame(10).test()
+            }
+
+            @Test
+            @DisplayName("Then should request dao service")
+            fun shouldRequestDao() {
+                verify(dao).findDeveloperForGame(10)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertValue(result)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call saveDeveloperForGame")
+        inner class saveDeveloperForGameCalled {
+
+            private var observer: TestObserver<Void>? = null
+            private val source = makeCompany()
+            private val companyDao = makeCompanyDao()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(mapper.mapFromEntity(source)).thenReturn(companyDao)
+                whenever(dao.insertCompany(companyDao)).thenReturn(10)
+                whenever(dao.insertGameDeveloper(any())).thenReturn(10)
+                observer = repository.saveDeveloperForGame(10, source).test()
+            }
+
+            @Test
+            @DisplayName("Then should save company")
+            fun shouldSaveCompany() {
+                verify(dao).insertCompany(companyDao)
+            }
+
+            @Test
+            @DisplayName("Then should save developer relation")
+            fun shouldRequestDao() {
+                verify(dao).insertGameDeveloper(com.nhaarman.mockito_kotlin.check {
+                    assertEquals("10-${source.id}", "${it.gameId}-${it.companyId}")
+                    assertEquals(it.companyId, source.id)
+                    assertEquals(it.gameId, 10)
+                })
             }
 
             @Test
