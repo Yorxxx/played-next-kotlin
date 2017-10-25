@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-internal class CompanyRemoteImplTest() {
+internal class CompanyRemoteImplTest {
 
     @Nested
     @DisplayName("Given CompanyRemoteImpl instance")
