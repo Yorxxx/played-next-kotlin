@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 import com.piticlistudio.playednext.BuildConfig
 import com.piticlistudio.playednext.data.entity.net.CompanyDTO
 import com.piticlistudio.playednext.data.entity.net.GameDTO
+import com.piticlistudio.playednext.data.entity.net.GenreDTO
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
