@@ -53,13 +53,13 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideGameRemoteRepository(service: IGDBService, mapper: GameDTOMapper, companyMapper: CompanyDTOMapper): GameRemoteImpl {
-        return GameRemoteImpl(service, mapper, companyMapper)
+    fun provideGameRemoteRepository(service: IGDBService, mapper: GameDTOMapper): GameRemoteImpl {
+        return GameRemoteImpl(service, mapper)
     }
 
     @Provides
     @Singleton
-    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl): GameRepository {
+    fun provideGameRepository(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl): GameRepository {
         return GameRepositoryImpl(remoteImpl, localImpl)
     }
 }

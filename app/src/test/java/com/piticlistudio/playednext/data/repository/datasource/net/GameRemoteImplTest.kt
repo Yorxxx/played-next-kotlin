@@ -31,14 +31,13 @@ internal class GameRemoteImplTest {
 
         @Mock lateinit var service: IGDBService
         @Mock lateinit var mapper: GameDTOMapper
-        @Mock lateinit var companymapper: CompanyDTOMapper
 
         private var repositoryImpl: GameRemoteImpl? = null
 
         @BeforeEach
         fun setup() {
             MockitoAnnotations.initMocks(this)
-            repositoryImpl = GameRemoteImpl(service, mapper, companymapper)
+            repositoryImpl = GameRemoteImpl(service, mapper)
         }
 
         @Nested
