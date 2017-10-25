@@ -38,6 +38,9 @@ data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: Strin
 @Entity(tableName = "genre")
 data class GenreDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
 
+@Entity(tableName = "collection")
+data class CollectionDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
+
 @Entity(tableName = "game_developer",
         primaryKeys = arrayOf("gameId", "companyId"),
         foreignKeys = arrayOf(
@@ -59,20 +62,9 @@ data class GamePublisherDao(val gameId: Int, val companyId: Int)
                 (ForeignKey(entity = GenreDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("genreId"), onDelete = ForeignKey.CASCADE))))
 data class GameGenreDao(val gameId: Int, val genreId: Int)
 
-//@Entity(tableName = "time_to_beat",
-//        foreignKeys = arrayOf(ForeignKey(entity = GameDao::class,
-//                parentColumns = arrayOf("id"),
-//                childColumns = arrayOf("gameId"),
-//                onDelete = ForeignKey.CASCADE)))
-
-
-/**
-val developers: List<Int>? = listOf(),
-val publishers: List<Int>? = listOf(),
-val game_engines: List<Int>? = listOf(),
-val genres: List<Int>? = listOf(),
-val first_release_date: Long? = null,
-val release_dates: List<ReleaseDateDTO>? = listOf(),
-val screenshots: List<ImageDTO>? = listOf(),
-val videos: List<VideoDTO>? = listOf(),
-val games: List<Int>? = listOf()*/
+@Entity(tableName = "game_collection",
+        primaryKeys = arrayOf("gameId", "collectionId"),
+        foreignKeys = arrayOf(
+                (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
+                (ForeignKey(entity = CollectionDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("collectionId"), onDelete = ForeignKey.CASCADE))))
+data class GameCollectionDao(val gameId: Int, val collectionId: Int)

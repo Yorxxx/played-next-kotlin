@@ -40,6 +40,8 @@ class CompanyDTO(id: Int, name: String, slug: String, url: String, created_at: L
 
 class GenreDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
+class CollectionDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
+
 data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: Int?)
 
 data class ReleaseDateDTO(val game: Int, val category: Int, val platform: Int?, val human: String)
