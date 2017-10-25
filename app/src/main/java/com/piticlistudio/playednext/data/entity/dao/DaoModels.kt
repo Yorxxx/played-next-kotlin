@@ -35,6 +35,9 @@ data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
 @Entity(tableName = "company")
 data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
 
+@Entity(tableName = "genre")
+data class GenreDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
+
 @Entity(tableName = "game_developer",
         primaryKeys = arrayOf("gameId", "companyId"),
         foreignKeys = arrayOf(
@@ -48,6 +51,13 @@ data class GameDeveloperDao(val gameId: Int, val companyId: Int)
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
                 (ForeignKey(entity = CompanyDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("companyId"), onDelete = ForeignKey.CASCADE))))
 data class GamePublisherDao(val gameId: Int, val companyId: Int)
+
+@Entity(tableName = "game_genre",
+        primaryKeys = arrayOf("gameId", "genreId"),
+        foreignKeys = arrayOf(
+                (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
+                (ForeignKey(entity = GenreDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("genreId"), onDelete = ForeignKey.CASCADE))))
+data class GameGenreDao(val gameId: Int, val genreId: Int)
 
 //@Entity(tableName = "time_to_beat",
 //        foreignKeys = arrayOf(ForeignKey(entity = GameDao::class,

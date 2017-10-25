@@ -25,7 +25,7 @@ data class GameDTO(val id: Int,
                    val publishers: List<CompanyDTO>? = listOf(),
                    val game_engines: List<Int>? = listOf(),
                    val time_to_beat: TimeToBeatDTO?,
-                   val genres: List<BaseEnumeratedEntity>? = listOf(),
+                   val genres: List<GenreDTO>? = listOf(),
                    val first_release_date: Long? = null,
                    val release_dates: List<ReleaseDateDTO>? = listOf(),
                    val screenshots: List<ImageDTO>? = listOf(),
@@ -37,6 +37,8 @@ open class BaseEnumeratedEntity(val id: Int, val name: String, val slug: String,
                                 val created_at: Long, val updated_at: Long)
 
 class CompanyDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
+
+class GenreDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
 data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: Int?)
 
