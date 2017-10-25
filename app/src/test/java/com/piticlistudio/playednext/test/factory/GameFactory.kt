@@ -14,6 +14,7 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTOList
 
 /**
  * Factory class for Game instances
@@ -58,7 +59,7 @@ class GameFactory {
                     randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), makeCompanyDTOList(),
                     makeCompanyDTOList(), randomIntList(), makeTimeToBeatRemote(),
-                    makeEnumeratedEntityList(), randomLong(), listOf(makeReleaseDateRemote(),
+                    makeGenreDTOList(), randomLong(), listOf(makeReleaseDateRemote(),
                     makeReleaseDateRemote()), listOf(makeImageRemote(), makeImageRemote(), makeImageRemote()),
                     listOf(makeVideoRemote()), makeImageRemote(), randomIntList())
         }

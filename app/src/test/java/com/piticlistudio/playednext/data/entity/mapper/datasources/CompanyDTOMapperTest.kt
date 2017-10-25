@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-internal class CompanyDTOMapperTest() {
+internal class CompanyDTOMapperTest {
 
     @Nested
     @DisplayName("Given CompanyDTOMapper instance")
