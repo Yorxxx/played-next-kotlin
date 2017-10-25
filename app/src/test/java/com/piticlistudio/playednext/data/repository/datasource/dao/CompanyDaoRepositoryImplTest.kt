@@ -164,7 +164,6 @@ internal class CompanyDaoRepositoryImplTest {
             @DisplayName("Then should save developer relation")
             fun shouldRequestDao() {
                 verify(dao).insertGameDeveloper(com.nhaarman.mockito_kotlin.check {
-                    assertEquals("10-${source.id}", "${it.gameId}-${it.companyId}")
                     assertEquals(it.companyId, source.id)
                     assertEquals(it.gameId, 10)
                 })

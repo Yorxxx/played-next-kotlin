@@ -30,6 +30,6 @@ class CompanyDaoRepositoryImpl @Inject constructor(private val dao: CompanyDaoSe
 
     override fun saveDeveloperForGame(id: Int, data: Company): Completable {
         return save(data)
-                .doOnComplete { dao.insertGameDeveloper(GameDeveloperDao("${id}-${data.id}", id, data.id)) }
+                .doOnComplete { dao.insertGameDeveloper(GameDeveloperDao(id, data.id)) }
     }
 }

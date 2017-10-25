@@ -36,10 +36,11 @@ data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
 data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String, val created_at: Long, val updated_at: Long)
 
 @Entity(tableName = "game_developer",
+        primaryKeys = arrayOf("gameId", "companyId"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
                 (ForeignKey(entity = CompanyDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("companyId"), onDelete = ForeignKey.CASCADE))))
-data class GameDeveloperDao(@PrimaryKey val id: String, val gameId: Int, val companyId: Int)
+data class GameDeveloperDao(val gameId: Int, val companyId: Int)
 
 //@Entity(tableName = "time_to_beat",
 //        foreignKeys = arrayOf(ForeignKey(entity = GameDao::class,

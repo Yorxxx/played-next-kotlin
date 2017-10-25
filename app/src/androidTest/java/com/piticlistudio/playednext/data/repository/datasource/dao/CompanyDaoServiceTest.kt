@@ -10,8 +10,7 @@ import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeCompanyDao
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -49,14 +48,29 @@ class CompanyDaoServiceTest {
     fun insertGameDeveloper() {
         val company = makeCompanyDao()
         val game = makeGameCache()
-        val data = GameDeveloperDao("10", game.id, company.id)
+        val data = GameDeveloperDao(game.id, company.id)
 
         database?.gamesDao()?.insertGame(game)
         database?.companyDao()?.insertCompany(company)
         val result = database?.companyDao()?.insertGameDeveloper(data)
 
         assertNotNull(result)
-        assertEquals(data.id, result!!.toInt())
+        assertTrue(result!! > 0)
+    }
+
+    @Test
+    fun updateGameDeveloper() {
+        val company = makeCompanyDao()
+        val game = makeGameCache()
+        val data = GameDeveloperDao(game.id, company.id)
+
+        database?.gamesDao()?.insertGame(game)
+        database?.companyDao()?.insertCompany(company)
+        database?.companyDao()?.insertGameDeveloper(data)
+        val result = database?.companyDao()?.insertGameDeveloper(data)
+
+        assertNotNull(result)
+        assertTrue(result!! > 0)
     }
 
     @Test
@@ -91,16 +105,20 @@ class CompanyDaoServiceTest {
     @Test
     fun findDeveloperForGameReturnsData() {
         val game = makeGameCache()
+        val game2 = makeGameCache()
         val company1 = makeCompanyDao()
         val company2 = makeCompanyDao()
-        val data = GameDeveloperDao("10", game.id, company1.id)
-        val data2 = GameDeveloperDao("20", game.id, company2.id)
+        val data = GameDeveloperDao(game.id, company1.id)
+        val data2 = GameDeveloperDao(game.id, company2.id)
+        val data3 = GameDeveloperDao(game2.id, company1.id)
 
         database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insertGame(game2)
         database?.companyDao()?.insertCompany(company1)
         database?.companyDao()?.insertCompany(company2)
         database?.companyDao()?.insertGameDeveloper(data)
         database?.companyDao()?.insertGameDeveloper(data2)
+        database?.companyDao()?.insertGameDeveloper(data3)
 
         // Act
         val observer = database?.companyDao()?.findDeveloperForGame(game.id)?.test()
