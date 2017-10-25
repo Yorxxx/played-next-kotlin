@@ -4,11 +4,15 @@ import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
+import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import org.junit.Rule
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 import kotlin.test.assertNull
 
 
@@ -18,7 +22,20 @@ internal class GameDTOMapperTest {
     @DisplayName("Given a GameDTOMapper instance")
     inner class GameDTOMapperInstance {
 
-        val mapper = GameDTOMapper()
+        @Rule
+        @JvmField
+        val mOverrideSchedulersRule = RxSchedulersOverrideRule()
+
+        @Mock
+        lateinit var companymapper: CompanyDTOMapper
+        @Mock lateinit var genremapper: GenreDTOMapper
+        lateinit var mapper: GameDTOMapper
+
+        @BeforeEach
+        internal fun setUp() {
+            MockitoAnnotations.initMocks(this)
+            mapper = GameDTOMapper(companymapper, genremapper)
+        }
 
         @Nested
         @DisplayName("When we call mapFromModel")
@@ -72,60 +89,6 @@ internal class GameDTOMapperTest {
                     assertEquals(url, result!!.cover?.url)
                     assertEquals(width, result!!.cover?.width)
                     assertEquals(height, result!!.cover?.height)
-                }
-            }
-
-            @Test
-            @DisplayName("Then maps developers")
-            fun intoDevelopers() {
-                result?.apply {
-                    assertEquals(model.developers?.size, developers?.size)
-                    model.developers?.apply {
-                        for ((index,value) in model.developers!!.withIndex()) {
-                            assertEquals(value.id, developers?.get(index)!!.id)
-                            assertEquals(value.name, developers?.get(index)!!.name)
-                            assertEquals(value.created_at, developers?.get(index)!!.createdAt)
-                            assertEquals(value.updated_at, developers?.get(index)!!.updatedAt)
-                            assertEquals(value.slug, developers?.get(index)!!.slug)
-                            assertEquals(value.url, developers?.get(index)!!.url)
-                        }
-                    }
-                }
-            }
-
-            @Test
-            @DisplayName("Then maps publishers")
-            fun intoPublishers() {
-                result?.apply {
-                    assertEquals(model.publishers?.size, publishers?.size)
-                    model.publishers?.apply {
-                        for ((index,value) in model.publishers!!.withIndex()) {
-                            assertEquals(value.id, publishers?.get(index)!!.id)
-                            assertEquals(value.name, publishers?.get(index)!!.name)
-                            assertEquals(value.created_at, publishers?.get(index)!!.createdAt)
-                            assertEquals(value.updated_at, publishers?.get(index)!!.updatedAt)
-                            assertEquals(value.slug, publishers?.get(index)!!.slug)
-                            assertEquals(value.url, publishers?.get(index)!!.url)
-                        }
-                    }
-                }
-            }
-
-            @Test
-            @DisplayName("Then maps genres")
-            fun intoGenres() {
-                result?.apply {
-                    assertEquals(model.genres?.size, genres?.size)
-                    model.genres?.apply {
-                        for ((index,value) in model.genres!!.withIndex()) {
-                            assertEquals(value.id, genres?.get(index)!!.id)
-                            assertEquals(value.name, genres?.get(index)!!.name)
-                            assertEquals(value.created_at, genres?.get(index)!!.createdAt)
-                            assertEquals(value.updated_at, genres?.get(index)!!.updatedAt)
-                            assertEquals(value.slug, genres?.get(index)!!.slug)
-                            assertEquals(value.url, genres?.get(index)!!.url)
-                        }
-                    }
                 }
             }
         }

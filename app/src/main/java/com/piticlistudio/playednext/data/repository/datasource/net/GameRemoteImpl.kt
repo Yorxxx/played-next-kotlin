@@ -15,8 +15,7 @@ import javax.inject.Inject
  * store implementation can carry out.
  */
 class GameRemoteImpl @Inject constructor(private val service: IGDBService,
-                                         private val mapper: GameDTOMapper,
-                                         private val companymapper: CompanyDTOMapper) : GameDatasourceRepository {
+                                         private val mapper: GameDTOMapper) : GameDatasourceRepository {
 
     override fun load(id: Int): Single<Game> {
         return service.loadGame(id)
