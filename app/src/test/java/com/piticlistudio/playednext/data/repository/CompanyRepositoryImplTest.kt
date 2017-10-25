@@ -22,7 +22,7 @@ import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import kotlin.test.assertTrue
 
-internal class CompanyRepositoryImplTest() {
+internal class CompanyRepositoryImplTest {
 
     @Nested
     @DisplayName("Given CompanyRepositoryImpl instance")
