@@ -20,7 +20,7 @@ class CompanyRemoteImpl @Inject constructor(val service: IGDBService, val mapper
     }
 
     override fun loadDevelopersForGame(id: Int): Single<List<Company>> {
-        return service.loadGame(id, "*")
+        return service.loadGame(id, "developers", "developers")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map { mapper.mapFromModel(it.developers) }
@@ -28,6 +28,18 @@ class CompanyRemoteImpl @Inject constructor(val service: IGDBService, val mapper
     }
 
     override fun saveDeveloperForGame(id: Int, data: Company): Completable {
+        return Completable.error(Throwable("Not allowed"))
+    }
+
+    override fun loadPublishersForGame(id: Int): Single<List<Company>> {
+        return service.loadGame(id, "publishers", "publishers")
+                .filter { it.size == 1 }
+                .map { it.get(0) }
+                .map { mapper.mapFromModel(it.publishers) }
+                .toSingle()
+    }
+
+    override fun savePublisherForGame(id: Int, data: Company): Completable {
         return Completable.error(Throwable("Not allowed"))
     }
 }
