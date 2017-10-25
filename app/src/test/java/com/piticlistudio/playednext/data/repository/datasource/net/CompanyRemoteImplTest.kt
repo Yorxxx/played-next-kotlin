@@ -116,7 +116,7 @@ internal class CompanyRemoteImplTest() {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(service.loadGame(10, "developers", "developers")).thenReturn(Single.just(listOf(game)))
+                whenever(service.loadGame(10, "id,name,slug,url,created_at,updated_at,developers", "developers")).thenReturn(Single.just(listOf(game)))
                 whenever(mapper.mapFromModel(game.developers)).thenReturn(result)
                 observer = repositoryImpl?.loadDevelopersForGame(10)?.test()
             }
@@ -124,7 +124,7 @@ internal class CompanyRemoteImplTest() {
             @Test
             @DisplayName("Then should request game")
             fun requestsGame() {
-                verify(service).loadGame(10, "developers", "developers")
+                verify(service).loadGame(10, "id,name,slug,url,created_at,updated_at,developers", "developers")
             }
 
             @Test
@@ -150,7 +150,7 @@ internal class CompanyRemoteImplTest() {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(service.loadGame(10, "publishers", "publishers")).thenReturn(Single.just(listOf(game)))
+                whenever(service.loadGame(10, "id,name,slug,url,created_at,updated_at,publishers", "publishers")).thenReturn(Single.just(listOf(game)))
                 whenever(mapper.mapFromModel(game.publishers)).thenReturn(result)
                 observer = repositoryImpl?.loadPublishersForGame(10)?.test()
             }
@@ -158,7 +158,7 @@ internal class CompanyRemoteImplTest() {
             @Test
             @DisplayName("Then should request game")
             fun requestsGame() {
-                verify(service).loadGame(10, "publishers", "publishers")
+                verify(service).loadGame(10, "id,name,slug,url,created_at,updated_at,publishers", "publishers")
             }
 
             @Test

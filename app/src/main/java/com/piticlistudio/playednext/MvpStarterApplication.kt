@@ -63,7 +63,7 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val localCompRepository = CompanyDaoRepositoryImpl(database.companyDao(), CompanyDaoMapper())
         val comp_repository = CompanyRepositoryImpl(localCompRepository, CompanyRemoteImpl(service, CompanyDTOMapper()))
         val load = LoadGameUseCase(repository, comp_repository)
-        load.execute(650)
+        load.execute(653)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
@@ -72,6 +72,9 @@ class MvpStarterApplication : Application(), HasActivityInjector {
                             Log.d("LoadGameUseCase", "Retrieved game ${it}")
                             it.developers?.forEach {
                                 Log.d("LoadGameUseCase", "Retrieved developer ${it}")
+                            }
+                            it.publishers?.forEach {
+                                Log.d("LoadGameUseCase", "Retrieved publisher ${it}")
                             }
                         },
                         onError = { Log.e("LoadGameUseCase", "Failed loading game ${it}") },

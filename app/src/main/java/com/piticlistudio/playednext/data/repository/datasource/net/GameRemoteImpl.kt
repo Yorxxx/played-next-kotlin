@@ -19,9 +19,7 @@ class GameRemoteImpl @Inject constructor(private val service: IGDBService,
                                          private val companymapper: CompanyDTOMapper) : GameDatasourceRepository {
 
     override fun load(id: Int): Single<Game> {
-        return service.loadGame(id,
-                "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,developers,publishers,genres,platforms,screenshots,cover",
-                        "developers,publishers,genres,platforms,collection")
+        return service.loadGame(id)
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map {

@@ -16,12 +16,26 @@ class LoadGameUseCase constructor(
                     val game = it
                     if (it.developers == null) {
                         comprepository.loadDevelopersForGameId(parameter)
-                                .onErrorReturn {
-                                    listOf()
-                                }
+                                .onErrorReturn { listOf() }
                                 .map {
                                     if (!it.isEmpty()) {
                                         game.developers = it
+                                    }
+                                    game
+                                }
+                    }
+                    else {
+                        Single.just(game)
+                    }
+                }
+                .flatMap {
+                    val game = it
+                    if (it.publishers == null) {
+                        comprepository.loadPublishersForGame(parameter)
+                                .onErrorReturn { listOf() }
+                                .map {
+                                    if (!it.isEmpty()) {
+                                        game.publishers = it
                                     }
                                     game
                                 }
