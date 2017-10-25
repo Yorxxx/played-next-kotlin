@@ -22,6 +22,6 @@ interface CompanyDaoService {
             "WHERE game_developer.gameId = :id")
     fun findDeveloperForGame(id: Int): Single<List<CompanyDao>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGameDeveloper(data: GameDeveloperDao): Long
 }
