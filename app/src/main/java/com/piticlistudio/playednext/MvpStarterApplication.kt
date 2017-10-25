@@ -18,11 +18,13 @@ import com.piticlistudio.playednext.data.repository.datasource.net.CompanyRemote
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
+import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -63,7 +65,9 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val localCompRepository = CompanyDaoRepositoryImpl(database.companyDao(), CompanyDaoMapper())
         val comp_repository = CompanyRepositoryImpl(localCompRepository, CompanyRemoteImpl(service, CompanyDTOMapper()))
         val load = LoadGameUseCase(repository, comp_repository)
-        load.execute(653)
+        val save = SaveGameUseCase(repository, comp_repository)
+        load.execute(654)
+                .flatMap { save.execute(it).andThen(Single.just(it)) }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
