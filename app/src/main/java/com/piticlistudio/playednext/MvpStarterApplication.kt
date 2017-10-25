@@ -67,8 +67,8 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val localGenRepository = GenreDaoRepositoryImpl(database.genreDao(), GenreDaoMapper())
         val gen_repository = GenreRepositoryImpl(localGenRepository, GenreRemoteImpl(service, GenreDTOMapper()))
         val load = LoadGameUseCase(repository, comp_repository, gen_repository)
-        val save = SaveGameUseCase(repository, comp_repository)
-        load.execute(654)
+        val save = SaveGameUseCase(repository, comp_repository, gen_repository)
+        load.execute(657)
                 .flatMap { save.execute(it).andThen(Single.just(it)) }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
