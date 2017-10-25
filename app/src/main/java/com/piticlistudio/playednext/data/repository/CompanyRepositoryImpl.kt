@@ -44,4 +44,26 @@ class CompanyRepositoryImpl constructor(private val localImpl: CompanyDaoReposit
         return Observable.fromIterable(developers)
                 .flatMapCompletable { localImpl.saveDeveloperForGame(id, it) }
     }
+
+    override fun loadPublishersForGame(id: Int): Single<List<Company>> {
+        return localImpl.loadPublishersForGame(id)
+                .flatMap {
+                    if (it.isEmpty()) {
+                        remoteImpl.loadPublishersForGame(id)
+                                .flatMap {
+                                    Observable.fromIterable(it)
+                                            .flatMapSingle {
+                                                localImpl.savePublisherForGame(id, it).andThen(Single.just(it))
+                                            }.toList()
+                                }
+                    } else {
+                        Single.just(it)
+                    }
+                }
+    }
+
+    override fun savePublishersForGame(id: Int, publishers: List<Company>): Completable {
+        return Observable.fromIterable(publishers)
+                .flatMapCompletable { localImpl.savePublisherForGame(id, it) }
+    }
 }

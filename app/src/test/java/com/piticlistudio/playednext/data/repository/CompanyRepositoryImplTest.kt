@@ -233,5 +233,119 @@ internal class CompanyRepositoryImplTest() {
                 }
             }
         }
+
+        @Nested
+        @DisplayName("When we call loadPublishersForGame")
+        inner class loadPublishersForGameCalled {
+            val id = 10
+            val entity = makeCompanyList()
+            var result: TestObserver<List<Company>>? = null
+
+            @BeforeEach
+            fun setup() {
+                whenever(localImpl.loadPublishersForGame(id)).thenReturn(Single.just(entity))
+                result = repository?.loadPublishersForGame(id)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request local repository")
+            fun localIsCalled() {
+                verify(localImpl).loadPublishersForGame(id)
+            }
+
+            @Test
+            @DisplayName("Then should not request remote repository")
+            fun remoteIsNotCalled() {
+                verifyZeroInteractions(remoteImpl)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(result)
+                result?.apply {
+                    assertNoErrors()
+                    assertValueCount(1)
+                    assertComplete()
+                    assertValue(entity)
+                }
+            }
+
+            @Nested
+            @DisplayName("And there is no result in local repository")
+            inner class withoutLocalResult {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(localImpl.loadPublishersForGame(id)).thenReturn(Single.just(listOf()))
+                    whenever(remoteImpl.loadPublishersForGame(id)).thenReturn(Single.just(entity))
+                    whenever(localImpl.savePublisherForGame(anyInt(), any())).thenReturn(Completable.complete())
+                    result = repository?.loadPublishersForGame(id)?.test()
+                }
+
+                @Test
+                @DisplayName("Then should request remote repository")
+                fun remoteIsCalled() {
+                    verify(remoteImpl).loadPublishersForGame(id)
+                }
+
+                @Test
+                @DisplayName("Then should emit without errors")
+                fun withoutErrors() {
+                    assertNotNull(result)
+                    with(result) {
+                        this?.assertNoErrors()
+                        this?.assertValueCount(1)
+                        this?.assertComplete()
+                        this?.assertValue(entity)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then should cache retrieved data")
+                fun cacheResponse() {
+                    verify(localImpl, times(entity.size)).savePublisherForGame(anyInt(), any())
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call savePublishersForGame")
+        inner class savePublishersForGameCalled {
+
+            val companies = makeCompanyList()
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(localImpl.savePublisherForGame(anyInt(), any())).thenReturn(Completable.complete())
+                observer = repository?.savePublishersForGame(10, companies)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request local repository")
+            fun savesInLocalRepository() {
+                verify(localImpl, times(companies.size)).savePublisherForGame(anyInt(), check {
+                    assertTrue(companies.contains(it))
+                })
+            }
+
+            @Test
+            @DisplayName("Then should not request remote repository")
+            fun remoteIsNotCalled() {
+                verifyZeroInteractions(remoteImpl)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
+                }
+            }
+        }
     }
 }
