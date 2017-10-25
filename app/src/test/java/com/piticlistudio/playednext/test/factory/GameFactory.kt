@@ -15,6 +15,7 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntLi
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTOList
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
 
 /**
  * Factory class for Game instances
@@ -27,7 +28,7 @@ class GameFactory {
             return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
-                    makeTimeToBeat(), makeCompanyList(), makeCompanyList())
+                    makeTimeToBeat(), makeCompanyList(), makeCompanyList(), makeGenreList())
         }
 
         fun makeCover(): Cover {

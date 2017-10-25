@@ -6,17 +6,17 @@ import android.arch.persistence.room.Room
 import android.util.Log
 import com.facebook.stetho.Stetho
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.*
 import com.piticlistudio.playednext.data.repository.CompanyRepositoryImpl
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.GenreRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
+import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.CompanyRemoteImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
+import com.piticlistudio.playednext.data.repository.datasource.net.GenreRemoteImpl
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
@@ -64,7 +64,9 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val repository = GameRepositoryImpl(GameRemoteImpl(service, GameDTOMapper(), CompanyDTOMapper()), localRepository)
         val localCompRepository = CompanyDaoRepositoryImpl(database.companyDao(), CompanyDaoMapper())
         val comp_repository = CompanyRepositoryImpl(localCompRepository, CompanyRemoteImpl(service, CompanyDTOMapper()))
-        val load = LoadGameUseCase(repository, comp_repository)
+        val localGenRepository = GenreDaoRepositoryImpl(database.genreDao(), GenreDaoMapper())
+        val gen_repository = GenreRepositoryImpl(localGenRepository, GenreRemoteImpl(service, GenreDTOMapper()))
+        val load = LoadGameUseCase(repository, comp_repository, gen_repository)
         val save = SaveGameUseCase(repository, comp_repository)
         load.execute(654)
                 .flatMap { save.execute(it).andThen(Single.just(it)) }
@@ -79,6 +81,9 @@ class MvpStarterApplication : Application(), HasActivityInjector {
                             }
                             it.publishers?.forEach {
                                 Log.d("LoadGameUseCase", "Retrieved publisher ${it}")
+                            }
+                            it.genres?.forEach {
+                                Log.d("LoadGameUseCase", "Retrieved genre ${it}")
                             }
                         },
                         onError = { Log.e("LoadGameUseCase", "Failed loading game ${it}") },

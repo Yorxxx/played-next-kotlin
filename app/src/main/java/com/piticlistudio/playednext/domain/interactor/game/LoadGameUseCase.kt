@@ -4,11 +4,13 @@ import com.piticlistudio.playednext.domain.interactor.SingleUseCaseWithParameter
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
+import com.piticlistudio.playednext.domain.repository.GenreRepository
 import io.reactivex.Single
 
 class LoadGameUseCase constructor(
         private val grepository: GameRepository,
-        private val comprepository: CompanyRepository) : SingleUseCaseWithParameter<Int, Game> {
+        private val comprepository: CompanyRepository,
+        private val genre_repository: GenreRepository) : SingleUseCaseWithParameter<Int, Game> {
 
     override fun execute(parameter: Int): Single<Game> {
         return grepository.load(parameter)
@@ -36,6 +38,22 @@ class LoadGameUseCase constructor(
                                 .map {
                                     if (!it.isEmpty()) {
                                         game.publishers = it
+                                    }
+                                    game
+                                }
+                    }
+                    else {
+                        Single.just(game)
+                    }
+                }
+                .flatMap {
+                    val game = it
+                    if (it.genres == null) {
+                        genre_repository.loadForGame(parameter)
+                                .onErrorReturn { listOf() }
+                                .map {
+                                    if (!it.isEmpty()) {
+                                        game.genres = it
                                     }
                                     game
                                 }

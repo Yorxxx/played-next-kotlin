@@ -110,6 +110,24 @@ internal class GameDTOMapperTest {
                     }
                 }
             }
+
+            @Test
+            @DisplayName("Then maps genres")
+            fun intoGenres() {
+                result?.apply {
+                    assertEquals(model.genres?.size, genres?.size)
+                    model.genres?.apply {
+                        for ((index,value) in model.genres!!.withIndex()) {
+                            assertEquals(value.id, genres?.get(index)!!.id)
+                            assertEquals(value.name, genres?.get(index)!!.name)
+                            assertEquals(value.created_at, genres?.get(index)!!.createdAt)
+                            assertEquals(value.updated_at, genres?.get(index)!!.updatedAt)
+                            assertEquals(value.slug, genres?.get(index)!!.slug)
+                            assertEquals(value.url, genres?.get(index)!!.url)
+                        }
+                    }
+                }
+            }
         }
 
         @Nested
