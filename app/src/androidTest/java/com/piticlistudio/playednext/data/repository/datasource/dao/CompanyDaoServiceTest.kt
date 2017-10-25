@@ -7,6 +7,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
+import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeCompanyDao
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert
@@ -59,6 +60,20 @@ class CompanyDaoServiceTest {
     }
 
     @Test
+    fun insertGamePublisher() {
+        val company = makeCompanyDao()
+        val game = makeGameCache()
+        val data = GamePublisherDao(game.id, company.id)
+
+        database?.gamesDao()?.insertGame(game)
+        database?.companyDao()?.insertCompany(company)
+        val result = database?.companyDao()?.insertGamePublisher(data)
+
+        assertNotNull(result)
+        assertTrue(result!! > 0)
+    }
+
+    @Test
     fun updateGameDeveloper() {
         val company = makeCompanyDao()
         val game = makeGameCache()
@@ -68,6 +83,21 @@ class CompanyDaoServiceTest {
         database?.companyDao()?.insertCompany(company)
         database?.companyDao()?.insertGameDeveloper(data)
         val result = database?.companyDao()?.insertGameDeveloper(data)
+
+        assertNotNull(result)
+        assertTrue(result!! > 0)
+    }
+
+    @Test
+    fun updateGamePublisher() {
+        val company = makeCompanyDao()
+        val game = makeGameCache()
+        val data = GamePublisherDao(game.id, company.id)
+
+        database?.gamesDao()?.insertGame(game)
+        database?.companyDao()?.insertCompany(company)
+        database?.companyDao()?.insertGamePublisher(data)
+        val result = database?.companyDao()?.insertGamePublisher(data)
 
         assertNotNull(result)
         assertTrue(result!! > 0)
@@ -135,6 +165,38 @@ class CompanyDaoServiceTest {
     }
 
     @Test
+    fun findPublishersForGameReturnsData() {
+        val game = makeGameCache()
+        val game2 = makeGameCache()
+        val company1 = makeCompanyDao()
+        val company2 = makeCompanyDao()
+        val data = GamePublisherDao(game.id, company1.id)
+        val data2 = GamePublisherDao(game.id, company2.id)
+        val data3 = GamePublisherDao(game2.id, company1.id)
+
+        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insertGame(game2)
+        database?.companyDao()?.insertCompany(company1)
+        database?.companyDao()?.insertCompany(company2)
+        database?.companyDao()?.insertGamePublisher(data)
+        database?.companyDao()?.insertGamePublisher(data2)
+        database?.companyDao()?.insertGamePublisher(data3)
+
+        // Act
+        val observer = database?.companyDao()?.findPublishersForGame(game.id)?.test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertValueCount(1)
+            assertComplete()
+            assertValue {
+                it.size == 2 && it.contains(company1) && it.contains(company2)
+            }
+        }
+    }
+
+    @Test
     fun findDeveloperForGameReturnsEmptyList() {
 
         val game = makeGameCache()
@@ -143,6 +205,25 @@ class CompanyDaoServiceTest {
         // Act
         // Act
         val observer = database?.companyDao()?.findDeveloperForGame(game.id)?.test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertValueCount(1)
+            assertComplete()
+            assertValue { it.size == 0 }
+        }
+    }
+
+    @Test
+    fun findPublishersForGameReturnsEmptyList() {
+
+        val game = makeGameCache()
+        database?.gamesDao()?.insertGame(game)
+
+        // Act
+        // Act
+        val observer = database?.companyDao()?.findPublishersForGame(game.id)?.test()
 
         assertNotNull(observer)
         observer?.apply {

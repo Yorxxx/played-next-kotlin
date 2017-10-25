@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.piticlistudio.playednext.data.entity.dao.CompanyDao
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
+import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
 import io.reactivex.Single
 
 @Dao
@@ -24,4 +25,12 @@ interface CompanyDaoService {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGameDeveloper(data: GameDeveloperDao): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertGamePublisher(data: GamePublisherDao): Long
+
+    @Query("select company.* from company " +
+            "LEFT JOIN game_publisher ON company.id = game_publisher.companyId " +
+            "WHERE game_publisher.gameId = :id")
+    fun findPublishersForGame(id: Int): Single<List<CompanyDao>>
 }
