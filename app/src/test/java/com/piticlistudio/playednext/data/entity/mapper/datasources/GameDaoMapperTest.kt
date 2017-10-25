@@ -59,6 +59,7 @@ internal class GameDaoMapperTest {
                     assertNull(developers)
                     assertNull(publishers)
                     assertNull(genres)
+                    assertNull(collection)
                 }
             }
 
