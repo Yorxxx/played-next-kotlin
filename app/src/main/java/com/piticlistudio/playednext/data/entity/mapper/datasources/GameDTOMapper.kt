@@ -10,7 +10,8 @@ import com.piticlistudio.playednext.domain.model.TimeToBeat
 import javax.inject.Inject
 
 class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTOMapper,
-                                        private val genreDTOMapper: GenreDTOMapper) : LayerDataMapper<GameDTO, Game> {
+                                        private val genreDTOMapper: GenreDTOMapper,
+                                        private val collectionDTOMapper: CollectionDTOMapper) : LayerDataMapper<GameDTO, Game> {
 
     override fun mapFromModel(type: GameDTO): Game {
         with(type) {
@@ -19,7 +20,8 @@ class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTO
                     total_rating_count, first_release_date, mapCoverModel(cover),
                     mapTimeToBeatModel(time_to_beat), companyDTOMapper.mapFromModel(developers),
                     companyDTOMapper.mapFromModel(publishers),
-                    genreDTOMapper.mapFromModel(genres))
+                    genreDTOMapper.mapFromModel(genres),
+                    collectionDTOMapper.mapFromModel(collection))
         }
     }
 

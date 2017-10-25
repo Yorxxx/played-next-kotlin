@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
+import com.nhaarman.mockito_kotlin.verify
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
@@ -29,12 +30,13 @@ internal class GameDTOMapperTest {
         @Mock
         lateinit var companymapper: CompanyDTOMapper
         @Mock lateinit var genremapper: GenreDTOMapper
+        @Mock lateinit var collectionmapper: CollectionDTOMapper
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            mapper = GameDTOMapper(companymapper, genremapper)
+            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper)
         }
 
         @Nested
@@ -68,6 +70,15 @@ internal class GameDTOMapperTest {
                     assertEquals(model.total_rating, totalRating)
                     assertEquals(model.total_rating_count, totalRatingCount)
                 }
+            }
+
+            @Test
+            @DisplayName("Then requests mapping for inner classes")
+            fun childMaps() {
+                verify(collectionmapper).mapFromModel(model.collection)
+                verify(companymapper).mapFromModel(model.publishers)
+                verify(companymapper).mapFromModel(model.developers)
+                verify(genremapper).mapFromModel(model.genres)
             }
 
             @Test
