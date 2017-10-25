@@ -19,5 +19,12 @@ class SaveGameUseCase constructor(
                         Completable.complete()
                     }
                 )
+                .andThen(
+                    if (parameter.publishers != null) {
+                        comprepository.savePublishersForGame(parameter.id, parameter.publishers!!)
+                    } else {
+                        Completable.complete()
+                    }
+                )
     }
 }

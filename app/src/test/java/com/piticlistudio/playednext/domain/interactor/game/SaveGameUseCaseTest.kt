@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
@@ -13,10 +13,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import kotlin.test.assertNotNull
-import kotlin.test.fail
 
 internal class SaveGameUseCaseTest {
 
@@ -30,9 +30,14 @@ internal class SaveGameUseCaseTest {
         private lateinit var companyRepository: CompanyRepository
         private var usecase: SaveGameUseCase? = null
 
+        val game = makeGame()
+
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
+            whenever(repository.save(game)).thenReturn(Completable.complete())
+            whenever(companyRepository.saveDevelopersForGame(any(), any())).thenReturn(Completable.complete())
+            whenever(companyRepository.savePublishersForGame(any(), any())).thenReturn(Completable.complete())
             usecase = SaveGameUseCase(repository, companyRepository)
         }
 
@@ -46,12 +51,8 @@ internal class SaveGameUseCaseTest {
             @DisplayName("and does have developers")
             inner class withDevelopers {
 
-                val game = makeGame()
-
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(repository.save(game)).thenReturn(Completable.complete())
-                    whenever(companyRepository.saveDevelopersForGame(any(), any())).thenReturn(Completable.complete())
                     observer = usecase?.execute(game)?.test()
                 }
 
@@ -83,20 +84,81 @@ internal class SaveGameUseCaseTest {
             @DisplayName("and does not have developers")
             inner class withoutDevelopers {
 
-                val game = makeGame()
                 var observer: TestObserver<Void>? = null
 
                 @BeforeEach
                 internal fun setUp() {
                     game.developers = null
-                    whenever(repository.save(game)).thenReturn(Completable.complete())
                     observer = usecase?.execute(game)?.test()
                 }
 
                 @Test
                 @DisplayName("Then does not save developers")
                 fun doesNotRequestsRepository() {
-                    verifyZeroInteractions(companyRepository)
+                    verify(companyRepository, never()).saveDevelopersForGame(anyInt(), any())
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does have publishers")
+            inner class withPublishers {
+
+                @BeforeEach
+                internal fun setUp() {
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then saves into repository")
+                fun requestsRepository() {
+                    verify(repository).save(game)
+                }
+
+                @Test
+                @DisplayName("Then saves publishers")
+                fun savesDevelopers() {
+                    verify(companyRepository).savePublishersForGame(game.id, game.publishers!!)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does not have publishers")
+            inner class withoutPublishers {
+
+                var observer: TestObserver<Void>? = null
+
+                @BeforeEach
+                internal fun setUp() {
+                    game.publishers = null
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then does not save publishers")
+                fun doesNotRequestsRepository() {
+                    verify(companyRepository, never()).savePublishersForGame(anyInt(), any())
                 }
 
                 @Test
