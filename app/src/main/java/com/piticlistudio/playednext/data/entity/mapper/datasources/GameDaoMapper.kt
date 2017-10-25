@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
-import com.piticlistudio.playednext.data.entity.GameDomainModel
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
