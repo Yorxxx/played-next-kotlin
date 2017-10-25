@@ -20,7 +20,7 @@ class CompanyRemoteImpl @Inject constructor(val service: IGDBService, val mapper
     }
 
     override fun loadDevelopersForGame(id: Int): Single<List<Company>> {
-        return service.loadGame(id, "developers", "developers")
+        return service.loadGame(id, "id,name,slug,url,created_at,updated_at,developers", "developers")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map { mapper.mapFromModel(it.developers) }
@@ -32,7 +32,7 @@ class CompanyRemoteImpl @Inject constructor(val service: IGDBService, val mapper
     }
 
     override fun loadPublishersForGame(id: Int): Single<List<Company>> {
-        return service.loadGame(id, "publishers", "publishers")
+        return service.loadGame(id, "id,name,slug,url,created_at,updated_at,publishers", "publishers")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
                 .map { mapper.mapFromModel(it.publishers) }

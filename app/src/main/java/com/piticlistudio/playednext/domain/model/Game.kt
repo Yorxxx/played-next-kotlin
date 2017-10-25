@@ -21,7 +21,7 @@ data class Game(val id: Int,
                 val cover: Cover?,
                 val timeToBeat: TimeToBeat?,
                 var developers: List<Company>?,
-                val publishers: List<Company>?)
+                var publishers: List<Company>?)
 
 data class Cover(val url: String, val width: Int?, val height: Int?)
 

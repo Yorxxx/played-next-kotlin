@@ -28,12 +28,7 @@ class CompanyRepositoryImpl constructor(private val localImpl: CompanyDaoReposit
                 .flatMap {
                     if (it.isEmpty()) {
                         remoteImpl.loadDevelopersForGame(id)
-                                .flatMap {
-                                    Observable.fromIterable(it)
-                                            .flatMapSingle {
-                                                localImpl.saveDeveloperForGame(id, it).andThen(Single.just(it))
-                                            }.toList()
-                                }
+                                .flatMap { saveDevelopersForGame(id, it).andThen(Single.just(it)) }
                     } else {
                         Single.just(it)
                     }
@@ -50,12 +45,7 @@ class CompanyRepositoryImpl constructor(private val localImpl: CompanyDaoReposit
                 .flatMap {
                     if (it.isEmpty()) {
                         remoteImpl.loadPublishersForGame(id)
-                                .flatMap {
-                                    Observable.fromIterable(it)
-                                            .flatMapSingle {
-                                                localImpl.savePublisherForGame(id, it).andThen(Single.just(it))
-                                            }.toList()
-                                }
+                                .flatMap { savePublishersForGame(id, it).andThen(Single.just(it)) }
                     } else {
                         Single.just(it)
                     }
