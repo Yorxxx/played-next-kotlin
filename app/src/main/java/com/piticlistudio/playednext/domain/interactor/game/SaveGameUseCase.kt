@@ -12,9 +12,12 @@ class SaveGameUseCase constructor(
 
     override fun execute(parameter: Game): Completable {
         return repository.save(parameter)
-                .andThen {
-                    if (parameter.developers != null)
+                .andThen(
+                    if (parameter.developers != null) {
                         comprepository.saveDevelopersForGame(parameter.id, parameter.developers!!)
-                }
+                    } else {
+                        Completable.complete()
+                    }
+                )
     }
 }
