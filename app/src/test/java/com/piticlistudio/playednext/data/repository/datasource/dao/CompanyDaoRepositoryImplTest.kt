@@ -139,6 +139,39 @@ internal class CompanyDaoRepositoryImplTest {
         }
 
         @Nested
+        @DisplayName("When we call loadPublishersForGame")
+        inner class loadPublishersForGameCalled {
+
+            private var observer: TestObserver<List<Company>>? = null
+            private val source = makeCompanyDaoList()
+            private val result = makeCompanyList()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                whenever(dao.findPublishersForGame(10)).thenReturn(Single.just(source))
+                observer = repository.loadPublishersForGame(10).test()
+            }
+
+            @Test
+            @DisplayName("Then should request dao service")
+            fun shouldRequestDao() {
+                verify(dao).findPublishersForGame(10)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertValue(result)
+                }
+            }
+        }
+
+        @Nested
         @DisplayName("When we call saveDeveloperForGame")
         inner class saveDeveloperForGameCalled {
 
@@ -161,9 +194,52 @@ internal class CompanyDaoRepositoryImplTest {
             }
 
             @Test
-            @DisplayName("Then should save developer relation")
+            @DisplayName("Then should save publisher relation")
             fun shouldRequestDao() {
                 verify(dao).insertGameDeveloper(com.nhaarman.mockito_kotlin.check {
+                    assertEquals(it.companyId, source.id)
+                    assertEquals(it.gameId, 10)
+                })
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertNoValues()
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call savePublisherForGame")
+        inner class savePublisherForGameCalled {
+
+            private var observer: TestObserver<Void>? = null
+            private val source = makeCompany()
+            private val companyDao = makeCompanyDao()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(mapper.mapFromEntity(source)).thenReturn(companyDao)
+                whenever(dao.insertCompany(companyDao)).thenReturn(10)
+                whenever(dao.insertGamePublisher(any())).thenReturn(10)
+                observer = repository.savePublisherForGame(10, source).test()
+            }
+
+            @Test
+            @DisplayName("Then should save company")
+            fun shouldSaveCompany() {
+                verify(dao).insertCompany(companyDao)
+            }
+
+            @Test
+            @DisplayName("Then should save publisher relation")
+            fun shouldRequestDao() {
+                verify(dao).insertGamePublisher(com.nhaarman.mockito_kotlin.check {
                     assertEquals(it.companyId, source.id)
                     assertEquals(it.gameId, 10)
                 })

@@ -116,7 +116,7 @@ internal class CompanyRemoteImplTest() {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(service.loadGame(10, "*")).thenReturn(Single.just(listOf(game)))
+                whenever(service.loadGame(10, "developers", "developers")).thenReturn(Single.just(listOf(game)))
                 whenever(mapper.mapFromModel(game.developers)).thenReturn(result)
                 observer = repositoryImpl?.loadDevelopersForGame(10)?.test()
             }
@@ -124,7 +124,41 @@ internal class CompanyRemoteImplTest() {
             @Test
             @DisplayName("Then should request game")
             fun requestsGame() {
-                verify(service).loadGame(10, "*")
+                verify(service).loadGame(10, "developers", "developers")
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                with(observer) {
+                    this?.assertValueCount(1)
+                    this?.assertComplete()
+                    this?.assertNoErrors()
+                    this?.assertValue(result)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call loadPublishersForGame")
+        inner class loadPublishersForGameCalled {
+
+            var observer: TestObserver<List<Company>>? = null
+            val game = makeGameRemote()
+            val result = makeCompanyList()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(service.loadGame(10, "publishers", "publishers")).thenReturn(Single.just(listOf(game)))
+                whenever(mapper.mapFromModel(game.publishers)).thenReturn(result)
+                observer = repositoryImpl?.loadPublishersForGame(10)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request game")
+            fun requestsGame() {
+                verify(service).loadGame(10, "publishers", "publishers")
             }
 
             @Test
@@ -150,6 +184,30 @@ internal class CompanyRemoteImplTest() {
             @BeforeEach
             internal fun setUp() {
                 observer = repositoryImpl?.saveDeveloperForGame(10, entity1)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should emit notAllowedException")
+            fun throwsError() {
+                assertNotNull(observer)
+                with(observer) {
+                    this!!.assertNotComplete()
+                    assertNoValues()
+                    assertError(Throwable::class.java)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call savePublisherForGame")
+        inner class savePublisherForGameCalled {
+
+            val entity1 = makeCompany()
+            var observer: TestObserver<Void>? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                observer = repositoryImpl?.savePublisherForGame(10, entity1)?.test()
             }
 
             @Test

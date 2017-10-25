@@ -17,4 +17,8 @@ interface CompanyDatasourceRepository {
     fun loadDevelopersForGame(id: Int): Single<List<Company>>
 
     fun saveDeveloperForGame(id: Int, data: Company): Completable
+
+    fun loadPublishersForGame(id: Int): Single<List<Company>>
+
+    fun savePublisherForGame(id: Int, data: Company): Completable
 }
