@@ -7,11 +7,8 @@ import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
-import junit.framework.Assert.*
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -62,7 +59,7 @@ class GameDaoServiceTest {
 
         val game = makeGameCache()
 
-        val result = database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insertGame(game)
         try {
             database?.gamesDao()?.insertGame(game)
             fail("should have thrown")
@@ -76,7 +73,7 @@ class GameDaoServiceTest {
     fun updateGame_shouldUpdateData() {
 
         val game = makeGameCache()
-        val game2 = makeGameCache(2)
+        val game2 = makeGameCache(game.id)
 
         database?.gamesDao()?.insertGame(game)
         val result = database?.gamesDao()?.updateGame(game2)
