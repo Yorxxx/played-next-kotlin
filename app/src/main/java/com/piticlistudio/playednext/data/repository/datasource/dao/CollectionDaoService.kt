@@ -14,7 +14,7 @@ interface CollectionDaoService {
     @Query("select * from collection where id = :id")
     fun find(id: Long): Single<CollectionDao>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(data: CollectionDao): Long
 
     @Query("select collection.* from collection " +

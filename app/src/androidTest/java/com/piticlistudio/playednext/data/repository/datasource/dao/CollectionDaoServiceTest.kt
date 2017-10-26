@@ -43,6 +43,17 @@ class CollectionDaoServiceTest {
         Assert.assertEquals(data.id, result!!.toInt())
     }
 
+    fun insert_ignoresIfAlreadyStored() {
+
+        val data = DomainFactory.makeCollectionDao()
+
+        val id = database?.collectionDao()?.insert(data)
+        val id2 = database?.collectionDao()?.insert(data)
+
+        Assert.assertTrue(id!! > 0L)
+        Assert.assertEquals(0L, id2)
+    }
+
     @Test
     fun insertGameCollection_shouldStoreRelation() {
         val data = makeCollectionDao()
