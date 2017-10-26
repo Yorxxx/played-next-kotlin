@@ -1,9 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.piticlistudio.playednext.data.entity.dao.CompanyDao
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
 import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
@@ -15,7 +12,7 @@ interface CompanyDaoService {
     @Query("select * from company where id = :id")
     fun findCompanyById(id: Long): Single<CompanyDao>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertCompany(data: CompanyDao): Long
 
     @Query("select company.* from company " +
