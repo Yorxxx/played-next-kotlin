@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.data.repository.datasource.dao.CollectionDao
 import com.piticlistudio.playednext.data.repository.datasource.net.CollectionDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.domain.repository.CollectionRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class CollectionRepositoryImpl constructor(private val localImpl: CollectionDaoRepositoryImpl,
@@ -15,5 +16,9 @@ class CollectionRepositoryImpl constructor(private val localImpl: CollectionDaoR
                     remoteImpl.loadForGame(id)
                             .flatMap { localImpl.saveForGame(id, it).andThen(Single.just(it)) }
                 }
+    }
+
+    override fun saveForGame(id: Int, data: Collection): Completable {
+        return localImpl.saveForGame(id, data)
     }
 }

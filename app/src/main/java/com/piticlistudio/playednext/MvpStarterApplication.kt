@@ -75,7 +75,7 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val col_repository = CollectionRepositoryImpl(localColRepository, CollectionDTORepositoryImpl(service, collectionDTOMapper))
 
         val load = LoadGameUseCase(repository, comp_repository, gen_repository, col_repository)
-        val save = SaveGameUseCase(repository, comp_repository, gen_repository)
+        val save = SaveGameUseCase(repository, comp_repository, gen_repository, col_repository)
         load.execute(658)
                 .flatMap { save.execute(it).andThen(Single.just(it)) }
                 .subscribeOn(Schedulers.computation())
