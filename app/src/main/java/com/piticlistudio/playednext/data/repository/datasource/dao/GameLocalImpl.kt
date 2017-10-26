@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
+import android.database.sqlite.SQLiteConstraintException
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Game
@@ -24,7 +25,13 @@ class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
 
     override fun save(domainModel: Game): Completable {
         return Completable.defer {
-            dao.insertGame(mapper.mapFromModel(domainModel))
+            mapper.mapFromModel(domainModel).also {
+                try {
+                    dao.insertGame(it)
+                } catch (e: SQLiteConstraintException) {
+                    dao.updateGame(it)
+                }
+            }
             Completable.complete()
         }
     }

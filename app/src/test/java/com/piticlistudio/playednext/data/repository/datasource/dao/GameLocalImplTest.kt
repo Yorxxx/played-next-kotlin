@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
+import android.database.sqlite.SQLiteConstraintException
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
@@ -110,6 +112,12 @@ internal class GameLocalImplTest {
             }
 
             @Test
+            @DisplayName("Then should not update")
+            fun updateNotCalled() {
+                verify(daoService, never()).updateGame(data)
+            }
+
+            @Test
             @DisplayName("Then emits completion")
             fun emitsComplete() {
                 assertNotNull(observer)
@@ -117,6 +125,34 @@ internal class GameLocalImplTest {
                     assertComplete()
                     assertNoValues()
                     assertNoErrors()
+                }
+            }
+
+            @Nested
+            @DisplayName("and data is already stored")
+            inner class alreadyStored {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(daoService.insertGame(data)).thenThrow(SQLiteConstraintException())
+                    observer = repository.save(source).test()
+                }
+
+                @Test
+                @DisplayName("Then should update")
+                fun updateNotCalled() {
+                    verify(daoService).updateGame(data)
+                }
+
+                @Test
+                @DisplayName("Then emits completion")
+                fun emitsComplete() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertComplete()
+                        assertNoValues()
+                        assertNoErrors()
+                    }
                 }
             }
         }

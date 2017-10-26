@@ -3,12 +3,12 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.EmptyResultSetException
 import android.arch.persistence.room.Room
+import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -55,21 +55,31 @@ class GameDaoServiceTest {
     }
 
     @Test
-    fun insertGameReplacesOnConflict() {
-        val game = makeGameCache(1)
-        val game2 = makeGameCache(1)
+    fun insertGame_abortsIfAlreadyStored() {
+
+        val game = makeGameCache()
+
+        val result = database?.gamesDao()?.insertGame(game)
+        try {
+            database?.gamesDao()?.insertGame(game)
+            fail("should have thrown")
+        } catch (e: Throwable) {
+            assertNotNull(e)
+            assertTrue(e is SQLiteConstraintException)
+        }
+    }
+
+    @Test
+    fun updateGame_shouldUpdateData() {
+
+        val game = makeGameCache()
+        val game2 = makeGameCache(2)
 
         database?.gamesDao()?.insertGame(game)
-        database?.gamesDao()?.insertGame(game2)
+        val result = database?.gamesDao()?.updateGame(game2)
 
-        val observer = database?.gamesDao()?.getAllGames()?.test()
-
-        assertNotNull(observer)
-        observer?.apply {
-            assertNotComplete()
-            assertNoErrors()
-            assertValue { it.size == 1 }
-        }
+        assertNotNull(result)
+        assertEquals(1, result)
     }
 
     @Test

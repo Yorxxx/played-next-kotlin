@@ -11,7 +11,7 @@ import io.reactivex.Single
 @Dao
 interface GenreDaoService {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(data: GenreDao): Long
 
     @Query("select genre.* from genre " +
