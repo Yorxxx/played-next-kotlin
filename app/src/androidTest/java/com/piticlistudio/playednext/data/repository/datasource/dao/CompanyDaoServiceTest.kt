@@ -8,8 +8,8 @@ import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
 import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
-import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeCompanyDao
-import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCompanyDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert
 import junit.framework.Assert.*
 import org.junit.After

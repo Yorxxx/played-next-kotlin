@@ -9,6 +9,9 @@ import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.test.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert.*
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
