@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.domain.repository
 
 import com.piticlistudio.playednext.domain.model.Collection
+import io.reactivex.Completable
 import io.reactivex.Single
 
 /**
@@ -10,4 +11,6 @@ import io.reactivex.Single
 interface CollectionRepository {
 
     fun loadForGame(id: Int): Single<Collection>
+
+    fun saveForGame(id: Int, data: Collection): Completable
 }

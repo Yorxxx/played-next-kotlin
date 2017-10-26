@@ -19,8 +19,8 @@ class CompanyDaoRepositoryImpl @Inject constructor(private val dao: CompanyDaoSe
 
     override fun save(data: Company): Completable {
         return Completable.defer {
-            dao.insertCompany(mapper.mapFromEntity(data))
-            Completable.complete()
+            val id = dao.insertCompany(mapper.mapFromEntity(data))
+            if (id != 0L) Completable.complete() else Completable.error(Throwable("Could not save company"))
         }
     }
 
@@ -31,7 +31,13 @@ class CompanyDaoRepositoryImpl @Inject constructor(private val dao: CompanyDaoSe
 
     override fun saveDeveloperForGame(id: Int, data: Company): Completable {
         return save(data)
-                .doOnComplete { dao.insertGameDeveloper(GameDeveloperDao(id, data.id)) }
+                .doOnComplete {
+                    if (dao.insertGameDeveloper(GameDeveloperDao(id, data.id)) > 0L) {
+                        Completable.complete()
+                    } else {
+                        Completable.error(Throwable("Could not save game developer"))
+                    }
+                }
     }
 
     override fun loadPublishersForGame(id: Int): Single<List<Company>> {
@@ -41,6 +47,12 @@ class CompanyDaoRepositoryImpl @Inject constructor(private val dao: CompanyDaoSe
 
     override fun savePublisherForGame(id: Int, data: Company): Completable {
         return save(data)
-                .doOnComplete { dao.insertGamePublisher(GamePublisherDao(id, data.id)) }
+                .doOnComplete {
+                    if (dao.insertGamePublisher(GamePublisherDao(id, data.id)) > 0L) {
+                        Completable.complete()
+                    } else {
+                        Completable.error(Throwable("Could not save game developer"))
+                    }
+                }
     }
 }

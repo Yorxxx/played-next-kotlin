@@ -1,9 +1,7 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
+import com.piticlistudio.playednext.domain.repository.CollectionRepository
 import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.domain.repository.GenreRepository
@@ -31,6 +29,8 @@ internal class SaveGameUseCaseTest {
         private lateinit var companyRepository: CompanyRepository
         @Mock
         private lateinit var genreRepository: GenreRepository
+        @Mock
+        private lateinit var collectionRepository: CollectionRepository
         private var usecase: SaveGameUseCase? = null
 
         val game = makeGame()
@@ -42,7 +42,7 @@ internal class SaveGameUseCaseTest {
             whenever(companyRepository.saveDevelopersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(companyRepository.savePublishersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(genreRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, companyRepository, genreRepository)
+            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository)
         }
 
         @Nested
@@ -226,6 +226,69 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then does not save genres")
                 fun doesNotRequestsRepository() {
                     verify(genreRepository, never()).saveForGame(anyInt(), any())
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does have collection")
+            inner class withCollection {
+
+                @BeforeEach
+                internal fun setUp() {
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then saves into repository")
+                fun requestsRepository() {
+                    verify(repository).save(game)
+                }
+
+                @Test
+                @DisplayName("Then saves collection")
+                fun savesDevelopers() {
+                    verify(collectionRepository).saveForGame(game.id, game.collection!!)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does not collection")
+            inner class withoutCollection {
+
+                var observer: TestObserver<Void>? = null
+
+                @BeforeEach
+                internal fun setUp() {
+                    game.collection = null
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then does not save collection")
+                fun doesNotRequestsRepository() {
+                    verifyZeroInteractions(collectionRepository)
                 }
 
                 @Test
