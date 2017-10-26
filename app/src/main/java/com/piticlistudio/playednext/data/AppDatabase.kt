@@ -11,7 +11,7 @@ import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoServi
 @Database(entities = arrayOf(GameDao::class, CompanyDao::class, GameDeveloperDao::class,
         GamePublisherDao::class, GenreDao::class, GameGenreDao::class, CollectionDao::class,
         GameCollectionDao::class),
-        version = 4, exportSchema = false)
+        version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): GameDaoService

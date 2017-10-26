@@ -7,16 +7,15 @@ import android.util.Log
 import com.facebook.stetho.Stetho
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.mapper.datasources.*
+import com.piticlistudio.playednext.data.repository.CollectionRepositoryImpl
 import com.piticlistudio.playednext.data.repository.CompanyRepositoryImpl
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.GenreRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.dao.CollectionDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.CompanyRemoteImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
-import com.piticlistudio.playednext.data.repository.datasource.net.GenreRemoteImpl
+import com.piticlistudio.playednext.data.repository.datasource.net.*
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
@@ -68,11 +67,16 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         val repository = GameRepositoryImpl(GameRemoteImpl(service, gameMapper), localRepository)
         val localCompRepository = CompanyDaoRepositoryImpl(database.companyDao(), CompanyDaoMapper())
         val comp_repository = CompanyRepositoryImpl(localCompRepository, CompanyRemoteImpl(service, companyDTOMapper))
+
         val localGenRepository = GenreDaoRepositoryImpl(database.genreDao(), GenreDaoMapper())
         val gen_repository = GenreRepositoryImpl(localGenRepository, GenreRemoteImpl(service, genreDTOMapper))
-        val load = LoadGameUseCase(repository, comp_repository, gen_repository)
+
+        val localColRepository = CollectionDaoRepositoryImpl(database.collectionDao(), CollectionDaoMapper())
+        val col_repository = CollectionRepositoryImpl(localColRepository, CollectionDTORepositoryImpl(service, collectionDTOMapper))
+
+        val load = LoadGameUseCase(repository, comp_repository, gen_repository, col_repository)
         val save = SaveGameUseCase(repository, comp_repository, gen_repository)
-        load.execute(657)
+        load.execute(658)
                 .flatMap { save.execute(it).andThen(Single.just(it)) }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -88,6 +92,9 @@ class MvpStarterApplication : Application(), HasActivityInjector {
                             }
                             it.genres?.forEach {
                                 Log.d("LoadGameUseCase", "Retrieved genre ${it}")
+                            }
+                            it.collection?.apply {
+                                Log.d("LoadGameUseCase", "Retrieved collection ${it.collection!!}")
                             }
                         },
                         onError = { Log.e("LoadGameUseCase", "Failed loading game ${it}") },

@@ -5,9 +5,11 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.repository.CollectionRepository
 import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.domain.repository.GenreRepository
+import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -30,6 +33,7 @@ class LoadGameUseCaseTest {
         @Mock lateinit var repository: GameRepository
         @Mock lateinit var companyrepository: CompanyRepository
         @Mock lateinit var genrerepository: GenreRepository
+        @Mock lateinit var collectionrepository: CollectionRepository
 
         private val gameId = 10
         private var useCase: LoadGameUseCase? = null
@@ -37,7 +41,7 @@ class LoadGameUseCaseTest {
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            useCase = LoadGameUseCase(repository, companyrepository, genrerepository)
+            useCase = LoadGameUseCase(repository, companyrepository, genrerepository, collectionrepository)
         }
 
         @Nested
@@ -48,13 +52,15 @@ class LoadGameUseCaseTest {
             val result = makeGame()
             val companyList = makeCompanyList()
             val genreList = makeGenreList()
+            val collection = makeCollection()
 
             @BeforeEach
             internal fun setup() {
                 whenever(repository.load(gameId)).thenReturn(Single.just(result))
-                whenever(companyrepository.loadDevelopersForGameId(gameId)).thenReturn(Single.just(companyList))
-                whenever(companyrepository.loadPublishersForGame(gameId)).thenReturn(Single.just(companyList))
-                whenever(genrerepository.loadForGame(gameId)).thenReturn(Single.just(genreList))
+                whenever(companyrepository.loadDevelopersForGameId(result.id)).thenReturn(Single.just(companyList))
+                whenever(companyrepository.loadPublishersForGame(result.id)).thenReturn(Single.just(companyList))
+                whenever(genrerepository.loadForGame(result.id)).thenReturn(Single.just(genreList))
+                whenever(collectionrepository.loadForGame(result.id)).thenReturn(Single.just(collection))
                 testObserver = useCase?.execute(gameId)!!.test()
             }
 
@@ -93,6 +99,12 @@ class LoadGameUseCaseTest {
                 verify(genrerepository, never()).loadForGame(gameId);
             }
 
+            @Test
+            @DisplayName("Then should not request collection")
+            fun noCollectionRequest() {
+                verify(collectionrepository, never()).loadForGame(gameId);
+            }
+
             @Nested
             @DisplayName("And does not have developers assigned")
             inner class withoutDevelopers {
@@ -106,7 +118,7 @@ class LoadGameUseCaseTest {
                 @Test
                 @DisplayName("Then requests company repository")
                 fun requestsRepository() {
-                    verify(companyrepository).loadDevelopersForGameId(gameId)
+                    verify(companyrepository).loadDevelopersForGameId(result.id)
                 }
 
                 @Test
@@ -129,7 +141,7 @@ class LoadGameUseCaseTest {
                     @BeforeEach
                     internal fun setUp() {
                         result.developers = null
-                        whenever(companyrepository.loadDevelopersForGameId(gameId)).thenReturn(Single.error(Throwable("foo")))
+                        whenever(companyrepository.loadDevelopersForGameId(anyInt())).thenReturn(Single.error(Throwable("foo")))
                         testObserver = useCase?.execute(gameId)!!.test()
                     }
 
@@ -156,14 +168,13 @@ class LoadGameUseCaseTest {
                 @BeforeEach
                 internal fun setUp() {
                     result.publishers = null
-                    whenever(repository.load(gameId)).thenReturn(Single.just(result))
                     testObserver = useCase?.execute(gameId)!!.test()
                 }
 
                 @Test
                 @DisplayName("Then requests company repository")
                 fun requestsRepository() {
-                    verify(companyrepository).loadPublishersForGame(gameId)
+                    verify(companyrepository).loadPublishersForGame(result.id)
                 }
 
                 @Test
@@ -187,7 +198,7 @@ class LoadGameUseCaseTest {
                     @BeforeEach
                     internal fun setUp() {
                         result.publishers = null
-                        whenever(companyrepository.loadPublishersForGame(gameId)).thenReturn(Single.error(Throwable("foo")))
+                        whenever(companyrepository.loadPublishersForGame(anyInt())).thenReturn(Single.error(Throwable("foo")))
                         testObserver = useCase?.execute(gameId)!!.test()
                     }
 
@@ -214,14 +225,13 @@ class LoadGameUseCaseTest {
                 @BeforeEach
                 internal fun setUp() {
                     result.genres = null
-                    whenever(repository.load(gameId)).thenReturn(Single.just(result))
                     testObserver = useCase?.execute(gameId)!!.test()
                 }
 
                 @Test
                 @DisplayName("Then requests repository")
                 fun requestsRepository() {
-                    verify(genrerepository).loadForGame(gameId)
+                    verify(genrerepository).loadForGame(result.id)
                 }
 
                 @Test
@@ -245,7 +255,7 @@ class LoadGameUseCaseTest {
                     @BeforeEach
                     internal fun setUp() {
                         result.genres = null
-                        whenever(genrerepository.loadForGame(gameId)).thenReturn(Single.error(Throwable("foo")))
+                        whenever(genrerepository.loadForGame(anyInt())).thenReturn(Single.error(Throwable("foo")))
                         testObserver = useCase?.execute(gameId)!!.test()
                     }
 
@@ -259,6 +269,63 @@ class LoadGameUseCaseTest {
                             assertComplete()
                             assertValue {
                                 it.genres == null
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And does not have collection assigned")
+            inner class withoutCollection {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.collection = null
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then requests repository")
+                fun requestsRepository() {
+                    verify(collectionrepository).loadForGame(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    with(testObserver) {
+                        this!!.assertNoErrors()
+                        assertComplete()
+                        assertValueCount(1)
+                        assertValue {
+                            it.collection == collection
+                        }
+                    }
+                }
+
+                @Nested
+                @DisplayName("And request fails")
+                inner class requestFails {
+
+                    @BeforeEach
+                    internal fun setUp() {
+                        result.collection = null
+                        whenever(collectionrepository.loadForGame(result.id)).thenReturn(Single.error(Throwable("foo")))
+                        testObserver = useCase?.execute(gameId)!!.test()
+                    }
+
+                    @Test
+                    @DisplayName("Then emits ignores errors")
+                    fun withoutErrors() {
+                        assertNotNull(testObserver)
+                        with(testObserver) {
+                            this!!.assertNoErrors()
+                            assertValueCount(1)
+                            assertComplete()
+                            assertValue {
+                                it.collection == null
                             }
                         }
                     }
