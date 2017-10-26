@@ -1,10 +1,6 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
-import com.piticlistudio.playednext.data.entity.dao.CompanyDao
-import com.piticlistudio.playednext.data.entity.dao.CoverDao
-import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
-import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.data.entity.dao.*
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
 
@@ -49,6 +45,10 @@ class DomainFactory {
 
         fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
             return CompanyDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
+        }
+
+        fun makeCollectionDao(id: Int = randomInt()): CollectionDao {
+            return CollectionDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
         }
 
         fun makeCoverCache(): CoverDao {

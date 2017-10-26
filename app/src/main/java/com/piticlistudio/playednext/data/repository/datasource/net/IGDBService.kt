@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.piticlistudio.playednext.BuildConfig
+import com.piticlistudio.playednext.data.entity.net.CollectionDTO
 import com.piticlistudio.playednext.data.entity.net.CompanyDTO
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
@@ -32,4 +33,8 @@ interface IGDBService {
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/companies/{id}/")
     fun loadCompany(@Path("id") id: Int, @Query("fields") fields: String): Single<CompanyDTO>
+
+    @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
+    @GET("/collections/{id}/")
+    fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "*"): Single<CollectionDTO>
 }
