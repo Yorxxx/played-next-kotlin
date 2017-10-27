@@ -21,9 +21,7 @@ class GameRemoteImpl @Inject constructor(private val service: IGDBService,
         return service.loadGame(id)
                 .filter { it.size == 1 }
                 .map { it.get(0) }
-                .map {
-                    mapper.mapFromModel(it)
-                }
+                .map { mapper.mapFromModel(it) }
                 .toSingle()
     }
 

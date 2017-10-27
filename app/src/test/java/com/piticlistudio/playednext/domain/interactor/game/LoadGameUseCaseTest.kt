@@ -90,19 +90,19 @@ class LoadGameUseCaseTest {
             @Test
             @DisplayName("Then should not request publishers")
             fun noPublishersRequest() {
-                verify(companyrepository, never()).loadPublishersForGame(gameId);
+                verify(companyrepository, never()).loadPublishersForGame(gameId)
             }
 
             @Test
             @DisplayName("Then should not request genres")
             fun noGenresRequest() {
-                verify(genrerepository, never()).loadForGame(gameId);
+                verify(genrerepository, never()).loadForGame(gameId)
             }
 
             @Test
             @DisplayName("Then should not request collection")
             fun noCollectionRequest() {
-                verify(collectionrepository, never()).loadForGame(gameId);
+                verify(collectionrepository, never()).loadForGame(gameId)
             }
 
             @Nested
