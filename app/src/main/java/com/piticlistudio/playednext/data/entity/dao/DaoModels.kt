@@ -22,7 +22,8 @@ data class GameDao(@PrimaryKey val id: Int,
                    @ColumnInfo(name = "total_rating_count") val totalRatingCount: Int?,
                    @ColumnInfo(name = "first_release_date") val firstReleaseAt: Long?,
                    @Embedded val timeToBeat: TimeToBeatDao?,
-                   @Embedded val cover: CoverDao?)
+                   @Embedded val cover: CoverDao?,
+                   @ColumnInfo(name = "synced_at") val syncedAt: Long)
 
 data class TimeToBeatDao(@ColumnInfo(name = "beat_hastly") val hastly: Int?,
                          @ColumnInfo(name = "beat_normally") val normally: Int?,

@@ -55,6 +55,7 @@ internal class GameDTOMapperTest {
             @DisplayName("Then maps values into model")
             fun valuesAreMapped() {
                 assertNotNull(result)
+                val currentTime = System.currentTimeMillis()
                 result?.apply {
                     assertEquals(model.id, id)
                     assertEquals(model.name, name)
@@ -69,6 +70,7 @@ internal class GameDTOMapperTest {
                     assertEquals(model.aggregated_rating_count, aggregatedRatingCount)
                     assertEquals(model.total_rating, totalRating)
                     assertEquals(model.total_rating_count, totalRatingCount)
+                    assertTrue(syncedAt >= currentTime)
                 }
             }
 
