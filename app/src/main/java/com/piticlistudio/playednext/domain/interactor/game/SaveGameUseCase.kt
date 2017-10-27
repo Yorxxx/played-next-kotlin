@@ -7,8 +7,9 @@ import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.domain.repository.GenreRepository
 import io.reactivex.Completable
+import javax.inject.Inject
 
-class SaveGameUseCase constructor(
+class SaveGameUseCase @Inject constructor(
         private val repository: GameRepository,
         private val comprepository: CompanyRepository,
         private val genrerepository: GenreRepository,

@@ -4,7 +4,7 @@ import android.app.Fragment
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.piticlistudio.playednext.R
-import com.piticlistudio.playednext.ui.game.search.GameSearchFragment
+import com.piticlistudio.playednext.ui.game.load.GameLoadFragment
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -21,7 +21,7 @@ class FooActivity : AppCompatActivity(), HasFragmentInjector {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_search_fragment)
         fragmentManager.beginTransaction()
-                .add(android.R.id.content, GameSearchFragment())
+                .add(android.R.id.content, GameLoadFragment())
                 .commit()
     }
 
