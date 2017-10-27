@@ -1,6 +1,8 @@
 package com.piticlistudio.playednext.data.repository
 
+import android.app.AlarmManager
 import android.arch.persistence.room.EmptyResultSetException
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -48,12 +51,16 @@ internal class GameRepositoryImplTest {
         @DisplayName("When we call load")
         inner class Load {
             val id = 10
-            val entity = makeGame()
+            val entity = makeGame().apply {
+                syncedAt = System.currentTimeMillis()
+            }
             var result: TestObserver<Game>? = null
 
             @BeforeEach
             fun setup() {
-                whenever(localImpl.load(id)).thenReturn(Single.just(entity))
+                whenever(localImpl.load(anyInt())).thenReturn(Single.just(entity))
+                whenever(localImpl.save(entity)).thenReturn(Completable.complete())
+                whenever(remoteImpl.load(anyInt())).thenReturn(Single.just(entity))
                 result = repository?.load(id)?.test()
             }
 
@@ -78,6 +85,64 @@ internal class GameRepositoryImplTest {
                     assertValueCount(1)
                     assertComplete()
                     assertValue(entity)
+                }
+            }
+
+            @Nested
+            @DisplayName("And local repository has unsynced data")
+            inner class localDataIsOld {
+
+                @BeforeEach
+                internal fun setUp() {
+                    entity.syncedAt = System.currentTimeMillis() - AlarmManager.INTERVAL_DAY * 15
+                    result = repository?.load(id)?.test()
+                }
+
+                @Test
+                @DisplayName("Then should request remote repository")
+                fun remoteIsCalled() {
+                    verify(remoteImpl).load(id)
+                }
+
+                @Test
+                @DisplayName("Then should emit without errors")
+                fun withoutErrors() {
+                    assertNotNull(result)
+                    with(result) {
+                        this?.assertNoErrors()
+                        this?.assertValueCount(1)
+                        this?.assertComplete()
+                        this?.assertValue(entity)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then should cache retrieved data")
+                fun cacheResponse() {
+                    verify(localImpl).save(entity)
+                }
+
+                @Nested
+                @DisplayName("And request fails")
+                inner class refreshFailed {
+
+                    @BeforeEach
+                    internal fun setUp() {
+                        whenever(remoteImpl.load(anyInt())).thenReturn(Single.error(Throwable("No Internet Connection")))
+                        result = repository?.load(id)?.test()
+                    }
+
+                    @Test
+                    @DisplayName("Then should emit without errors")
+                    fun withoutErrors() {
+                        assertNotNull(result)
+                        with(result) {
+                            this?.assertNoErrors()
+                            this?.assertValueCount(1)
+                            this?.assertComplete()
+                            this?.assertValue(entity)
+                        }
+                    }
                 }
             }
 
