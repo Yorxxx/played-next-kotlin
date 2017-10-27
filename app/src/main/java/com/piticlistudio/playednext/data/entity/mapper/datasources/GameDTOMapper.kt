@@ -21,7 +21,7 @@ class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTO
                     mapTimeToBeatModel(time_to_beat), companyDTOMapper.mapFromModel(developers),
                     companyDTOMapper.mapFromModel(publishers),
                     genreDTOMapper.mapFromModel(genres),
-                    collectionDTOMapper.mapFromModel(collection))
+                    collectionDTOMapper.mapFromModel(collection), System.currentTimeMillis())
         }
     }
 

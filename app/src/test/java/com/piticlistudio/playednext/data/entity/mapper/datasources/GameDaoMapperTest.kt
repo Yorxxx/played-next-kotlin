@@ -45,7 +45,7 @@ internal class GameDaoMapperTest {
                     assertEquals(model.name, name)
                     assertEquals(model.summary, summary)
                     assertEquals(model.storyline, storyline)
-                    //assertEquals(model.collection, collectionId)
+                    assertEquals(model.syncedAt, syncedAt)
                     //assertEquals(model.franchise, franchiseId)
                     assertEquals(model.rating, rating)
                     assertEquals(model.aggregatedRatingCount, aggregatedRatingCount)
@@ -118,6 +118,7 @@ internal class GameDaoMapperTest {
                     assertNull(popularity)
                     assertEquals(entity.ratingCount, ratingCount)
                     assertEquals(entity.totalRating, totalRating)
+                    assertEquals(entity.syncedAt, syncedAt)
                 }
             }
 

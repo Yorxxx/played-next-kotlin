@@ -30,7 +30,8 @@ class GameFactory {
             return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
-                    makeTimeToBeat(), makeCompanyList(), makeCompanyList(), makeGenreList(), makeCollection())
+                    makeTimeToBeat(), makeCompanyList(), makeCompanyList(), makeGenreList(), makeCollection(),
+                    randomLong())
         }
 
         fun makeCover(): Cover {
@@ -45,7 +46,8 @@ class GameFactory {
             return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeTimeToBeatCache(), makeCoverCache())
+                    randomLong(), makeTimeToBeatCache(), makeCoverCache(),
+                    randomLong())
         }
 
         fun makeCoverCache(): CoverDao {
