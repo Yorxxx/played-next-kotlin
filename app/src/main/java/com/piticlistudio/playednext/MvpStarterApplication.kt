@@ -2,31 +2,12 @@ package com.piticlistudio.playednext
 
 import android.app.Activity
 import android.app.Application
-import android.arch.persistence.room.Room
-import android.util.Log
 import com.facebook.stetho.Stetho
-import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.mapper.datasources.*
-import com.piticlistudio.playednext.data.repository.CollectionRepositoryImpl
-import com.piticlistudio.playednext.data.repository.CompanyRepositoryImpl
-import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
-import com.piticlistudio.playednext.data.repository.GenreRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.CollectionDaoRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.*
-import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
-import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.ui.injection.component.ApplicationComponent
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -53,53 +34,6 @@ class MvpStarterApplication : Application(), HasActivityInjector {
             Timber.plant(Timber.DebugTree())
             Stetho.initializeWithDefaults(this)
         }
-
-        val database = Room.databaseBuilder(this.applicationContext, AppDatabase::class.java, "my-todo-db")
-                .fallbackToDestructiveMigration().build()
-        val service = GameServiceFactory.makeGameService()
-        val gamesDao = database.gamesDao()
-
-        val localRepository = GameLocalImpl(gamesDao, GameDaoMapper())
-        val companyDTOMapper = CompanyDTOMapper()
-        val genreDTOMapper = GenreDTOMapper()
-        val collectionDTOMapper = CollectionDTOMapper()
-        val gameMapper = GameDTOMapper(companyDTOMapper, genreDTOMapper, collectionDTOMapper)
-        val repository = GameRepositoryImpl(GameRemoteImpl(service, gameMapper), localRepository)
-        val localCompRepository = CompanyDaoRepositoryImpl(database.companyDao(), CompanyDaoMapper())
-        val comp_repository = CompanyRepositoryImpl(localCompRepository, CompanyRemoteImpl(service, companyDTOMapper))
-
-        val localGenRepository = GenreDaoRepositoryImpl(database.genreDao(), GenreDaoMapper())
-        val gen_repository = GenreRepositoryImpl(localGenRepository, GenreRemoteImpl(service, genreDTOMapper))
-
-        val localColRepository = CollectionDaoRepositoryImpl(database.collectionDao(), CollectionDaoMapper())
-        val col_repository = CollectionRepositoryImpl(localColRepository, CollectionDTORepositoryImpl(service, collectionDTOMapper))
-
-        val load = LoadGameUseCase(repository, comp_repository, gen_repository, col_repository)
-        val save = SaveGameUseCase(repository, comp_repository, gen_repository, col_repository)
-        load.execute(658)
-                .flatMap { save.execute(it).andThen(Single.just(it)) }
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .toObservable()
-                .subscribeBy(
-                        onNext = {
-                            Log.d("LoadGameUseCase", "Retrieved game ${it}")
-                            it.developers?.forEach {
-                                Log.d("LoadGameUseCase", "Retrieved developer ${it}")
-                            }
-                            it.publishers?.forEach {
-                                Log.d("LoadGameUseCase", "Retrieved publisher ${it}")
-                            }
-                            it.genres?.forEach {
-                                Log.d("LoadGameUseCase", "Retrieved genre ${it}")
-                            }
-                            it.collection?.apply {
-                                Log.d("LoadGameUseCase", "Retrieved collection ${it.collection!!}")
-                            }
-                        },
-                        onError = { Log.e("LoadGameUseCase", "Failed loading game ${it}") },
-                        onComplete = { println("LoadGameUseCase completed") }
-                )
     }
 
 //    // Needed to replace the component with a test specific one

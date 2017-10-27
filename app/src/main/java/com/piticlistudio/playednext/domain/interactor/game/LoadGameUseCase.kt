@@ -7,8 +7,9 @@ import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.domain.repository.GenreRepository
 import io.reactivex.Single
+import javax.inject.Inject
 
-class LoadGameUseCase constructor(
+class LoadGameUseCase @Inject constructor(
         private val grepository: GameRepository,
         private val comprepository: CompanyRepository,
         private val genre_repository: GenreRepository,
