@@ -21,7 +21,7 @@ class PlatformDTOMapper @Inject constructor() : LayerDataMapper<List<PlatformDTO
         throw Throwable("Forbidden")
     }
 
-    private fun mapFromModel(type: PlatformDTO): Platform {
+    fun mapFromModel(type: PlatformDTO): Platform {
         with(type) {
             return Platform(id, name, slug, url, created_at, updated_at)
         }

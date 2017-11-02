@@ -4,7 +4,7 @@ import com.piticlistudio.playednext.BuildConfig
 import com.piticlistudio.playednext.data.entity.net.CollectionDTO
 import com.piticlistudio.playednext.data.entity.net.CompanyDTO
 import com.piticlistudio.playednext.data.entity.net.GameDTO
-import com.piticlistudio.playednext.data.entity.net.GenreDTO
+import com.piticlistudio.playednext.data.entity.net.PlatformDTO
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -20,9 +20,9 @@ interface IGDBService {
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/")
     fun searchGames(@Query("offset") offset: Int,
-               @Query("search") query: String,
-               @Query("fields") fields: String,
-               @Query("limit") limit: Int): Single<List<GameDTO>>
+                    @Query("search") query: String,
+                    @Query("fields") fields: String,
+                    @Query("limit") limit: Int): Single<List<GameDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/games/{id}/")
@@ -37,4 +37,8 @@ interface IGDBService {
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/collections/{id}/")
     fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "*"): Single<CollectionDTO>
+
+    @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
+    @GET("/platforms/{id}/")
+    fun loadPlatform(@Path("id") id: Int, @Query("fields") fields: String = "*"): Single<PlatformDTO>
 }
