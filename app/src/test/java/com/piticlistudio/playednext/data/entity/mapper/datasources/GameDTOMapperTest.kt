@@ -70,7 +70,7 @@ internal class GameDTOMapperTest {
                     assertEquals(model.aggregated_rating_count, aggregatedRatingCount)
                     assertEquals(model.total_rating, totalRating)
                     assertEquals(model.total_rating_count, totalRatingCount)
-                    assertTrue(syncedAt >= currentTime)
+                    assertTrue(syncedAt <= currentTime)
                 }
             }
 
