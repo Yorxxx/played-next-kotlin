@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.data.entity.net.ImageDTO
 import com.piticlistudio.playednext.data.entity.net.TimeToBeatDTO
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTOMapper,
                                         private val genreDTOMapper: GenreDTOMapper,
-                                        private val collectionDTOMapper: CollectionDTOMapper) : LayerDataMapper<GameDTO, Game> {
+                                        private val collectionDTOMapper: CollectionDTOMapper,
+                                        private val platformDTOMapper: PlatformDTOMapper) : LayerDataMapper<GameDTO, Game> {
 
     override fun mapFromModel(type: GameDTO): Game {
         with(type) {
@@ -21,7 +23,8 @@ class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTO
                     mapTimeToBeatModel(time_to_beat), companyDTOMapper.mapFromModel(developers),
                     companyDTOMapper.mapFromModel(publishers),
                     genreDTOMapper.mapFromModel(genres),
-                    collectionDTOMapper.mapFromModel(collection), System.currentTimeMillis(), null)
+                    collectionDTOMapper.mapFromModel(collection), System.currentTimeMillis(),
+                    platformDTOMapper.mapFromModel(platforms))
         }
     }
 

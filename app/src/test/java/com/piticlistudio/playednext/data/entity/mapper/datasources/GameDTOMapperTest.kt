@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
 import com.nhaarman.mockito_kotlin.verify
+import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
@@ -31,12 +32,13 @@ internal class GameDTOMapperTest {
         lateinit var companymapper: CompanyDTOMapper
         @Mock lateinit var genremapper: GenreDTOMapper
         @Mock lateinit var collectionmapper: CollectionDTOMapper
+        @Mock lateinit var platformmapper: PlatformDTOMapper
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper)
+            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper)
         }
 
         @Nested
@@ -81,6 +83,7 @@ internal class GameDTOMapperTest {
                 verify(companymapper).mapFromModel(model.publishers)
                 verify(companymapper).mapFromModel(model.developers)
                 verify(genremapper).mapFromModel(model.genres)
+                verify(platformmapper).mapFromModel(model.platforms)
             }
 
             @Test
