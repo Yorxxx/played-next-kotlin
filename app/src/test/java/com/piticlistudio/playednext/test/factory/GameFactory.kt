@@ -18,6 +18,8 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTOList
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTOList
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
 
 /**
  * Factory class for Game instances
@@ -31,7 +33,7 @@ class GameFactory {
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
                     makeTimeToBeat(), makeCompanyList(), makeCompanyList(), makeGenreList(), makeCollection(),
-                    randomLong())
+                    randomLong(), makePlatformList())
         }
 
         fun makeCover(): Cover {
@@ -66,7 +68,7 @@ class GameFactory {
                     makeCompanyDTOList(), randomIntList(), makeTimeToBeatRemote(),
                     makeGenreDTOList(), randomLong(), listOf(makeReleaseDateRemote(),
                     makeReleaseDateRemote()), listOf(makeImageRemote(), makeImageRemote(), makeImageRemote()),
-                    listOf(makeVideoRemote()), makeImageRemote(), randomIntList())
+                    listOf(makeVideoRemote()), makeImageRemote(), randomIntList(), makePlatformDTOList())
         }
 
         fun makeEnumeratedEntityList(size: Int = randomInt()): List<BaseEnumeratedEntity> {
