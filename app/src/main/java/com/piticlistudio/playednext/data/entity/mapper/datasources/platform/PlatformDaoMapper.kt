@@ -25,13 +25,13 @@ class PlatformDaoMapper @Inject constructor() : LayerDataMapper<List<PlatformDao
         return result
     }
 
-    private fun mapFromModel(type: PlatformDao): Platform {
+    fun mapFromModel(type: PlatformDao): Platform {
         with(type) {
             return Platform(id, name, slug, url, created_at, updated_at)
         }
     }
 
-    private fun mapFromEntity(type: Platform): PlatformDao {
+    fun mapFromEntity(type: Platform): PlatformDao {
         with(type) {
             return PlatformDao(id, name, slug, url, createdAt, updatedAt)
         }
