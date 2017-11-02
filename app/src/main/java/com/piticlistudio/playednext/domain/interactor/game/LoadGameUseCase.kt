@@ -2,10 +2,7 @@ package com.piticlistudio.playednext.domain.interactor.game
 
 import com.piticlistudio.playednext.domain.interactor.SingleUseCaseWithParameter
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.repository.CollectionRepository
-import com.piticlistudio.playednext.domain.repository.CompanyRepository
-import com.piticlistudio.playednext.domain.repository.GameRepository
-import com.piticlistudio.playednext.domain.repository.GenreRepository
+import com.piticlistudio.playednext.domain.repository.*
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -13,7 +10,8 @@ class LoadGameUseCase @Inject constructor(
         private val grepository: GameRepository,
         private val comprepository: CompanyRepository,
         private val genre_repository: GenreRepository,
-        private val collection_repository: CollectionRepository) : SingleUseCaseWithParameter<Int, Game> {
+        private val collection_repository: CollectionRepository,
+        private val platformRepository: PlatformRepository) : SingleUseCaseWithParameter<Int, Game> {
 
     override fun execute(parameter: Int): Single<Game> {
         return grepository.load(parameter)
@@ -21,6 +19,7 @@ class LoadGameUseCase @Inject constructor(
                 .flatMap { loadPublishers(it) }
                 .flatMap { loadGenres(it) }
                 .flatMap { loadCollection(it) }
+                .flatMap { loadPlatforms(it) }
     }
 
     private fun loadDevelopers(game: Game): Single<Game> {
@@ -61,5 +60,15 @@ class LoadGameUseCase @Inject constructor(
                     game
                 }
                 .onErrorResumeNext { Single.just(game) }
+    }
+
+    private fun loadPlatforms(game: Game): Single<Game> {
+        return game.platforms?.let { Single.just(game) }
+                ?: platformRepository.loadForGame(game.id)
+                .onErrorReturn { listOf() }
+                .map {
+                    game.platforms = it.takeIf { !it.isEmpty() }
+                    game
+                }
     }
 }

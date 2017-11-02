@@ -19,7 +19,8 @@ import javax.inject.Singleton
         GameModule::class,
         CompanyModule::class,
         GenreModule::class,
-        CollectionModule::class))
+        CollectionModule::class,
+        PlatformModule::class))
 interface ApplicationComponent {
 
     @Component.Builder
