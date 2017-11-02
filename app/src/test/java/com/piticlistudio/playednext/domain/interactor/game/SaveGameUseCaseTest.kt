@@ -1,10 +1,7 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.domain.repository.CollectionRepository
-import com.piticlistudio.playednext.domain.repository.CompanyRepository
-import com.piticlistudio.playednext.domain.repository.GameRepository
-import com.piticlistudio.playednext.domain.repository.GenreRepository
+import com.piticlistudio.playednext.domain.repository.*
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.Completable
 import io.reactivex.observers.TestObserver
@@ -31,6 +28,8 @@ internal class SaveGameUseCaseTest {
         private lateinit var genreRepository: GenreRepository
         @Mock
         private lateinit var collectionRepository: CollectionRepository
+        @Mock
+        private lateinit var platformRepository: PlatformRepository
         private var usecase: SaveGameUseCase? = null
 
         val game = makeGame()
@@ -42,7 +41,8 @@ internal class SaveGameUseCaseTest {
             whenever(companyRepository.saveDevelopersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(companyRepository.savePublishersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(genreRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository)
+            whenever(platformRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
+            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository, platformRepository)
         }
 
         @Nested
@@ -289,6 +289,69 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then does not save collection")
                 fun doesNotRequestsRepository() {
                     verifyZeroInteractions(collectionRepository)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does have platforms")
+            inner class withPlatforms {
+
+                @BeforeEach
+                internal fun setUp() {
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then saves into repository")
+                fun requestsRepository() {
+                    verify(repository).save(game)
+                }
+
+                @Test
+                @DisplayName("Then saves platforms")
+                fun savesPlatforms() {
+                    verify(platformRepository).saveForGame(game.id, game.platforms!!)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("and does not have platforms")
+            inner class withoutPlatforms {
+
+                var observer: TestObserver<Void>? = null
+
+                @BeforeEach
+                internal fun setUp() {
+                    game.platforms = null
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then does not save platforms")
+                fun doesNotRequestsRepository() {
+                    verify(platformRepository, never()).saveForGame(anyInt(), any())
                 }
 
                 @Test

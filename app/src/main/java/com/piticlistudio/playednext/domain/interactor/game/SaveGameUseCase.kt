@@ -2,10 +2,7 @@ package com.piticlistudio.playednext.domain.interactor.game
 
 import com.piticlistudio.playednext.domain.interactor.CompletableUseCaseWithParameter
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.repository.CollectionRepository
-import com.piticlistudio.playednext.domain.repository.CompanyRepository
-import com.piticlistudio.playednext.domain.repository.GameRepository
-import com.piticlistudio.playednext.domain.repository.GenreRepository
+import com.piticlistudio.playednext.domain.repository.*
 import io.reactivex.Completable
 import javax.inject.Inject
 
@@ -13,7 +10,8 @@ class SaveGameUseCase @Inject constructor(
         private val repository: GameRepository,
         private val comprepository: CompanyRepository,
         private val genrerepository: GenreRepository,
-        private val collectionRepository: CollectionRepository) : CompletableUseCaseWithParameter<Game> {
+        private val collectionRepository: CollectionRepository,
+        private val platformRepository: PlatformRepository) : CompletableUseCaseWithParameter<Game> {
 
     override fun execute(parameter: Game): Completable {
         return repository.save(parameter)
@@ -21,7 +19,8 @@ class SaveGameUseCase @Inject constructor(
                         saveDevelopers(parameter),
                         savePublishers(parameter),
                         saveGenres(parameter),
-                        saveCollection(parameter))))
+                        saveCollection(parameter),
+                        savePlatforms(parameter))))
     }
 
     private fun saveDevelopers(game: Game): Completable {
@@ -44,5 +43,11 @@ class SaveGameUseCase @Inject constructor(
 
     private fun saveCollection(game: Game): Completable {
         return game.collection?.let { collectionRepository.saveForGame(game.id, game.collection!!) } ?: Completable.complete()
+    }
+
+    private fun savePlatforms(game: Game): Completable {
+        return game.platforms?.let {
+            platformRepository.saveForGame(game.id, game.platforms!!)
+        } ?: Completable.complete()
     }
 }
