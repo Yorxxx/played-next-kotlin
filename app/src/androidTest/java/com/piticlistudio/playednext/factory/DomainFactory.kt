@@ -40,7 +40,7 @@ class DomainFactory {
             return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeTimeToBeatCache(), makeCoverCache())
+                    randomLong(), makeTimeToBeatCache(), makeCoverCache(), randomLong())
         }
 
         fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
@@ -57,6 +57,10 @@ class DomainFactory {
 
         fun makeTimeToBeatCache(): TimeToBeatDao {
             return TimeToBeatDao(randomInt(), randomInt(), randomInt())
+        }
+
+        fun makePlatformDao(id: Int = randomInt()): PlatformDao {
+            return PlatformDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
         }
     }
 }
