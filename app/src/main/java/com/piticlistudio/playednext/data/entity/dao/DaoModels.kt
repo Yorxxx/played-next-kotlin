@@ -79,3 +79,11 @@ data class GameCollectionDao(val gameId: Int, val collectionId: Int)
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
                 (ForeignKey(entity = PlatformDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))))
 data class GamePlatformDao(val gameId: Int, val platformId: Int)
+
+@Entity(tableName = "game_relation",
+        primaryKeys = arrayOf("gameId", "platformId"),
+        foreignKeys = arrayOf(
+                (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
+                (ForeignKey(entity = PlatformDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))
+        ))
+data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
