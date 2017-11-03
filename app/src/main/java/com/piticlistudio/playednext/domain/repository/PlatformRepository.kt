@@ -10,6 +10,8 @@ import io.reactivex.Single
  */
 interface PlatformRepository {
 
+    fun load(id: Int): Single<Platform>
+
     fun loadForGame(id: Int): Single<List<Platform>>
 
     fun saveForGame(id: Int, platforms: List<Platform>): Completable
