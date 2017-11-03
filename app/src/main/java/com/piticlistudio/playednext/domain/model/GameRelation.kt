@@ -1,4 +1,4 @@
 package com.piticlistudio.playednext.domain.model
 
-data class GameRelation(private val game: Game, private val platform: Platform, private val currentStatus: GameRelationStatus,
-                        private var createdAt: Long = System.currentTimeMillis(), private var updatedAt: Long = System.currentTimeMillis())
+data class GameRelation(val game: Game?, val platform: Platform?, val currentStatus: GameRelationStatus,
+                        var createdAt: Long = System.currentTimeMillis(), var updatedAt: Long = System.currentTimeMillis())
