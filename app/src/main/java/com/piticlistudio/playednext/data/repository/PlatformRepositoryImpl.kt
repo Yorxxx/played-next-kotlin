@@ -26,4 +26,11 @@ class PlatformRepositoryImpl @Inject constructor(private val localImpl: Platform
         return Observable.fromIterable(platforms)
                 .flatMapCompletable { localImpl.saveForGame(id, it) }
     }
+
+    override fun load(id: Int): Single<Platform> {
+        return localImpl.load(id)
+                .onErrorResumeNext {
+                    remoteImpl.load(id).flatMap { localImpl.save(it).andThen(Single.just(it)) }
+                }
+    }
 }
