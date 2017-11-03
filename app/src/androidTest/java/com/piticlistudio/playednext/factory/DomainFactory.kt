@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.factory
 
 import com.piticlistudio.playednext.data.entity.dao.*
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
 
@@ -61,6 +62,14 @@ class DomainFactory {
 
         fun makePlatformDao(id: Int = randomInt()): PlatformDao {
             return PlatformDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
+        }
+
+        fun makeRelationDao(gameId: Int = randomInt(), platformId: Int = randomInt()): GameRelationDao {
+            return GameRelationDao(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
+        }
+
+        fun makeRelationStatus(): GameRelationStatus {
+            return GameRelationStatus.values().get(randomInt() % GameRelationStatus.values().size)
         }
     }
 }
