@@ -6,9 +6,12 @@ import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.domain.repository.CollectionRepository
 import io.reactivex.Completable
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CollectionRepositoryImpl constructor(private val localImpl: CollectionDaoRepositoryImpl,
-                                           private val remoteImpl: CollectionDTORepositoryImpl) : CollectionRepository {
+@Singleton
+class CollectionRepositoryImpl @Inject constructor(private val localImpl: CollectionDaoRepositoryImpl,
+                                                   private val remoteImpl: CollectionDTORepositoryImpl) : CollectionRepository {
 
     override fun loadForGame(id: Int): Single<Collection> {
         return localImpl.loadForGame(id)

@@ -8,7 +8,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PlatformRepositoryImpl @Inject constructor(private val localImpl: PlatformDaoRepositoryImpl,
                                                  private val remoteImpl: PlatformDTORepositoryImpl) : PlatformRepository {
 

@@ -7,9 +7,12 @@ import com.piticlistudio.playednext.domain.repository.CompanyRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CompanyRepositoryImpl constructor(private val localImpl: CompanyDaoRepositoryImpl,
-                                        private val remoteImpl: CompanyRemoteImpl) : CompanyRepository {
+@Singleton
+class CompanyRepositoryImpl @Inject constructor(private val localImpl: CompanyDaoRepositoryImpl,
+                                                private val remoteImpl: CompanyRemoteImpl) : CompanyRepository {
 
     override fun load(id: Int): Single<Company> {
         return localImpl.load(id)
