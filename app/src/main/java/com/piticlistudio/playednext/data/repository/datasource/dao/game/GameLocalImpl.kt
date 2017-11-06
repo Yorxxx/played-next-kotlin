@@ -7,7 +7,6 @@ import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRep
 import com.piticlistudio.playednext.domain.model.Game
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import javax.inject.Inject
 
 class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
@@ -21,7 +20,11 @@ class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
 
     override fun search(query: String): Flowable<List<Game>> {
         return dao.findByName(query)
-                .flatMapSingle { Observable.fromIterable(it).map { mapper.mapFromEntity(it) }.toList() }
+                .map {
+                    val data = mutableListOf<Game>()
+                    it.forEach { data.add(mapper.mapFromEntity(it)) }
+                    data
+                }
     }
 
     override fun save(domainModel: Game): Completable {

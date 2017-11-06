@@ -3,11 +3,15 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
+import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
@@ -51,9 +55,8 @@ internal class GameRemoteImplTest {
 
             @BeforeEach
             fun setup() {
-                val response = listOf(model)
-
-                whenever(service.loadGame(10)).thenReturn(Single.just(response))
+                val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model))  }
+                whenever(service.loadGame(10)).thenReturn(flowable)
                 whenever(mapper.mapFromModel(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
@@ -76,7 +79,7 @@ internal class GameRemoteImplTest {
                 assertNotNull(result)
                 result?.apply {
                     assertValueCount(1)
-                    assertNotComplete()
+                    assertComplete()
                     assertNoErrors()
                     assertValue(entity)
                 }
@@ -88,7 +91,8 @@ internal class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    whenever(service.loadGame(10)).thenReturn(Single.just(listOf()))
+                    val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf())  }
+                    whenever(service.loadGame(10)).thenReturn(flowable)
                     result = repositoryImpl?.load(10)?.test()
                 }
 
@@ -117,12 +121,10 @@ internal class GameRemoteImplTest {
 
             @BeforeEach
             fun setup() {
-                whenever(service.searchGames(0, "query", "*", 20))
-                        .thenReturn(Single.just(response))
-                whenever(mapper.mapFromModel(model))
-                        .thenReturn(entity1)
-                whenever(mapper.mapFromModel(model2))
-                        .thenReturn(entity2)
+                val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model, model2))  }
+                whenever(service.searchGames(0, "query", "*", 20)).thenReturn(flowable)
+                whenever(mapper.mapFromModel(model)).thenReturn(entity1)
+                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
                 result = repositoryImpl?.search("query")?.test()
             }
 
@@ -145,7 +147,7 @@ internal class GameRemoteImplTest {
                 assertNotNull(result)
                 result?.apply {
                     assertNoErrors()
-                    assertNotComplete()
+                    assertComplete()
                     assertValueCount(1)
                     assertValue(listOf(entity1, entity2))
                 }
