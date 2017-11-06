@@ -96,7 +96,8 @@ internal class GameLocalImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(daoService.findById(anyLong())).thenReturn(Flowable.just(listOf()))
+                    val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf()) }, BackpressureStrategy.MISSING)
+                    whenever(daoService.findById(anyLong())).thenReturn(flowable)
                     observer = repository.load(10).test()
                 }
 
@@ -198,7 +199,8 @@ internal class GameLocalImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(daoService.findByName("foo")).thenReturn(Flowable.just(listOf(data1, data2)))
+                val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf(data1, data2)) }, BackpressureStrategy.MISSING)
+                whenever(daoService.findByName("foo")).thenReturn(flowable)
                 whenever(mapper.mapFromEntity(data1)).thenReturn(entity1)
                 whenever(mapper.mapFromEntity(data2)).thenReturn(entity2)
                 observer = repository.search("foo").test()
@@ -221,10 +223,10 @@ internal class GameLocalImplTest {
             @DisplayName("Then emits without errors")
             fun withoutErrors() {
                 assertNotNull(observer)
-                with(observer) {
-                    this!!.assertNoErrors()
+                observer?.apply {
+                    assertNoErrors()
                     assertValueCount(1)
-                    assertComplete()
+                    assertNotComplete()
                     assertValue(listOf(entity1, entity2))
                 }
             }
