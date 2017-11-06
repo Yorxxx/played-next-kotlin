@@ -6,10 +6,12 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
+import com.piticlistudio.playednext.data.entity.dao.GameRelationDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makePlatformDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRelationDao
 import junit.framework.Assert
+import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.fail
 import org.junit.After
 import org.junit.Before
@@ -114,6 +116,64 @@ class RelationDaoServiceTest {
             assertNoValues()
             assertNotComplete()
             assertError { it is EmptyResultSetException }
+        }
+    }
+
+    @Test
+    fun findForGame_shouldReturnAllRelationsForTheSpecifiedGame() {
+
+        val game = makeGameCache()
+        val game2 = makeGameCache()
+        val platform = makePlatformDao()
+        val platform2 = makePlatformDao()
+        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insertGame(game2)
+        database?.platformDao()?.insert(platform)
+        database?.platformDao()?.insert(platform2)
+
+        val relation = makeRelationDao(game.id, platform.id)
+        val relation2 = makeRelationDao(game.id, platform2.id)
+        database?.relationDao()?.insert(relation)
+        database?.relationDao()?.insert(relation2)
+
+        // Act
+        val observer = database?.relationDao()?.findForGame(game.id)?.test()
+
+        // Assert
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertComplete()
+            assertValue { it.size == 2 && it.containsAll(listOf<GameRelationDao>(relation, relation2)) }
+        }
+    }
+
+    @Test
+    fun findForGame_shouldEmptyListIfNoRelationsForThisGame() {
+
+        val game = makeGameCache(1)
+        val game2 = makeGameCache(2)
+        val platform = makePlatformDao()
+        val platform2 = makePlatformDao()
+        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insertGame(game2)
+        database?.platformDao()?.insert(platform)
+        database?.platformDao()?.insert(platform2)
+
+        val relation = makeRelationDao(game.id, platform.id)
+        val relation2 = makeRelationDao(game.id, platform2.id)
+        database?.relationDao()?.insert(relation)
+        database?.relationDao()?.insert(relation2)
+
+        // Act
+        val observer = database?.relationDao()?.findForGame(15)?.test()
+
+        // Assert
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertComplete()
+            assertValue { it.size == 0 }
         }
     }
 

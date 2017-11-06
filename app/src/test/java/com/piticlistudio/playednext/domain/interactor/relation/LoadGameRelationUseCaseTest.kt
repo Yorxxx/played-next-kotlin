@@ -10,8 +10,10 @@ import com.piticlistudio.playednext.domain.repository.GameRelationRepository
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -42,7 +44,7 @@ internal class LoadGameRelationUseCaseTest {
         @DisplayName("When we call execute")
         inner class executeIsCalled {
 
-            private var observer: TestObserver<GameRelation>? = null
+            private var observer: TestSubscriber<GameRelation>? = null
             private val gameId = 100
             private val platformId = 1000
             private val game = makeGame()
@@ -53,7 +55,7 @@ internal class LoadGameRelationUseCaseTest {
             internal fun setUp() {
                 whenever(loadGameUseCase.execute(anyInt())).thenReturn(Single.just(game))
                 whenever(loadPlatformUseCase.execute(anyInt())).thenReturn(Single.just(platform))
-                whenever(gamerelationRepository.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Single.just(gamerelation))
+                whenever(gamerelationRepository.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Flowable.just(gamerelation))
                 observer = usecase.execute(Pair(gameId, platformId)).test()
             }
 
@@ -96,7 +98,7 @@ internal class LoadGameRelationUseCaseTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(gamerelationRepository.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Single.error(error))
+                    whenever(gamerelationRepository.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Flowable.error(error))
                     observer = usecase.execute(Pair(gameId, platformId)).test()
                 }
 

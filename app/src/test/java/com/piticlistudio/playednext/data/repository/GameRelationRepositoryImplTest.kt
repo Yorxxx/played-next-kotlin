@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.data.repository
 
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.repository.datasource.dao.relation.RelationDaoRepositoryImpl
@@ -10,8 +11,9 @@ import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -21,6 +23,8 @@ import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import rx.Observable
+import java.util.concurrent.TimeUnit
 
 internal class GameRelationRepositoryImplTest {
 
@@ -49,11 +53,11 @@ internal class GameRelationRepositoryImplTest {
             val gameId = 10
             val platformId = 10
             val entity = makeGameRelation()
-            var result: TestObserver<GameRelation>? = null
+            var result: TestSubscriber<GameRelation>? = null
 
             @BeforeEach
             fun setup() {
-                whenever(localImpl.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Single.just(entity))
+                doAnswer { Flowable.just(entity) }.whenever(localImpl).loadForGameAndPlatform(anyInt(), anyInt())
                 result = repository?.loadForGameAndPlatform(gameId, platformId)?.test()
             }
 
@@ -70,7 +74,7 @@ internal class GameRelationRepositoryImplTest {
                 result?.apply {
                     assertNoErrors()
                     assertValueCount(1)
-                    assertComplete()
+                    assertNotComplete()
                     assertValue(entity)
                 }
             }
@@ -81,21 +85,19 @@ internal class GameRelationRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(localImpl.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Single.error(EmptyResultSetException("no results")))
+                    whenever(localImpl.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Flowable.error(EmptyResultSetException("no results")))
                     result = repository?.loadForGameAndPlatform(gameId, platformId)?.test()
                 }
 
                 @Test
-                @DisplayName("Then should emit without errors")
+                @DisplayName("Then should emit default game relation")
                 fun withoutErrors() {
                     assertNotNull(result)
-                    with(result) {
-                        this?.assertNoErrors()
-                        this?.assertValueCount(1)
-                        this?.assertComplete()
-                        this?.assertValue {
-                            it.currentStatus == GameRelationStatus.NONE
-                        }
+                    result?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.currentStatus == GameRelationStatus.NONE }
                     }
                 }
             }
@@ -108,12 +110,12 @@ internal class GameRelationRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(localImpl.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Single.error(error))
+                    whenever(localImpl.loadForGameAndPlatform(anyInt(), anyInt())).thenReturn(Flowable.error(error))
                     result = repository?.loadForGameAndPlatform(gameId, platformId)?.test()
                 }
 
                 @Test
-                @DisplayName("Then should emit without errors")
+                @DisplayName("Then should emit error")
                 fun withoutErrors() {
                     assertNotNull(result)
                     result?.apply {
@@ -154,6 +156,40 @@ internal class GameRelationRepositoryImplTest {
                     assertNoValues()
                 }
             }
+        }
+
+        @Nested
+        @DisplayName("When we call loadForGame")
+        inner class loadForGameCalled {
+
+            private val gameId = 100
+            var observer: TestSubscriber<List<GameRelation>>? = null
+            private val result = listOf(makeGameRelation(), makeGameRelation())
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(localImpl.loadForGame(anyInt())).thenReturn(Flowable.just(result))
+                observer = repository?.loadForGame(gameId)?.test()
+            }
+
+            @Test
+            @DisplayName("Then should request local repository")
+            fun requestsRepository() {
+                verify(localImpl).loadForGame(gameId)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertNotComplete()
+                    assertValueCount(1)
+                    assertValue(result)
+                }
+            }
+
         }
     }
 }
