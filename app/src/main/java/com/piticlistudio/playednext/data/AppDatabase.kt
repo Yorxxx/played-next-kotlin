@@ -5,7 +5,7 @@ import android.arch.persistence.room.RoomDatabase
 import com.piticlistudio.playednext.data.entity.dao.*
 import com.piticlistudio.playednext.data.repository.datasource.dao.CollectionDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoService
-import com.piticlistudio.playednext.data.repository.datasource.dao.GameDaoService
+import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.platform.PlatformDaoService
 

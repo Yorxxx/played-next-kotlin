@@ -48,7 +48,7 @@ internal class CompanyDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findCompanyById(10)).thenReturn(Single.just(source))
+                whenever(dao.find(10)).thenReturn(Single.just(source))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
                 observer = repository.load(10).test();
             }
@@ -56,7 +56,7 @@ internal class CompanyDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should request dao service")
             fun shouldRequestRepository() {
-                verify(dao).findCompanyById(10)
+                verify(dao).find(10)
             }
 
             @Test
@@ -83,14 +83,14 @@ internal class CompanyDaoRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(mapper.mapFromEntity(source)).thenReturn(result)
-                whenever(dao.insertCompany(result)).thenReturn(10)
+                whenever(dao.insert(result)).thenReturn(10)
                 observer = repository.save(source).test()
             }
 
             @Test
             @DisplayName("Then should request dao service")
             fun shouldRequestDao() {
-                verify(dao).insertCompany(result)
+                verify(dao).insert(result)
             }
 
             @Test
@@ -182,7 +182,7 @@ internal class CompanyDaoRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(mapper.mapFromEntity(source)).thenReturn(companyDao)
-                whenever(dao.insertCompany(companyDao)).thenReturn(10)
+                whenever(dao.insert(companyDao)).thenReturn(10)
                 whenever(dao.insertGameDeveloper(any())).thenReturn(10)
                 observer = repository.saveDeveloperForGame(10, source).test()
             }
@@ -190,7 +190,7 @@ internal class CompanyDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should save company")
             fun shouldSaveCompany() {
-                verify(dao).insertCompany(companyDao)
+                verify(dao).insert(companyDao)
             }
 
             @Test
@@ -225,7 +225,7 @@ internal class CompanyDaoRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(mapper.mapFromEntity(source)).thenReturn(companyDao)
-                whenever(dao.insertCompany(companyDao)).thenReturn(10)
+                whenever(dao.insert(companyDao)).thenReturn(10)
                 whenever(dao.insertGamePublisher(any())).thenReturn(10)
                 observer = repository.savePublisherForGame(10, source).test()
             }
@@ -233,7 +233,7 @@ internal class CompanyDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should save company")
             fun shouldSaveCompany() {
-                verify(dao).insertCompany(companyDao)
+                verify(dao).insert(companyDao)
             }
 
             @Test

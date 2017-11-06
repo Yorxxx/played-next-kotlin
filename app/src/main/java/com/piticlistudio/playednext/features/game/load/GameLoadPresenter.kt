@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.features.game.load
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.features.base.BasePresenter
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -16,7 +17,7 @@ class GameLoadPresenter @Inject constructor(private val loadGameUseCase: LoadGam
         checkViewAttached()
         mvpView?.showLoading()
         loadGameUseCase.execute(id)
-                .flatMap { saveGameUseCase.execute(it).andThen(Single.just(it)).onErrorReturnItem(it) }
+                .flatMap { saveGameUseCase.execute(it).andThen(Flowable.just(it)).onErrorReturnItem(it) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()

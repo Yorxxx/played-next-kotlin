@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource
 
 import com.piticlistudio.playednext.domain.model.Game
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -10,9 +11,9 @@ import io.reactivex.Single
  */
 interface GameDatasourceRepository {
 
-    fun load(id: Int): Single<Game>
+    fun load(id: Int): Flowable<Game>
 
-    fun search(query: String): Single<List<Game>>
+    fun search(query: String): Flowable<List<Game>>
 
     fun save(domainModel: Game): Completable
 }

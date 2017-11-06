@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
+import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
@@ -10,6 +10,7 @@ import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRem
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -44,7 +45,7 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call load")
         inner class Load {
 
-            var result: TestObserver<Game>? = null
+            var result: TestSubscriber<Game>? = null
             val model = makeGameRemote()
             val entity = makeGame()
 
@@ -73,11 +74,11 @@ internal class GameRemoteImplTest {
             @DisplayName("Then should emit without errors")
             fun withoutErrors() {
                 assertNotNull(result)
-                with(result) {
-                    this?.assertValueCount(1)
-                    this?.assertComplete()
-                    this?.assertNoErrors()
-                    this?.assertValue(entity)
+                result?.apply {
+                    assertValueCount(1)
+                    assertNotComplete()
+                    assertNoErrors()
+                    assertValue(entity)
                 }
             }
 
@@ -94,32 +95,10 @@ internal class GameRemoteImplTest {
                 @Test
                 @DisplayName("Then should emit error")
                 fun emitsError() {
-                    with(result) {
-                        this?.assertNoValues()
-                        this?.assertNotComplete()
-                        this?.assertError(Throwable::class.java)
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And returns list with multiple items")
-            inner class MultipleListResponse {
-
-                @BeforeEach
-                fun setup() {
-                    val response = listOf(makeGameRemote(), makeGameRemote())
-                    whenever(service.loadGame(10)).thenReturn(Single.just(response))
-                    result = repositoryImpl?.load(10)?.test()
-                }
-
-                @Test
-                @DisplayName("Then should emit error")
-                fun emitsError() {
-                    with(result) {
-                        this?.assertNoValues()
-                        this?.assertNotComplete()
-                        this?.assertError(Throwable::class.java)
+                    result?.apply {
+                        assertNotComplete()
+                        assertNoValues()
+                        assertError { it is EmptyResultSetException }
                     }
                 }
             }
@@ -134,7 +113,7 @@ internal class GameRemoteImplTest {
             val response = listOf(model, model2)
             val entity1 = makeGame()
             val entity2 = makeGame()
-            var result: TestObserver<List<Game>>? = null
+            var result: TestSubscriber<List<Game>>? = null
 
             @BeforeEach
             fun setup() {
@@ -164,9 +143,9 @@ internal class GameRemoteImplTest {
             @DisplayName("Then emits without errors")
             fun withoutError() {
                 assertNotNull(result)
-                with(result) {
-                    this!!.assertNoErrors()
-                    assertComplete()
+                result?.apply {
+                    assertNoErrors()
+                    assertNotComplete()
                     assertValueCount(1)
                     assertValue(listOf(entity1, entity2))
                 }
@@ -178,7 +157,7 @@ internal class GameRemoteImplTest {
         inner class Save {
 
             val entity1 = makeGame()
-            var                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              observer: TestObserver<Void>? = null
+            var observer: TestObserver<Void>? = null
 
             @BeforeEach
             internal fun setUp() {

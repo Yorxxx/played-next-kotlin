@@ -21,7 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class GameSearchPresenterTest {
 
-    @Mock
+    /*@Mock
     private lateinit var useCase: SearchGamesUseCase
     @Mock
     private lateinit var view: GameSearchContract.View
@@ -80,5 +80,5 @@ class GameSearchPresenterTest {
         verify(view, never()).showData(any())
         verify(view).showError(error)
         verify(view).hideLoading()
-    }
+    }*/
 }

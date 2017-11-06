@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.persistence.room.EmptyResultSetException
 import android.arch.persistence.room.Room
 import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
@@ -20,7 +19,7 @@ class GameDaoServiceTest {
 
     @JvmField
     @Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule();
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var database: AppDatabase? = null
 
@@ -32,36 +31,53 @@ class GameDaoServiceTest {
     }
 
     @Test
-    fun findGameByIdThrowsErrorIfNotFound() {
-        val observer = database?.gamesDao()?.findGameById(2)?.test()
+    fun findByIdShouldReturnEmptyListWhenNoMatches() {
+        val observer = database?.gamesDao()?.findById(2)?.test()
 
         assertNotNull(observer)
         observer?.apply {
-            assertNoValues()
+            assertNoErrors()
             assertNotComplete()
-            assertError { it is EmptyResultSetException }
+            assertValue { it.isEmpty() }
         }
     }
 
     @Test
-    fun insertGameShouldStoreData() {
+    fun findByIdShouldReturnDataIfPresent() {
+        val game = makeGameCache()
+
+        database?.gamesDao()?.insert(game)
+
+        val observer = database?.gamesDao()?.findById(game.id.toLong())?.test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertValueCount(1)
+            assertNotComplete()
+            assertValue { it.size == 1 && it.contains(game) }
+        }
+    }
+
+    @Test
+    fun insertShouldStoreData() {
 
         val game = makeGameCache()
 
-        val result = database?.gamesDao()?.insertGame(game)
+        val result = database?.gamesDao()?.insert(game)
 
         assertNotNull(result)
         assertEquals(game.id, result!!.toInt())
     }
 
     @Test
-    fun insertGame_abortsIfAlreadyStored() {
+    fun insertShouldabortIfAlreadyStored() {
 
         val game = makeGameCache()
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         try {
-            database?.gamesDao()?.insertGame(game)
+            database?.gamesDao()?.insert(game)
             fail("should have thrown")
         } catch (e: Throwable) {
             assertNotNull(e)
@@ -70,52 +86,44 @@ class GameDaoServiceTest {
     }
 
     @Test
-    fun updateGame_shouldUpdateData() {
+    fun updateShouldUpdateData() {
 
         val game = makeGameCache()
         val game2 = makeGameCache(game.id)
 
-        database?.gamesDao()?.insertGame(game)
-        val result = database?.gamesDao()?.updateGame(game2)
+        database?.gamesDao()?.insert(game)
+        val result = database?.gamesDao()?.update(game2)
 
         assertNotNull(result)
         assertEquals(1, result)
     }
 
     @Test
-    fun findGameByIdReturnsDataIfPresent() {
+    fun updateShouldAbortIfDataIsNotStored() {
+
         val game = makeGameCache()
 
-        database?.gamesDao()?.insertGame(game)
-
-        val observer = database?.gamesDao()?.findGameById(game.id.toLong())?.test()
-
-        assertNotNull(observer)
-        observer?.apply {
-            assertNoErrors()
-            assertValueCount(1)
-            assertComplete()
-            assertValue(game)
-        }
+        val result = database?.gamesDao()?.update(game)
+        assertEquals(0, result)
     }
 
     @Test
-    fun getAllGamesReturnsAllStoredGames() {
+    fun findAllShouldReturnAllStoredGames() {
         val game1 = makeGameCache()
         val game2 = makeGameCache()
         val game3 = makeGameCache()
 
-        database?.gamesDao()?.insertGame(game1)
-        database?.gamesDao()?.insertGame(game2)
-        database?.gamesDao()?.insertGame(game3)
+        database?.gamesDao()?.insert(game1)
+        database?.gamesDao()?.insert(game2)
+        database?.gamesDao()?.insert(game3)
 
-        val observer = database?.gamesDao()?.getAllGames()?.test()
+        val observer = database?.gamesDao()?.findAll()?.test()
 
         assertNotNull(observer)
-        with(observer) {
-            this!!.assertNotComplete()
-            assertNoErrors()
+        observer?.apply {
+            assertNotComplete()
             assertValueCount(1)
+            assertNoErrors()
             assertValue { it.size == 3 && it.containsAll(listOf(game1, game2, game3)) }
         }
     }
