@@ -14,7 +14,7 @@ class GameRelationRepositoryImpl @Inject constructor(private val localImpl: Rela
     override fun loadForGameAndPlatform(gameId: Int, platformId: Int): Single<GameRelation> {
         return localImpl.loadForGameAndPlatform(gameId, platformId)
                 .onErrorResumeNext {
-                    if (it is EmptyResultSetException) Single.just(GameRelation(null, null, GameRelationStatus.UNPLAYED))
+                    if (it is EmptyResultSetException) Single.just(GameRelation(null, null, GameRelationStatus.NONE))
                     else Single.error(it)
                 }
     }

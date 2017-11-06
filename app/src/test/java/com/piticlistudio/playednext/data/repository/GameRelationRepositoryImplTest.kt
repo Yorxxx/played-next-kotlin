@@ -94,7 +94,7 @@ internal class GameRelationRepositoryImplTest {
                         this?.assertValueCount(1)
                         this?.assertComplete()
                         this?.assertValue {
-                            it.currentStatus == GameRelationStatus.UNPLAYED
+                            it.currentStatus == GameRelationStatus.NONE
                         }
                     }
                 }
