@@ -20,7 +20,7 @@ import org.mockito.MockitoAnnotations
  */
 class SearchGamesUseCaseTest {
 
-    @Nested
+    /*@Nested
     @DisplayName("Given SearchGamesUseCase instance")
     inner class SearchGamesUseCaseInstance {
 
@@ -68,5 +68,5 @@ class SearchGamesUseCaseTest {
             }
         }
 
-    }
+    }*/
 }

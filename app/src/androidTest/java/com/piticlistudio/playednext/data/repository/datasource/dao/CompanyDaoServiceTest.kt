@@ -23,7 +23,7 @@ class CompanyDaoServiceTest {
 
     @JvmField
     @Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule();
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var database: AppDatabase? = null
 
@@ -35,35 +35,35 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun insertCompany_shouldStoreData() {
+    fun insertShouldStoreData() {
 
         val data = makeCompanyDao()
 
-        val result = database?.companyDao()?.insertCompany(data)
+        val result = database?.companyDao()?.insert(data)
 
         assertNotNull(result)
         assertEquals(data.id, result!!.toInt())
     }
 
-    fun insertCompany_ignoresIfAlreadyStored() {
+    fun insertShouldIgnoreIfAlreadyStored() {
 
         val data = makeCompanyDao()
 
-        val id = database?.companyDao()?.insertCompany(data)
-        val id2 = database?.companyDao()?.insertCompany(data)
+        val id = database?.companyDao()?.insert(data)
+        val id2 = database?.companyDao()?.insert(data)
 
         assertTrue(id!! > 0L)
         assertEquals(0L, id2)
     }
 
     @Test
-    fun insertGameDeveloper_shouldStoreData() {
+    fun insertGameDeveloperShouldStoreData() {
         val company = makeCompanyDao()
         val game = makeGameCache()
         val data = GameDeveloperDao(game.id, company.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.companyDao()?.insertCompany(company)
+        database?.gamesDao()?.insert(game)
+        database?.companyDao()?.insert(company)
         val result = database?.companyDao()?.insertGameDeveloper(data)
 
         assertNotNull(result)
@@ -71,13 +71,13 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun insertGamePublisher_shouldStoreData() {
+    fun insertGamePublisherShouldStoreData() {
         val company = makeCompanyDao()
         val game = makeGameCache()
         val data = GamePublisherDao(game.id, company.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.companyDao()?.insertCompany(company)
+        database?.gamesDao()?.insert(game)
+        database?.companyDao()?.insert(company)
         val result = database?.companyDao()?.insertGamePublisher(data)
 
         assertNotNull(result)
@@ -85,13 +85,13 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun insertGameDeveloper_shouldReplaceDataOnConflict() {
+    fun insertGameDeveloperShouldReplaceDataOnConflict() {
         val company = makeCompanyDao()
         val game = makeGameCache()
         val data = GameDeveloperDao(game.id, company.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.companyDao()?.insertCompany(company)
+        database?.gamesDao()?.insert(game)
+        database?.companyDao()?.insert(company)
         database?.companyDao()?.insertGameDeveloper(data)
         val result = database?.companyDao()?.insertGameDeveloper(data)
 
@@ -100,13 +100,13 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun insertGamePublisher_shouldReplaceDataOnConflict() {
+    fun insertGamePublisherShouldReplaceDataOnConflict() {
         val company = makeCompanyDao()
         val game = makeGameCache()
         val data = GamePublisherDao(game.id, company.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.companyDao()?.insertCompany(company)
+        database?.gamesDao()?.insert(game)
+        database?.companyDao()?.insert(company)
         database?.companyDao()?.insertGamePublisher(data)
         val result = database?.companyDao()?.insertGamePublisher(data)
 
@@ -115,8 +115,8 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun findCompanyById_throwsErrorIfNotFound() {
-        val observer = database?.companyDao()?.findCompanyById(2)?.test()
+    fun findShouldThrowErrorIfNotFound() {
+        val observer = database?.companyDao()?.find(2)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {
@@ -127,12 +127,12 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun findCompanyById_returnsData() {
+    fun findShouldReturnData() {
         val data = makeCompanyDao()
 
-        database?.companyDao()?.insertCompany(data)
+        database?.companyDao()?.insert(data)
 
-        val observer = database?.companyDao()?.findCompanyById(data.id.toLong())?.test()
+        val observer = database?.companyDao()?.find(data.id.toLong())?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {
@@ -144,7 +144,7 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun findDeveloperForGame_returnsData() {
+    fun findDeveloperForGameShouldReturnData() {
         val game = makeGameCache()
         val game2 = makeGameCache()
         val company1 = makeCompanyDao()
@@ -153,10 +153,10 @@ class CompanyDaoServiceTest {
         val data2 = GameDeveloperDao(game.id, company2.id)
         val data3 = GameDeveloperDao(game2.id, company1.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.gamesDao()?.insertGame(game2)
-        database?.companyDao()?.insertCompany(company1)
-        database?.companyDao()?.insertCompany(company2)
+        database?.gamesDao()?.insert(game)
+        database?.gamesDao()?.insert(game2)
+        database?.companyDao()?.insert(company1)
+        database?.companyDao()?.insert(company2)
         database?.companyDao()?.insertGameDeveloper(data)
         database?.companyDao()?.insertGameDeveloper(data2)
         database?.companyDao()?.insertGameDeveloper(data3)
@@ -176,7 +176,7 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun findPublishersForGame_returnsData() {
+    fun findPublishersForGameShouldReturnData() {
         val game = makeGameCache()
         val game2 = makeGameCache()
         val company1 = makeCompanyDao()
@@ -185,10 +185,10 @@ class CompanyDaoServiceTest {
         val data2 = GamePublisherDao(game.id, company2.id)
         val data3 = GamePublisherDao(game2.id, company1.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.gamesDao()?.insertGame(game2)
-        database?.companyDao()?.insertCompany(company1)
-        database?.companyDao()?.insertCompany(company2)
+        database?.gamesDao()?.insert(game)
+        database?.gamesDao()?.insert(game2)
+        database?.companyDao()?.insert(company1)
+        database?.companyDao()?.insert(company2)
         database?.companyDao()?.insertGamePublisher(data)
         database?.companyDao()?.insertGamePublisher(data2)
         database?.companyDao()?.insertGamePublisher(data3)
@@ -208,10 +208,10 @@ class CompanyDaoServiceTest {
     }
 
     @Test
-    fun findDeveloperForGame_returnsEmptyList() {
+    fun findDeveloperForGameShouldReturnEmptyListWhenNoMatches() {
 
         val game = makeGameCache()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
 
         // Act
         // Act
@@ -222,15 +222,15 @@ class CompanyDaoServiceTest {
             assertNoErrors()
             assertValueCount(1)
             assertComplete()
-            assertValue { it.size == 0 }
+            assertValue { it.isEmpty() }
         }
     }
 
     @Test
-    fun findPublishersForGame_returnsEmptyList() {
+    fun findPublishersForGameShouldReturnEmptyListWhenNoMatches() {
 
         val game = makeGameCache()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
 
         // Act
         // Act
@@ -241,7 +241,7 @@ class CompanyDaoServiceTest {
             assertNoErrors()
             assertValueCount(1)
             assertComplete()
-            assertValue { it.size == 0 }
+            assertValue { it.isEmpty() }
         }
     }
 

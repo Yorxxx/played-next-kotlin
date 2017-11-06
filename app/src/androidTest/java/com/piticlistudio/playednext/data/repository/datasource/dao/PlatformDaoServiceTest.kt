@@ -21,7 +21,7 @@ class PlatformDaoServiceTest {
 
     @JvmField
     @Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule();
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var database: AppDatabase? = null
 
@@ -33,7 +33,7 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun insert_shouldStoreData() {
+    fun insertShouldStoreData() {
 
         val data = makePlatformDao()
 
@@ -43,7 +43,7 @@ class PlatformDaoServiceTest {
         Assert.assertEquals(data.id, result!!.toInt())
     }
 
-    fun insert_ignoresIfAlreadyStored() {
+    fun insertShouldIgnoreIfAlreadyStored() {
 
         val data = makePlatformDao()
 
@@ -55,12 +55,12 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun insertGamePlatform_shouldStoreData() {
+    fun insertGamePlatformShouldStoreData() {
         val platform = makePlatformDao()
         val game = DomainFactory.makeGameCache()
         val data = GamePlatformDao(game.id, platform.id)
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.platformDao()?.insert(platform)
         val result = database?.platformDao()?.insertGamePlatform(data)
 
@@ -69,12 +69,12 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun insertGamePlatform_shouldReplaceDataOnConflict() {
+    fun insertGamePlatformShouldReplaceDataOnConflict() {
         val platform = makePlatformDao()
         val game = DomainFactory.makeGameCache()
         val data = GamePlatformDao(game.id, platform.id)
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.platformDao()?.insert(platform)
         database?.platformDao()?.insertGamePlatform(data)
         val result = database?.platformDao()?.insertGamePlatform(data)
@@ -84,7 +84,7 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun find_throwsErrorIfNotFound() {
+    fun findShouldThrowsErrorIfNotFound() {
         val observer = database?.platformDao()?.find(2)?.test()
 
         Assert.assertNotNull(observer)
@@ -96,7 +96,7 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun find_returnsData() {
+    fun findShouldReturnData() {
         val data = makePlatformDao()
 
         database?.platformDao()?.insert(data)
@@ -113,7 +113,7 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun findForGame_returnsData() {
+    fun findForGameShouldReturnData() {
         val game = DomainFactory.makeGameCache()
         val game2 = DomainFactory.makeGameCache()
         val platform1 = makePlatformDao()
@@ -122,8 +122,8 @@ class PlatformDaoServiceTest {
         val data2 = GamePlatformDao(game.id, platform2.id)
         val data3 = GamePlatformDao(game2.id, platform1.id)
 
-        database?.gamesDao()?.insertGame(game)
-        database?.gamesDao()?.insertGame(game2)
+        database?.gamesDao()?.insert(game)
+        database?.gamesDao()?.insert(game2)
         database?.platformDao()?.insert(platform1)
         database?.platformDao()?.insert(platform2)
         database?.platformDao()?.insertGamePlatform(data)
@@ -145,10 +145,10 @@ class PlatformDaoServiceTest {
     }
 
     @Test
-    fun findForGame_returnsEmptyList() {
+    fun findForGameShouldReturnEmptyListWhenNoMatches() {
 
         val game = DomainFactory.makeGameCache()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
 
         // Act
         // Act

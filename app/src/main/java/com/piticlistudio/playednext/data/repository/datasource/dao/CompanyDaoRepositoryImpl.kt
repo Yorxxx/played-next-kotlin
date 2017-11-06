@@ -13,13 +13,13 @@ class CompanyDaoRepositoryImpl @Inject constructor(private val dao: CompanyDaoSe
                                                    private val mapper: CompanyDaoMapper) : CompanyDatasourceRepository {
 
     override fun load(id: Int): Single<Company> {
-        return dao.findCompanyById(id.toLong())
+        return dao.find(id.toLong())
                 .map { mapper.mapFromModel(it) }
     }
 
     override fun save(data: Company): Completable {
         return Completable.defer {
-            val id = dao.insertCompany(mapper.mapFromEntity(data))
+            val id = dao.insert(mapper.mapFromEntity(data))
             if (id != 0L) Completable.complete() else Completable.error(Throwable("Could not save company"))
         }
     }

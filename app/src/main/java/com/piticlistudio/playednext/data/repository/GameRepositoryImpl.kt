@@ -1,11 +1,13 @@
 package com.piticlistudio.playednext.data.repository
 
 import android.app.AlarmManager
-import com.piticlistudio.playednext.data.repository.datasource.dao.GameLocalImpl
+import android.arch.persistence.room.EmptyResultSetException
+import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,13 +19,15 @@ import javax.inject.Singleton
 class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteImpl,
                                              private val localImpl: GameLocalImpl) : GameRepository {
 
-    override fun load(id: Int): Single<Game> {
+    override fun load(id: Int): Flowable<Game> {
         return localImpl.load(id)
-                .flatMap { if (shouldSyncData(it)) fetchAndCache(id).onErrorReturnItem(it) else Single.just(it) }
-                .onErrorResumeNext { fetchAndCache(id) }
+                .onErrorResumeNext { t: Throwable ->
+                    if (t is EmptyResultSetException) fetchAndCache(id).toFlowable() else throw t
+                }
+                .flatMap { if (shouldSyncData(it)) fetchAndCache(id).toFlowable().onErrorReturnItem(it) else Flowable.just(it) }
     }
 
-    override fun search(query: String): Single<List<Game>> {
+    override fun search(query: String): Flowable<List<Game>> {
         return remoteImpl.search(query)
     }
 
@@ -33,6 +37,7 @@ class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteI
 
     private fun fetchAndCache(id: Int): Single<Game> {
         return remoteImpl.load(id)
+                .firstOrError()
                 .flatMap { localImpl.save(it).andThen(Single.just(it)) }
     }
 

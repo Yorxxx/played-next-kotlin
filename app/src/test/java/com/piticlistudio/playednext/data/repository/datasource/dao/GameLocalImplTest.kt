@@ -1,23 +1,29 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
+import android.arch.persistence.room.EmptyResultSetException
 import android.database.sqlite.SQLiteConstraintException
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameDaoService
+import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -48,14 +54,14 @@ internal class GameLocalImplTest {
         @DisplayName("When load is called")
         inner class loadIsCalled {
 
-            private var observer: TestObserver<Game>? = null
+            private var observer: TestSubscriber<Game>? = null
             private val model = makeGameCache()
             private val entity = makeGame()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(daoService.findGameById(10))
-                        .thenReturn(Single.just(model))
+                val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf(model)) }, BackpressureStrategy.MISSING)
+                whenever(daoService.findById(10)).thenReturn(flowable)
                 whenever(mapper.mapFromEntity(model)).thenReturn(entity)
                 observer = repository.load(10).test()
             }
@@ -63,7 +69,7 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then should request DAO")
             fun daoIsCalled() {
-                verify(daoService).findGameById(10)
+                verify(daoService).findById(10)
             }
 
             @Test
@@ -77,11 +83,34 @@ internal class GameLocalImplTest {
             fun withoutErrors() {
                 assertNotNull(observer)
                 observer?.apply {
-                    assertComplete()
+                    assertNotComplete()
                     assertValueCount(1)
                     assertNoErrors()
                     assertValue(entity)
                 }
+            }
+
+            @Nested
+            @DisplayName("And there are no results in database")
+            inner class noResults {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(daoService.findById(anyLong())).thenReturn(Flowable.just(listOf()))
+                    observer = repository.load(10).test()
+                }
+
+                @Test
+                @DisplayName("Then should emit error")
+                fun withoutErrors() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertNotComplete()
+                        assertNoValues()
+                        assertError { it is EmptyResultSetException }
+                    }
+                }
+
             }
         }
 
@@ -108,13 +137,13 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then inserts into DAO")
             fun isInserted() {
-                verify(daoService).insertGame(data)
+                verify(daoService).insert(data)
             }
 
             @Test
             @DisplayName("Then should not update")
             fun updateNotCalled() {
-                verify(daoService, never()).updateGame(data)
+                verify(daoService, never()).update(data)
             }
 
             @Test
@@ -134,14 +163,14 @@ internal class GameLocalImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(daoService.insertGame(data)).thenThrow(SQLiteConstraintException())
+                    whenever(daoService.insert(data)).thenThrow(SQLiteConstraintException())
                     observer = repository.save(source).test()
                 }
 
                 @Test
                 @DisplayName("Then should update")
                 fun updateNotCalled() {
-                    verify(daoService).updateGame(data)
+                    verify(daoService).update(data)
                 }
 
                 @Test
@@ -163,7 +192,7 @@ internal class GameLocalImplTest {
 
             private val data1 = makeGameCache()
             private val data2 = makeGameCache()
-            private var observer: TestObserver<List<Game>>? = null
+            private var observer: TestSubscriber<List<Game>>? = null
             private val entity1 = makeGame()
             private val entity2 = makeGame()
 

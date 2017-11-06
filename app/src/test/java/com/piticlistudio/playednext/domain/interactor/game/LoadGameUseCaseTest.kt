@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations
 
 class LoadGameUseCaseTest {
 
-    @Nested
+    /*@Nested
     @DisplayName("Given a LoadGameUseCase instance")
     inner class LoadGameUseCaseInstance {
 
@@ -396,5 +396,5 @@ class LoadGameUseCaseTest {
                 }
             }
         }
-    }
+    }*/
 }

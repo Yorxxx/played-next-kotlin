@@ -21,7 +21,7 @@ class CollectionDaoServiceTest {
 
     @JvmField
     @Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule();
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var database: AppDatabase? = null
 
@@ -33,7 +33,7 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun insert_shouldStoreCollectionDao() {
+    fun insertShouldStoreData() {
 
         val data = DomainFactory.makeCollectionDao()
 
@@ -43,7 +43,7 @@ class CollectionDaoServiceTest {
         Assert.assertEquals(data.id, result!!.toInt())
     }
 
-    fun insert_ignoresIfAlreadyStored() {
+    fun insertShouldIgnoreIfAlreadyStored() {
 
         val data = DomainFactory.makeCollectionDao()
 
@@ -55,12 +55,12 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun insertGameCollection_shouldStoreRelation() {
+    fun insertGameCollectionShouldStoreRelation() {
         val data = makeCollectionDao()
         val game = DomainFactory.makeGameCache()
         val relation = GameCollectionDao(game.id, data.id)
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.collectionDao()?.insert(data)
         val result = database?.collectionDao()?.insertGameCollection(relation)
 
@@ -69,14 +69,14 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun insertGameCollection_shouldUpdateRelation() {
+    fun insertGameCollectionShouldUpdateExistingRelation() {
         val data = makeCollectionDao()
         val data2 = makeCollectionDao()
         val game = DomainFactory.makeGameCache()
         val relation = GameCollectionDao(game.id, data.id)
         val updatedrelation = GameCollectionDao(game.id, data2.id)
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.collectionDao()?.insert(data)
         database?.collectionDao()?.insert(data2)
         database?.collectionDao()?.insertGameCollection(relation)
@@ -88,7 +88,7 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun find_shouldThrowsErrorIfNotFound() {
+    fun findShouldThrowErrorIfNotFound() {
         val observer = database?.collectionDao()?.find(2)?.test()
 
         Assert.assertNotNull(observer)
@@ -100,7 +100,7 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun find_shouldReturnStoredData() {
+    fun findShouldReturnStoredData() {
         val data = makeCollectionDao()
 
         database?.collectionDao()?.insert(data)
@@ -117,12 +117,12 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun findForGame_shouldReturnRelationData() {
+    fun findForGameShouldReturnRelationData() {
         val game = DomainFactory.makeGameCache()
         val data1 = makeCollectionDao()
         val relation = GameCollectionDao(game.id, data1.id)
 
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.collectionDao()?.insert(data1)
         database?.collectionDao()?.insertGameCollection(relation)
 
@@ -141,10 +141,10 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun findForGame_shouldThrowError() {
+    fun findForGameShouldThrowErrorIfNotFound() {
 
         val game = DomainFactory.makeGameCache()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
 
         // Act
         // Act

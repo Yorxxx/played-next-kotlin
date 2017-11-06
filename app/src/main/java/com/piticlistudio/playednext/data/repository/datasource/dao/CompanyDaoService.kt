@@ -10,10 +10,10 @@ import io.reactivex.Single
 interface CompanyDaoService {
 
     @Query("select * from company where id = :id")
-    fun findCompanyById(id: Long): Single<CompanyDao>
+    fun find(id: Long): Single<CompanyDao>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertCompany(data: CompanyDao): Long
+    fun insert(data: CompanyDao): Long
 
     @Query("select company.* from company " +
             "LEFT JOIN game_developer ON company.id = game_developer.companyId " +
