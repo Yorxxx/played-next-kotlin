@@ -7,10 +7,12 @@ import com.piticlistudio.playednext.domain.repository.GenreRepository
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class GenreRepositoryImpl constructor(private val localImpl: GenreDaoRepositoryImpl,
-                                      private val remoteImpl: GenreRemoteImpl) : GenreRepository {
+@Singleton
+class GenreRepositoryImpl @Inject constructor(private val localImpl: GenreDaoRepositoryImpl,
+                                              private val remoteImpl: GenreRemoteImpl) : GenreRepository {
 
     override fun loadForGame(id: Int): Single<List<Genre>> {
         return localImpl.loadForGame(id)
