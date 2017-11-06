@@ -5,11 +5,12 @@ import com.piticlistudio.playednext.features.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 /**
  * MvPPresenter implementation of [GameSearchContract.Presenter]
  */
-class GameSearchPresenter constructor(private val searchCase: SearchGamesUseCase) : BasePresenter<GameSearchContract.View>(), GameSearchContract.Presenter {
+class GameSearchPresenter @Inject constructor(private val searchCase: SearchGamesUseCase) : BasePresenter<GameSearchContract.View>(), GameSearchContract.Presenter {
 
     override fun search(query: String) {
         checkViewAttached()
