@@ -20,7 +20,8 @@ import javax.inject.Singleton
         CompanyModule::class,
         GenreModule::class,
         CollectionModule::class,
-        PlatformModule::class))
+        PlatformModule::class,
+        GameRelationModule::class))
 interface ApplicationComponent {
 
     @Component.Builder

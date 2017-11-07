@@ -145,9 +145,9 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:$versions.archComp"
     kapt "android.arch.persistence.room:compiler:$versions.archComp"
 
-    implementation "android.arch.lifecycle:extensions:1.0.0-rc1"
-    testImplementation "android.arch.core:core-testing:1.0.0-rc1"
-    implementation "android.arch.lifecycle:reactivestreams:1.0.0-rc1"
+    implementation "android.arch.lifecycle:extensions:$versions.archComp"
+    testImplementation "android.arch.core:core-testing:$versions.archComp"
+    implementation "android.arch.lifecycle:reactivestreams:$versions.archComp"
 }
 
 // Tests copy
