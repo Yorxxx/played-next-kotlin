@@ -19,7 +19,7 @@ internal class SaveGameRelationUseCaseTest {
 
     @Nested
     @DisplayName("Given a SaveGameRelationUseCase")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var usecase: SaveGameRelationUseCase
         @Mock private lateinit var repository: GameRelationRepository
@@ -32,7 +32,7 @@ internal class SaveGameRelationUseCaseTest {
 
         @Nested
         @DisplayName("When we call execute")
-        inner class executeIsCalled {
+        inner class ExecuteIsCalled {
 
             private var observer: TestObserver<Void>? = null
             private val relation = makeGameRelation()
