@@ -1,15 +1,16 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao.relation
 
-import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.dao.GameRelationDao
 import com.piticlistudio.playednext.data.entity.mapper.datasources.relation.RelationDaoMapper
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.test.factory.DataFactory
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelationDao
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
@@ -26,13 +27,11 @@ internal class RelationDaoRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a RelationDaoRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: RelationDaoRepositoryImpl
-        @Mock
-        private lateinit var dao: RelationDaoService
-        @Mock
-        private lateinit var mapper: RelationDaoMapper
+        @Mock private lateinit var dao: RelationDaoService
+        @Mock private lateinit var mapper: RelationDaoMapper
 
         @BeforeEach
         internal fun setUp() {
@@ -42,7 +41,7 @@ internal class RelationDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeGameRelation()
@@ -75,9 +74,9 @@ internal class RelationDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGameAndPlatform")
-        inner class loadForGameAndPlatformCalled {
+        inner class LoadForGameAndPlatformCalled {
 
-            private var observer: TestSubscriber<GameRelation>? = null
+            private var observer: TestSubscriber<List<GameRelation>>? = null
             private val daomodel1 = makeGameRelationDao()
             private val entity1 = makeGameRelation()
             private val gameId = 10
@@ -85,8 +84,12 @@ internal class RelationDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
+                val flowable = Flowable.create<List<GameRelationDao>>({
+                    it.onNext(listOf(daomodel1))
+                    it.onNext(listOf(daomodel1))
+                }, BackpressureStrategy.MISSING)
                 whenever(mapper.mapFromModel(daomodel1)).thenReturn(entity1)
-                whenever(dao.findForGameAndPlatform(gameId, platformId)).thenReturn(Flowable.just(listOf(daomodel1)))
+                whenever(dao.findForGameAndPlatform(gameId, platformId)).thenReturn(flowable)
                 observer = repository.loadForGameAndPlatform(gameId, platformId).test()
             }
 
@@ -103,17 +106,21 @@ internal class RelationDaoRepositoryImplTest {
                 observer?.apply {
                     assertNoErrors()
                     assertNotComplete()
-                    assertValue(entity1)
+                    assertValueCount(1)
+                    assertValue { it.contains(entity1) && it.size == 1 }
                 }
             }
 
             @Nested
             @DisplayName("And there are no results in DAO")
-            inner class emptyDatabase {
+            inner class EmptyDatabase {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(dao.findForGameAndPlatform(gameId, platformId)).thenReturn(Flowable.just(listOf()))
+                    val flowable = Flowable.create<List<GameRelationDao>>({
+                        it.onNext(listOf())
+                    }, BackpressureStrategy.MISSING)
+                    whenever(dao.findForGameAndPlatform(gameId, platformId)).thenReturn(flowable)
                     observer = repository.loadForGameAndPlatform(gameId, platformId).test()
                 }
 
@@ -123,8 +130,9 @@ internal class RelationDaoRepositoryImplTest {
                     assertNotNull(observer)
                     observer?.apply {
                         assertNotComplete()
-                        assertNoValues()
-                        assertError { it is EmptyResultSetException }
+                        assertValueCount(1)
+                        assertNoErrors()
+                        assertValue(listOf())
                     }
                 }
             }
@@ -132,15 +140,21 @@ internal class RelationDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             private var observer: TestSubscriber<List<GameRelation>>? = null
             private val gameId = 100
-            private val result = listOf(makeGameRelationDao(), makeGameRelationDao())
+            private val emission1 = listOf(makeGameRelationDao(), makeGameRelationDao())
+            private val emission2 = listOf(makeGameRelationDao(), makeGameRelationDao(), makeGameRelationDao())
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findForGame(anyInt())).thenReturn(Flowable.just(result))
+                val flowable = Flowable.create<List<GameRelationDao>>({
+                    it.onNext(emission1)
+                    it.onNext(emission2)
+                }, BackpressureStrategy.MISSING)
+                whenever(dao.findForGame(anyInt())).thenReturn(flowable)
+
                 whenever(mapper.mapFromModel(any())).thenReturn(makeGameRelation())
                 observer = repository.loadForGame(gameId).test()
             }
@@ -154,7 +168,7 @@ internal class RelationDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should map result")
             fun shouldMapResults() {
-                verify(mapper, times(result.size)).mapFromModel(any())
+                verify(mapper, times(emission1.size + emission2.size)).mapFromModel(any())
             }
 
             @Test
@@ -163,10 +177,10 @@ internal class RelationDaoRepositoryImplTest {
                 assertNotNull(observer)
                 observer?.apply {
                     assertNoErrors()
-                    assertComplete()
-                    assertValue {
-                        it.size == result.size
-                    }
+                    assertNotComplete()
+                    assertValueCount(2)
+                    assertValueAt(0, { it.size == emission1.size })
+                    assertValueAt(1, { it.size == emission2.size })
                 }
             }
         }
