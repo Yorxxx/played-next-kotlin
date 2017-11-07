@@ -26,7 +26,7 @@ internal class GameDaoMapperTest {
 
         @Nested
         @DisplayName("When mapFromEntity is called")
-        inner class mapFromEntityCalled {
+        inner class MapFromEntityCalled {
 
             val model = GameFactory.makeGameCache()
             var result: Game? = null
@@ -46,15 +46,13 @@ internal class GameDaoMapperTest {
                     assertEquals(model.summary, summary)
                     assertEquals(model.storyline, storyline)
                     assertEquals(model.syncedAt, syncedAt)
-                    //assertEquals(model.franchise, franchiseId)
                     assertEquals(model.rating, rating)
                     assertEquals(model.aggregatedRatingCount, aggregatedRatingCount)
                     assertEquals(model.agregatedRating, aggregatedRating)
                     assertEquals(model.createdAt, createdAt)
-                    //assertEquals(model.firstReleaseAt, firstReleaseAt)
-                    //assertEquals(model.hypes, hypes)
-                    //assertEquals(model.popularity, popularity)
+                    assertEquals(model.firstReleaseAt, releasedAt)
                     assertEquals(model.ratingCount, ratingCount)
+                    assertEquals(model.totalRatingCount, totalRatingCount)
                     assertEquals(model.totalRating, totalRating)
                     assertNull(developers)
                     assertNull(publishers)
@@ -88,7 +86,7 @@ internal class GameDaoMapperTest {
 
         @Nested
         @DisplayName("When mapFromModel is called")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
             val entity = GameFactory.makeGame()
             var result: GameDao? = null

@@ -11,8 +11,10 @@ import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeComp
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -24,7 +26,7 @@ import org.mockito.MockitoAnnotations
 
 class LoadGameUseCaseTest {
 
-    /*@Nested
+    @Nested
     @DisplayName("Given a LoadGameUseCase instance")
     inner class LoadGameUseCaseInstance {
 
@@ -45,9 +47,9 @@ class LoadGameUseCaseTest {
 
         @Nested
         @DisplayName("When execute is called")
-        inner class executeIsCalled {
+        inner class ExecuteIsCalled {
 
-            private var testObserver: TestObserver<Game>? = null
+            private var testObserver: TestSubscriber<Game>? = null
             val result = makeGame()
             val companyList = makeCompanyList()
             val genreList = makeGenreList()
@@ -56,7 +58,8 @@ class LoadGameUseCaseTest {
 
             @BeforeEach
             internal fun setup() {
-                whenever(repository.load(gameId)).thenReturn(Single.just(result))
+                val flowable = Flowable.create<Game>({ it.onNext(result) }, BackpressureStrategy.MISSING)
+                whenever(repository.load(gameId)).thenReturn(flowable)
                 whenever(companyrepository.loadDevelopersForGameId(result.id)).thenReturn(Single.just(companyList))
                 whenever(companyrepository.loadPublishersForGame(result.id)).thenReturn(Single.just(companyList))
                 whenever(genrerepository.loadForGame(result.id)).thenReturn(Single.just(genreList))
@@ -75,9 +78,9 @@ class LoadGameUseCaseTest {
             @DisplayName("Then emits without errors")
             fun withoutErrors() {
                 assertNotNull(testObserver)
-                with(testObserver) {
-                    this!!.assertNoErrors()
-                    assertComplete()
+                testObserver?.apply {
+                    assertNoErrors()
+                    assertNotComplete()
                     assertValue(result)
                 }
             }
@@ -114,7 +117,7 @@ class LoadGameUseCaseTest {
 
             @Nested
             @DisplayName("And does not have developers assigned")
-            inner class withoutDevelopers {
+            inner class WithoutDevelopers {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -132,18 +135,17 @@ class LoadGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun withoutErrors() {
                     assertNotNull(testObserver)
-                    with(testObserver) {
-                        this!!.assertNoErrors()
-                        assertComplete()
-                        assertValue {
-                            it.developers == companyList
-                        }
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.developers == companyList }
                     }
                 }
 
                 @Nested
                 @DisplayName("And request fails")
-                inner class requestFails {
+                inner class RequestFails {
 
                     @BeforeEach
                     internal fun setUp() {
@@ -156,13 +158,11 @@ class LoadGameUseCaseTest {
                     @DisplayName("Then emits ignores errors")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
-                        with(testObserver) {
-                            this!!.assertNoErrors()
-                            assertComplete()
+                        testObserver?.apply {
+                            assertNoErrors()
+                            assertNotComplete()
                             assertValueCount(1)
-                            assertValue {
-                                it.developers == null
-                            }
+                            assertValue { it.developers == null }
                         }
                     }
                 }
@@ -170,7 +170,7 @@ class LoadGameUseCaseTest {
 
             @Nested
             @DisplayName("And does not have publishers assigned")
-            inner class withoutPublishers {
+            inner class WithoutPublishers {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -188,19 +188,17 @@ class LoadGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun withoutErrors() {
                     assertNotNull(testObserver)
-                    with(testObserver) {
-                        this!!.assertNoErrors()
-                        assertComplete()
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
                         assertValueCount(1)
-                        assertValue {
-                            it.publishers == companyList
-                        }
+                        assertValue { it.publishers == companyList }
                     }
                 }
 
                 @Nested
                 @DisplayName("And request fails")
-                inner class requestFails {
+                inner class RequestFails {
 
                     @BeforeEach
                     internal fun setUp() {
@@ -213,13 +211,11 @@ class LoadGameUseCaseTest {
                     @DisplayName("Then emits ignores errors")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
-                        with(testObserver) {
-                            this!!.assertNoErrors()
+                        testObserver?.apply {
+                            assertNoErrors()
                             assertValueCount(1)
-                            assertComplete()
-                            assertValue {
-                                it.publishers == null
-                            }
+                            assertNotComplete()
+                            assertValue { it.publishers == null }
                         }
                     }
                 }
@@ -227,7 +223,7 @@ class LoadGameUseCaseTest {
 
             @Nested
             @DisplayName("And does not have genres assigned")
-            inner class withoutGenres {
+            inner class WithoutGenres {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -245,19 +241,17 @@ class LoadGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun withoutErrors() {
                     assertNotNull(testObserver)
-                    with(testObserver) {
-                        this!!.assertNoErrors()
-                        assertComplete()
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
                         assertValueCount(1)
-                        assertValue {
-                            it.genres == genreList
-                        }
+                        assertValue { it.genres == genreList }
                     }
                 }
 
                 @Nested
                 @DisplayName("And request fails")
-                inner class requestFails {
+                inner class RequestFails {
 
                     @BeforeEach
                     internal fun setUp() {
@@ -270,13 +264,11 @@ class LoadGameUseCaseTest {
                     @DisplayName("Then emits ignores errors")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
-                        with(testObserver) {
-                            this!!.assertNoErrors()
+                        testObserver?.apply {
+                            assertNoErrors()
+                            assertNotComplete()
                             assertValueCount(1)
-                            assertComplete()
-                            assertValue {
-                                it.genres == null
-                            }
+                            assertValue { it.genres == null }
                         }
                     }
                 }
@@ -284,7 +276,7 @@ class LoadGameUseCaseTest {
 
             @Nested
             @DisplayName("And does not have collection assigned")
-            inner class withoutCollection {
+            inner class WithoutCollection {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -302,19 +294,17 @@ class LoadGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun withoutErrors() {
                     assertNotNull(testObserver)
-                    with(testObserver) {
-                        this!!.assertNoErrors()
-                        assertComplete()
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
                         assertValueCount(1)
-                        assertValue {
-                            it.collection == collection
-                        }
+                        assertValue { it.collection == collection }
                     }
                 }
 
                 @Nested
                 @DisplayName("And request fails")
-                inner class requestFails {
+                inner class RequestFails {
 
                     @BeforeEach
                     internal fun setUp() {
@@ -327,13 +317,11 @@ class LoadGameUseCaseTest {
                     @DisplayName("Then emits ignores errors")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
-                        with(testObserver) {
-                            this!!.assertNoErrors()
+                        testObserver?.apply {
+                            assertNoErrors()
+                            assertNotComplete()
                             assertValueCount(1)
-                            assertComplete()
-                            assertValue {
-                                it.collection == null
-                            }
+                            assertValue { it.collection == null }
                         }
                     }
                 }
@@ -341,7 +329,7 @@ class LoadGameUseCaseTest {
 
             @Nested
             @DisplayName("And does not have platforms assigned")
-            inner class withoutPlatforms {
+            inner class WithoutPlatforms {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -359,19 +347,17 @@ class LoadGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun withoutErrors() {
                     assertNotNull(testObserver)
-                    with(testObserver) {
-                        this!!.assertNoErrors()
-                        assertComplete()
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
                         assertValueCount(1)
-                        assertValue {
-                            it.platforms == platforms
-                        }
+                        assertValue { it.platforms == platforms }
                     }
                 }
 
                 @Nested
                 @DisplayName("And request fails")
-                inner class requestFails {
+                inner class RequestFails {
 
                     @BeforeEach
                     internal fun setUp() {
@@ -384,17 +370,15 @@ class LoadGameUseCaseTest {
                     @DisplayName("Then emits ignores errors")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
-                        with(testObserver) {
-                            this!!.assertNoErrors()
+                        testObserver?.apply {
+                            assertNoErrors()
+                            assertNotComplete()
                             assertValueCount(1)
-                            assertComplete()
-                            assertValue {
-                                it.platforms == null
-                            }
+                            assertValue { it.platforms == null }
                         }
                     }
                 }
             }
         }
-    }*/
+    }
 }

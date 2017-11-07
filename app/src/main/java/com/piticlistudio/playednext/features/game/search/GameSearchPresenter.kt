@@ -20,10 +20,16 @@ class GameSearchPresenter @Inject constructor(private val searchCase: SearchGame
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
-                .doOnTerminate { mvpView?.hideLoading() }
                 .subscribeBy(
-                        onNext = { mvpView?.showData(it) },
-                        onError = { mvpView?.showError(it) }
+                        onNext = {
+                            mvpView?.showData(it)
+                            mvpView?.hideLoading()
+                        },
+                        onError = {
+                            mvpView?.showError(it)
+                            mvpView?.hideLoading()
+                            mvpView?.hideData()
+                        }
                 )
     }
 }

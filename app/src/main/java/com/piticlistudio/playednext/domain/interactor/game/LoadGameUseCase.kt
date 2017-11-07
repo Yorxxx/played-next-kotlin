@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.piticlistudio.playednext.domain.interactor.FlowableUseCaseWithParameter
-import com.piticlistudio.playednext.domain.interactor.SingleUseCaseWithParameter
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.*
 import io.reactivex.Flowable

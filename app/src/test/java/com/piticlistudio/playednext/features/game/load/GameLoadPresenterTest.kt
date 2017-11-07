@@ -3,10 +3,12 @@ package com.piticlistudio.playednext.features.game.load
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
@@ -18,12 +20,10 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 internal class GameLoadPresenterTest {
 
-    /*@Mock
-    private lateinit var useCase: LoadGameUseCase
-    @Mock
-    private lateinit var saveUseCase: SaveGameUseCase
-    @Mock
-    private lateinit var view: GameLoadContract.View
+    @Mock private lateinit var useCase: LoadGameUseCase
+    @Mock private lateinit var saveUseCase: SaveGameUseCase
+    @Mock private lateinit var view: GameLoadContract.View
+
     private lateinit var presenter: GameLoadPresenter
     @JvmField
     @Rule
@@ -36,7 +36,9 @@ internal class GameLoadPresenterTest {
         MockitoAnnotations.initMocks(this)
         presenter = GameLoadPresenter(useCase, saveUseCase)
         presenter.attachView(view)
-        whenever(useCase.execute(anyInt())).thenReturn(Single.just(result1))
+
+        val flowable = Flowable.create<Game>({ it.onNext(result1) }, BackpressureStrategy.MISSING)
+        whenever(useCase.execute(anyInt())).thenReturn(flowable)
         whenever(saveUseCase.execute(result1)).thenReturn(Completable.complete())
     }
 
@@ -60,8 +62,6 @@ internal class GameLoadPresenterTest {
 
     @org.junit.Test
     fun whenLoadUseCaseReturnsResult() {
-        whenever(useCase.execute(result1.id)).thenReturn(Single.just(result1))
-        whenever(saveUseCase.execute(result1)).thenReturn(Completable.complete())
         presenter.load(result1.id)
 
         verify(view).showData(result1)
@@ -73,8 +73,11 @@ internal class GameLoadPresenterTest {
 
     @org.junit.Test
     fun whenSaveUseCaseReturnsError() {
+
         val error = Throwable("bla")
-        whenever(useCase.execute(result1.id)).thenReturn(Single.just(result1))
+        val flowable = Flowable.create<Game>({ it.onNext(result1) }, BackpressureStrategy.MISSING)
+
+        whenever(useCase.execute(result1.id)).thenReturn(flowable)
         whenever(saveUseCase.execute(result1)).thenReturn(Completable.error(error))
         presenter.load(result1.id)
 
@@ -86,7 +89,8 @@ internal class GameLoadPresenterTest {
     @org.junit.Test
     fun whenUseCaseReturnsError() {
         val error = Throwable("bla")
-        whenever(useCase.execute(anyInt())).thenReturn(Single.error(error))
+        val flowable = Flowable.create<Game>({ it.onError(error) }, BackpressureStrategy.MISSING)
+        whenever(useCase.execute(anyInt())).thenReturn(flowable)
         presenter.load(10)
 
         verify(view, never()).showData(any())
@@ -94,5 +98,5 @@ internal class GameLoadPresenterTest {
         verify(view).hideLoading()
         verify(view).hideData()
         verifyZeroInteractions(saveUseCase)
-    }*/
+    }
 }

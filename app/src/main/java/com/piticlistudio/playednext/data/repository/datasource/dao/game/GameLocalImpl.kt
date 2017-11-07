@@ -14,12 +14,14 @@ class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
 
     override fun load(id: Int): Flowable<Game> {
         return dao.findById(id.toLong())
+                .distinctUntilChanged()
                 .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
                 .map { mapper.mapFromEntity(it) }
     }
 
     override fun search(query: String): Flowable<List<Game>> {
         return dao.findByName(query)
+                .distinctUntilChanged()
                 .map {
                     val data = mutableListOf<Game>()
                     it.forEach { data.add(mapper.mapFromEntity(it)) }
