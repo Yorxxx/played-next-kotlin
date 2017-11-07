@@ -11,7 +11,7 @@ ext {
             restMock      : '0.2.1',
             dagger        : '2.11',
             butterKnife   : '8.6.0',
-            archComp      : '1.0.0-beta1'
+            archComp      : '1.0.0'
     ]
 
     mockito = [mockito: "org.mockito:mockito-core:2.8.9"]
