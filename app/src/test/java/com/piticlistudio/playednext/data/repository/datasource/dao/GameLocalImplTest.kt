@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 import android.arch.persistence.room.EmptyResultSetException
 import android.database.sqlite.SQLiteConstraintException
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.dao.GameDao
@@ -60,7 +61,10 @@ internal class GameLocalImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf(model)) }, BackpressureStrategy.MISSING)
+                val flowable = Flowable.create<List<GameDao>>({
+                    it.onNext(listOf(model))
+                    it.onNext(listOf(model))
+                }, BackpressureStrategy.MISSING)
                 whenever(daoService.findById(10)).thenReturn(flowable)
                 whenever(mapper.mapFromEntity(model)).thenReturn(entity)
                 observer = repository.load(10).test()
@@ -193,16 +197,23 @@ internal class GameLocalImplTest {
 
             private val data1 = makeGameCache()
             private val data2 = makeGameCache()
+            private val data3 = makeGameCache()
             private var observer: TestSubscriber<List<Game>>? = null
             private val entity1 = makeGame()
             private val entity2 = makeGame()
+            private val entity3 = makeGame()
 
             @BeforeEach
             internal fun setUp() {
-                val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf(data1, data2)) }, BackpressureStrategy.MISSING)
+                val flowable = Flowable.create<List<GameDao>>({
+                    it.onNext(listOf(data1, data2))
+                    it.onNext(listOf(data1, data2))
+                    it.onNext(listOf(data1, data2, data3))
+                }, BackpressureStrategy.MISSING)
                 whenever(daoService.findByName("foo")).thenReturn(flowable)
                 whenever(mapper.mapFromEntity(data1)).thenReturn(entity1)
                 whenever(mapper.mapFromEntity(data2)).thenReturn(entity2)
+                whenever(mapper.mapFromEntity(data3)).thenReturn(entity3)
                 observer = repository.search("foo").test()
             }
 
@@ -215,8 +226,9 @@ internal class GameLocalImplTest {
             @Test
             @DisplayName("Then maps result into GameEntities")
             fun isMapped() {
-                verify(mapper).mapFromEntity(data1)
-                verify(mapper).mapFromEntity(data2)
+                verify(mapper, times(2)).mapFromEntity(data1)
+                verify(mapper, times(2)).mapFromEntity(data2)
+                verify(mapper).mapFromEntity(data3)
             }
 
             @Test
@@ -225,9 +237,10 @@ internal class GameLocalImplTest {
                 assertNotNull(observer)
                 observer?.apply {
                     assertNoErrors()
-                    assertValueCount(1)
+                    assertValueCount(2)
                     assertNotComplete()
-                    assertValue(listOf(entity1, entity2))
+                    assertValueAt(0, { it.containsAll(listOf(entity1, entity2))})
+                    assertValueAt(1, { it.containsAll(listOf(entity1, entity2, entity3))})
                 }
             }
         }

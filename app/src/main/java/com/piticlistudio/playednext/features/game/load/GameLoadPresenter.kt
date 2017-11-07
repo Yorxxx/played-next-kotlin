@@ -4,7 +4,6 @@ import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.features.base.BasePresenter
 import io.reactivex.Flowable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -21,15 +20,16 @@ class GameLoadPresenter @Inject constructor(private val loadGameUseCase: LoadGam
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
-                .doOnTerminate { mvpView?.hideLoading() }
                 .subscribeBy(
                         onNext = {
                             mvpView?.showData(it)
                             mvpView?.hideError()
+                            mvpView?.hideLoading()
                         },
                         onError = {
                             mvpView?.showError(it)
                             mvpView?.hideData()
+                            mvpView?.hideLoading()
                         }
                 )
     }
