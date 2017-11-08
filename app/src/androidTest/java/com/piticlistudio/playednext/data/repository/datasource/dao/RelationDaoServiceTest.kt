@@ -38,7 +38,7 @@ class RelationDaoServiceTest {
 
         val game = makeGameCache()
         val platform = makePlatformDao()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.platformDao()?.insert(platform)
 
         val data = makeRelationDao(game.id, platform.id)
@@ -68,7 +68,7 @@ class RelationDaoServiceTest {
 
         val game = makeGameCache()
         val platform = makePlatformDao()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
 
         try {
             val data = makeRelationDao(game.id, platform.id)
@@ -82,7 +82,7 @@ class RelationDaoServiceTest {
     fun findForGameAndPlatform_shouldReturnRelation() {
         val game = makeGameCache()
         val platform = makePlatformDao()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.platformDao()?.insert(platform)
         val relation = makeRelationDao(game.id, platform.id)
         database?.relationDao()?.insert(relation)
@@ -92,9 +92,9 @@ class RelationDaoServiceTest {
         Assert.assertNotNull(observer)
         observer?.apply {
             assertValueCount(1)
-            assertValue(relation)
             assertComplete()
             assertNoErrors()
+            assertValue { it.contains(relation) && it.size == 1 }
         }
     }
 
@@ -102,7 +102,7 @@ class RelationDaoServiceTest {
     fun findForGameAndPlatform_shouldThrowIfNotFound() {
         val game = makeGameCache()
         val platform = makePlatformDao()
-        database?.gamesDao()?.insertGame(game)
+        database?.gamesDao()?.insert(game)
         database?.platformDao()?.insert(platform)
         val relation = makeRelationDao(game.id, platform.id)
         database?.relationDao()?.insert(relation)
