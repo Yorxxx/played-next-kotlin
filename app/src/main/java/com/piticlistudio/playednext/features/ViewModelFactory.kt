@@ -2,20 +2,30 @@ package com.piticlistudio.playednext.features
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.piticlistudio.playednext.features.game.load.GameDetailViewModel
-import com.piticlistudio.playednext.features.gamerelation.load.GameRelationDetailViewModel
 import javax.inject.Inject
+import javax.inject.Provider
 
-class ViewModelFactory @Inject constructor(private val relationDetailVM: GameRelationDetailViewModel,
-                                           private val gameDetailVM: GameDetailViewModel): ViewModelProvider.Factory {
+class ViewModelFactory @Inject
+constructor(private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>) : ViewModelProvider.Factory {
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(GameRelationDetailViewModel::class.java)) {
-            return relationDetailVM as T
+        var creator = creators[modelClass]
+        if (creator == null) {
+            for ((key, value) in creators) {
+                if (modelClass.isAssignableFrom(key)) {
+                    creator = value
+                    break
+                }
+            }
         }
-        if (modelClass.isAssignableFrom(GameDetailViewModel::class.java)) {
-            return gameDetailVM as T
+        if (creator == null) {
+            throw IllegalArgumentException("Unknown viewmodel class " + modelClass)
         }
-        throw IllegalArgumentException("Unknown class name")
+        try {
+            return creator.get() as T
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
     }
 }
