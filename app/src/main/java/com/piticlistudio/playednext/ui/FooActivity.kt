@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.features
+package com.piticlistudio.playednext.ui
 
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
