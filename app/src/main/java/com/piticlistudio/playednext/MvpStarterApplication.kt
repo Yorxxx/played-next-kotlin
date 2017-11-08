@@ -16,8 +16,6 @@ class MvpStarterApplication : Application(), HasActivityInjector {
     @Inject
     lateinit var activityInjector: DispatchingAndroidInjector<Activity>
 
-    internal var mApplicationComponent: ApplicationComponent? = null
-
     override fun activityInjector(): AndroidInjector<Activity> {
         return activityInjector
     }
