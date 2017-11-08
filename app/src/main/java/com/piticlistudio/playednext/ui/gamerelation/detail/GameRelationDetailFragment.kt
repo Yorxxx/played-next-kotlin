@@ -11,13 +11,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.piticlistudio.playednext.R
-import dagger.android.AndroidInjection
+import com.piticlistudio.playednext.domain.model.GameRelation
+import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.gamerelation_detail.*
 import javax.inject.Inject
 
 class GameRelationDetailFragment : Fragment() {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var picasso: Picasso
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -25,7 +28,7 @@ class GameRelationDetailFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view: View? = inflater?.inflate(R.layout.game_search_fragment, container, false)
+        val view: View? = inflater?.inflate(R.layout.gamerelation_detail, container, false)
         return view!!
     }
 
@@ -34,18 +37,16 @@ class GameRelationDetailFragment : Fragment() {
         val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
 
         viewmodel.getLoading().observe(this, Observer {
-            Log.d("FooActivity", "Is loading ${it}")
-        })
-        viewmodel.getData().observe(this, Observer {
             when (it) {
-                null -> {
-                    Log.d("FooActivity", "No relation available")
+                false -> {
+                    gamerelation_detail_loading.hide()
                 }
                 else -> {
-                    Log.d("FooActivity", "Retrieved relation ${it}")
+                    gamerelation_detail_loading.show()
                 }
             }
         })
+        viewmodel.getData().observe(this, Observer { showData(it) })
         viewmodel.getError().observe(this, Observer {
             when (it) {
                 null -> {
@@ -58,5 +59,20 @@ class GameRelationDetailFragment : Fragment() {
         })
         if (savedInstanceState == null)
             viewmodel.loadRelation()
+    }
+
+    private fun showData(data: GameRelation?) {
+        when (data) {
+            null -> {
+                detail_content.visibility = View.INVISIBLE
+            }
+            else -> {
+                detail_content.visibility = View.VISIBLE
+                data.game?.apply {
+                    backdropTitle.text = name
+
+                }
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
@@ -21,6 +21,26 @@
     <style name="ButtonStyle">
         <item name="colorControlHighlight">@color/accent</item>
         <item name="colorButtonNormal">@color/primary</item>
+    </style>
+
+    <style name="AppTheme.Title" parent="Base.TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="AppTheme.Loading" parent="@style/Base.TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/lato_bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+    <style name="AppTheme.PlatformLabel" parent="Base.TextAppearance.AppCompat">
+        <item name="android:gravity">center</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.PlatformLabel.Horizontal" parent="AppTheme.PlatformLabel">
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingLeft">20dp</item>
     </style>
 
 </resources>

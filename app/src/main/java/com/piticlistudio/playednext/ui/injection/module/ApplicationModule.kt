@@ -6,6 +6,7 @@ import android.content.Context
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
+import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -31,4 +32,13 @@ class ApplicationModule {
     fun provideDatabase(ctx: Context): AppDatabase {
         return Room.databaseBuilder(ctx, AppDatabase::class.java, "my-todo-db").fallbackToDestructiveMigration().build()
     }
+
+    @Provides
+    @Singleton
+    fun providePicasso(ctx: Context): Picasso {
+        val picasso = Picasso.with(ctx)
+        picasso.setIndicatorsEnabled(true)
+        return picasso
+    }
+
 }
