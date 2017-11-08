@@ -15,4 +15,7 @@
     <string name="error_message">There was a problem loading the pokemon, please try again!</string>
     <string name="error_reload">Reload</string>
     <string name="title_activity_maps_sample">Map</string>
+
+    <!-- GameRelation Detail Loading -->
+    <string name="gamerelation_detail_loading">Loading…</string>
 </resources>

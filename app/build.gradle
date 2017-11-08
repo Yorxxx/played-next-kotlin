@@ -148,6 +148,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$versions.archComp"
     testImplementation "android.arch.core:core-testing:$versions.archComp"
     implementation "android.arch.lifecycle:reactivestreams:$versions.archComp"
+
+    implementation picassoLibs
 }
 
 // Tests copy
