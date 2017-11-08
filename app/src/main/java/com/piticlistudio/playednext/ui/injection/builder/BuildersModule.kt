@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.ui.injection.builder
 
 import android.arch.lifecycle.ViewModelProvider
-import com.piticlistudio.playednext.features.FooActivity
-import com.piticlistudio.playednext.features.ViewModelFactory
+import com.piticlistudio.playednext.ui.FooActivity
+import com.piticlistudio.playednext.ui.ViewModelFactory
 import com.piticlistudio.playednext.ui.gamerelation.detail.di.GameRelationDetailModule
 import dagger.Binds
 import dagger.Module
