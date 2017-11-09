@@ -19,7 +19,7 @@ class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
                 .map { mapper.mapFromEntity(it) }
     }
 
-    override fun search(query: String): Flowable<List<Game>> {
+    override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
         return dao.findByName(query)
                 .distinctUntilChanged()
                 .map {

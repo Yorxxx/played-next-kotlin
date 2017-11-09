@@ -21,6 +21,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -112,26 +114,25 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            val model = makeGameRemote()
-            val model2 = makeGameRemote()
-            val response = listOf(model, model2)
-            val entity1 = makeGame()
-            val entity2 = makeGame()
-            var result: TestSubscriber<List<Game>>? = null
+            private val model = makeGameRemote()
+            private val model2 = makeGameRemote()
+            private val entity1 = makeGame()
+            private val entity2 = makeGame()
+            private var result: TestSubscriber<List<Game>>? = null
 
             @BeforeEach
             fun setup() {
                 val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model, model2))  }
-                whenever(service.searchGames(0, "query", "*", 20)).thenReturn(flowable)
+                whenever(service.searchGames(anyInt(), anyString(), anyString(), anyInt())).thenReturn(flowable)
                 whenever(mapper.mapFromModel(model)).thenReturn(entity1)
                 whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
-                result = repositoryImpl?.search("query")?.test()
+                result = repositoryImpl?.search("query", 5, 15)?.test()
             }
 
             @Test
             @DisplayName("Then should request service with correct params")
             fun serviceIsCalled() {
-                verify(service).searchGames(0, "query", "*", 20)
+                verify(service).searchGames(5, "query", "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", 15)
             }
 
             @Test
@@ -158,7 +159,7 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = makeGame()
+            private val entity1 = makeGame()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach

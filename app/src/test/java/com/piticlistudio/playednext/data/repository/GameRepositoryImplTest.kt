@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -198,12 +199,15 @@ internal class GameRepositoryImplTest {
             private val model1 = makeGame()
             private val model2 = makeGame()
             var result: TestSubscriber<List<Game>>? = null
+            private val query = "foo"
+            private val offset = 0
+            private val limit = 20
 
             @BeforeEach
             fun setup() {
                 val flow = Flowable.create<List<Game>>({ it.onNext(listOf(model1, model2)) }, BackpressureStrategy.MISSING)
-                whenever(remoteImpl.search("query")).thenReturn(flow)
-                result = repository?.search("query")?.test()
+                whenever(remoteImpl.search(anyString(), anyInt(), anyInt())).thenReturn(flow)
+                result = repository?.search(query, offset, limit)?.test()
             }
 
             @Test
@@ -215,7 +219,7 @@ internal class GameRepositoryImplTest {
             @Test
             @DisplayName("Then should request remote implementation")
             fun remoteIsCalled() {
-                verify(remoteImpl).search("query")
+                verify(remoteImpl).search(query, offset, limit)
             }
 
             @Test
