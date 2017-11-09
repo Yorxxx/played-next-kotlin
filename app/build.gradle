@@ -154,7 +154,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$versions.archComp"
     testImplementation "android.arch.core:core-testing:$versions.archComp"
     implementation "android.arch.lifecycle:reactivestreams:$versions.archComp"
-    implementation "android.arch.paging:runtime:1.0.0-alpha1"
+    implementation "android.arch.paging:runtime:1.0.0-alpha3"
 
     implementation picassoLibs
 }
