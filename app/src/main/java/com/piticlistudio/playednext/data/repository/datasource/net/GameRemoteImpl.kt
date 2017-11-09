@@ -27,7 +27,7 @@ class GameRemoteImpl @Inject constructor(private val service: IGDBService,
     }
 
     override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
-        return service.searchGames(offset, query, "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", limit)
+        return service.searchGames(offset, query, "id,name,slug,url,summary,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", limit)
                 .flatMap { Observable.fromIterable(it).map { mapper.mapFromModel(it) }.toList() }
                 .toFlowable()
     }

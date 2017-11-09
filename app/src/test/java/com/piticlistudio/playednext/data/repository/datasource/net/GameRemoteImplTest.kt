@@ -129,7 +129,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should request service with correct params")
             fun serviceIsCalled() {
-                verify(service).searchGames(5, "query", "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", 15)
+                verify(service).searchGames(5, "query", "id,name,slug,url,summary,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", 15)
             }
 
             @Test
