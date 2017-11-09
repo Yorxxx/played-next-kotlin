@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -32,7 +33,7 @@ internal class GameLocalImplTest {
 
     @Nested
     @DisplayName("Given GameLocalImpl instance")
-    inner class localImplInstance {
+    inner class LocalImplInstance {
 
         @Rule
         @JvmField
@@ -53,7 +54,7 @@ internal class GameLocalImplTest {
 
         @Nested
         @DisplayName("When load is called")
-        inner class loadIsCalled {
+        inner class LoadIsCalled {
 
             private var observer: TestSubscriber<Game>? = null
             private val model = makeGameCache()
@@ -96,7 +97,7 @@ internal class GameLocalImplTest {
 
             @Nested
             @DisplayName("And there are no results in database")
-            inner class noResults {
+            inner class NoResults {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -121,7 +122,7 @@ internal class GameLocalImplTest {
 
         @Nested
         @DisplayName("When save is called")
-        inner class saveIsCalled {
+        inner class SaveIsCalled {
 
             private val source = makeGame()
             private val data = makeGameCache()
@@ -164,7 +165,7 @@ internal class GameLocalImplTest {
 
             @Nested
             @DisplayName("and data is already stored")
-            inner class alreadyStored {
+            inner class AlreadyStored {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -210,11 +211,11 @@ internal class GameLocalImplTest {
                     it.onNext(listOf(data1, data2))
                     it.onNext(listOf(data1, data2, data3))
                 }, BackpressureStrategy.MISSING)
-                whenever(daoService.findByName("foo")).thenReturn(flowable)
+                whenever(daoService.findByName(anyString())).thenReturn(flowable)
                 whenever(mapper.mapFromEntity(data1)).thenReturn(entity1)
                 whenever(mapper.mapFromEntity(data2)).thenReturn(entity2)
                 whenever(mapper.mapFromEntity(data3)).thenReturn(entity3)
-                observer = repository.search("foo").test()
+                observer = repository.search("foo", 0, 10).test()
             }
 
             @Test
@@ -239,8 +240,8 @@ internal class GameLocalImplTest {
                     assertNoErrors()
                     assertValueCount(2)
                     assertNotComplete()
-                    assertValueAt(0, { it.containsAll(listOf(entity1, entity2))})
-                    assertValueAt(1, { it.containsAll(listOf(entity1, entity2, entity3))})
+                    assertValueAt(0, { it.containsAll(listOf(entity1, entity2)) })
+                    assertValueAt(1, { it.containsAll(listOf(entity1, entity2, entity3)) })
                 }
             }
         }

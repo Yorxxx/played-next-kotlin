@@ -21,7 +21,7 @@ interface IGDBService {
     @GET("/games/")
     fun searchGames(@Query("offset") offset: Int,
                     @Query("search") query: String,
-                    @Query("fields") fields: String,
+                    @Query("fields") fields: String = "id,name,slug,url,summary,collection,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at",
                     @Query("limit") limit: Int): Single<List<GameDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)

@@ -27,8 +27,8 @@ class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteI
                 .flatMap { if (shouldSyncData(it)) fetchAndCache(id).toFlowable().onErrorReturnItem(it) else Flowable.just(it) }
     }
 
-    override fun search(query: String): Flowable<List<Game>> {
-        return remoteImpl.search(query)
+    override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
+        return remoteImpl.search(query, offset, limit)
     }
 
     override fun save(game: Game): Completable {

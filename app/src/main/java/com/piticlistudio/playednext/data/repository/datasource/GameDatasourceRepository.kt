@@ -13,7 +13,7 @@ interface GameDatasourceRepository {
 
     fun load(id: Int): Flowable<Game>
 
-    fun search(query: String): Flowable<List<Game>>
+    fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>>
 
     fun save(domainModel: Game): Completable
 }
