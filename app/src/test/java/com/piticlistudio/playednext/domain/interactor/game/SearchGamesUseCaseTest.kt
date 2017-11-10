@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.GameRepository
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -40,9 +41,9 @@ class SearchGamesUseCaseTest {
 
         @Nested
         @DisplayName("When execute is called")
-        inner class execute {
+        inner class Execute {
 
-            private val games = listOf(makeGame(), makeGame())
+            private val games = randomListOf{ makeGame() }
             private var response: TestSubscriber<List<Game>>? = null
             private val query = "mario"
             private val offset = 2

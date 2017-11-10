@@ -7,10 +7,11 @@ import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.*
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -51,10 +52,10 @@ class LoadGameUseCaseTest {
 
             private var testObserver: TestSubscriber<Game>? = null
             val result = makeGame()
-            val companyList = makeCompanyList()
-            val genreList = makeGenreList()
+            val companyList = randomListOf(factory = ::makeCompany)
+            val genreList = randomListOf { makeGenre() }
             val collection = makeCollection()
-            val platforms = makePlatformList()
+            val platforms = randomListOf { makePlatform() }
 
             @BeforeEach
             internal fun setup() {

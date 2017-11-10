@@ -5,11 +5,10 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDaoMapper
 import com.piticlistudio.playednext.domain.model.Platform
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDao
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDaoList
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,7 +23,7 @@ internal class PlatformDaoRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a PlatformDaoRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: PlatformDaoRepositoryImpl
         @Mock
@@ -40,7 +39,7 @@ internal class PlatformDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
 
             private var observer: TestObserver<Platform>? = null
             private val source = makePlatformDao()
@@ -51,7 +50,7 @@ internal class PlatformDaoRepositoryImplTest {
             internal fun setUp() {
                 whenever(dao.find(id)).thenReturn(Single.just(source))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
-                observer = repository.load(id.toInt()).test();
+                observer = repository.load(id.toInt()).test()
             }
 
             @Test
@@ -75,7 +74,7 @@ internal class PlatformDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makePlatform()
@@ -108,11 +107,11 @@ internal class PlatformDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             private var observer: TestObserver<List<Platform>>? = null
-            private val source = makePlatformDaoList()
-            private val result = makePlatformList()
+            private val source = randomListOf{ makePlatformDao() }
+            private val result = randomListOf { makePlatform() }
             private val id = 10
 
             @BeforeEach
@@ -142,7 +141,7 @@ internal class PlatformDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveForGame")
-        inner class saveForGameCalled {
+        inner class SaveForGameCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makePlatform()

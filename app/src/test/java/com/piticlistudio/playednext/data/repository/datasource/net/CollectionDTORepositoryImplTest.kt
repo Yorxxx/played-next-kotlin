@@ -23,7 +23,7 @@ internal class CollectionDTORepositoryImplTest {
 
     @Nested
     @DisplayName("Given a CollectionDTORepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: CollectionDTORepositoryImpl
         @Mock
@@ -39,7 +39,7 @@ internal class CollectionDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
 
             private var observer: TestObserver<Collection>? = null
             private val source = makeCollectionDTO()
@@ -49,7 +49,7 @@ internal class CollectionDTORepositoryImplTest {
             internal fun setUp() {
                 whenever(service.loadCollection(source.id)).thenReturn(Single.just(source))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
-                observer = repository.load(source.id).test();
+                observer = repository.load(source.id).test()
             }
 
             @Test
@@ -78,12 +78,12 @@ internal class CollectionDTORepositoryImplTest {
 
             @Nested
             @DisplayName("And mapping fails")
-            inner class mappingFailure {
+            inner class MappingFailure {
 
                 @BeforeEach
                 internal fun setUp() {
                     whenever(mapper.mapFromModel(any())).thenReturn(null)
-                    observer = repository.load(source.id).test();
+                    observer = repository.load(source.id).test()
                 }
 
                 @Test
@@ -101,7 +101,7 @@ internal class CollectionDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCollection()
@@ -123,7 +123,7 @@ internal class CollectionDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             private var observer: TestObserver<Collection>? = null
             private val result = CollectionFactory.makeCollection()
@@ -157,7 +157,7 @@ internal class CollectionDTORepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no collection")
-            inner class withoutCollection {
+            inner class WithoutCollection {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -182,7 +182,7 @@ internal class CollectionDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveForGame")
-        inner class saveForGameCalled {
+        inner class SaveForGameCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = CollectionFactory.makeCollection()

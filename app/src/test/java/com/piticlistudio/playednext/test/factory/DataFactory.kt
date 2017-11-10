@@ -34,5 +34,13 @@ class DataFactory {
             }
             return items
         }
+
+        fun <T> randomListOf(size: Int = randomInt(), factory: () -> T): List<T> {
+            val items: MutableList<T> = mutableListOf()
+            repeat(size) {
+                items.add(factory())
+            }
+            return items
+        }
     }
 }

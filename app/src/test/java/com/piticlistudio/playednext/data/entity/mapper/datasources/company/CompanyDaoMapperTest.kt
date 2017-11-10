@@ -1,6 +1,7 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
 import com.piticlistudio.playednext.data.entity.dao.CompanyDao
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDao
@@ -15,7 +16,7 @@ internal class CompanyDaoMapperTest {
 
     @Nested
     @DisplayName("Given a CompanyDaoMapper instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var mapper: CompanyDaoMapper
 
@@ -26,7 +27,7 @@ internal class CompanyDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
             private val model = makeCompanyDao()
             private var result: Company? = null
@@ -53,7 +54,7 @@ internal class CompanyDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntityCalled {
+        inner class MapFromEntityCalled {
 
             private val entity = makeCompany()
             private var result: CompanyDao? = null

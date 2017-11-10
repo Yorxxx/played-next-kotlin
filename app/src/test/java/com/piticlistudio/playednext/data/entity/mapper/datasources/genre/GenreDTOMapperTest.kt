@@ -1,16 +1,18 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
 import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTOList
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
 import org.junit.jupiter.api.*
 
 internal class GenreDTOMapperTest {
 
     @Nested
     @DisplayName("Given GenreDTOMapper instance")
-    inner class mapperInstance {
+    inner class MapperInstance {
 
         private lateinit var mapper: GenreDTOMapper
 
@@ -21,9 +23,9 @@ internal class GenreDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
-            val sources = makeGenreDTOList()
+            private val sources = randomListOf { makeGenreDTO() }
             var result: List<Genre>? = null
 
             @BeforeEach
@@ -38,12 +40,12 @@ internal class GenreDTOMapperTest {
                 with(result!!) {
                     kotlin.test.assertEquals(sources.size, size)
                     for ((index, value) in this.withIndex()) {
-                        kotlin.test.assertEquals(sources.get(index).id, value.id)
-                        kotlin.test.assertEquals(sources.get(index).name, value.name)
-                        kotlin.test.assertEquals(sources.get(index).created_at, value.createdAt)
-                        kotlin.test.assertEquals(sources.get(index).updated_at, value.updatedAt)
-                        kotlin.test.assertEquals(sources.get(index).slug, value.slug)
-                        kotlin.test.assertEquals(sources.get(index).url, value.url)
+                        kotlin.test.assertEquals(sources[index].id, value.id)
+                        kotlin.test.assertEquals(sources[index].name, value.name)
+                        kotlin.test.assertEquals(sources[index].created_at, value.createdAt)
+                        kotlin.test.assertEquals(sources[index].updated_at, value.updatedAt)
+                        kotlin.test.assertEquals(sources[index].slug, value.slug)
+                        kotlin.test.assertEquals(sources[index].url, value.url)
                     }
                 }
             }
@@ -51,9 +53,9 @@ internal class GenreDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntity {
+        inner class MapFromEntity {
 
-            private val sources = makeGenreList()
+            private val sources = randomListOf { makeGenre() }
             private var result: List<GenreDTO>? = null
 
             @Test

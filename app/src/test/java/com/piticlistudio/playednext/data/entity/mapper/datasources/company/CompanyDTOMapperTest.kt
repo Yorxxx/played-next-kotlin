@@ -1,8 +1,10 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.net.CompanyDTO
 import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTOList
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import org.junit.jupiter.api.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -12,7 +14,7 @@ internal class CompanyDTOMapperTest {
 
     @Nested
     @DisplayName("Given CompanyDTOMapper instance")
-    inner class mapperInstance {
+    inner class MapperInstance {
 
         private lateinit var mapper: CompanyDTOMapper
 
@@ -23,9 +25,9 @@ internal class CompanyDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
-            val sources = makeCompanyDTOList()
+            private val sources = randomListOf(factory = ::makeCompanyDTO)
             var result: List<Company>? = null
 
             @BeforeEach
@@ -40,12 +42,12 @@ internal class CompanyDTOMapperTest {
                 with(result!!) {
                     assertEquals(sources.size, size)
                     for ((index,value) in this.withIndex()) {
-                        assertEquals(sources.get(index).id, value.id)
-                        assertEquals(sources.get(index).name, value.name)
-                        assertEquals(sources.get(index).created_at, value.createdAt)
-                        assertEquals(sources.get(index).updated_at, value.updatedAt)
-                        assertEquals(sources.get(index).slug, value.slug)
-                        assertEquals(sources.get(index).url, value.url)
+                        assertEquals(sources[index].id, value.id)
+                        assertEquals(sources[index].name, value.name)
+                        assertEquals(sources[index].created_at, value.createdAt)
+                        assertEquals(sources[index].updated_at, value.updatedAt)
+                        assertEquals(sources[index].slug, value.slug)
+                        assertEquals(sources[index].url, value.url)
                     }
                 }
             }
@@ -53,7 +55,7 @@ internal class CompanyDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntity {
+        inner class MapFromEntity {
 
             private val sources = listOf<Company>()
             private var result: List<CompanyDTO>? = null

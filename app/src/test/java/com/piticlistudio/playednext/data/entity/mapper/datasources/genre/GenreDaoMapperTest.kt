@@ -1,6 +1,7 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.dao.GenreDao
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDaoMapper
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao
@@ -15,7 +16,7 @@ internal class GenreDaoMapperTest {
 
     @Nested
     @DisplayName("Given a GenreDaoMapper instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var mapper: GenreDaoMapper
 
@@ -26,7 +27,7 @@ internal class GenreDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
             private val model = makeGenreDao()
             private var result: Genre? = null
@@ -53,7 +54,7 @@ internal class GenreDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntityCalled {
+        inner class MapFromEntityCalled {
 
             private val entity = makeGenre()
             private var result: GenreDao? = null

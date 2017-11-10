@@ -1,6 +1,7 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.collection
 
 import com.piticlistudio.playednext.data.entity.dao.CollectionDao
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDaoMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDao
@@ -14,7 +15,7 @@ internal class CollectionDaoMapperTest {
 
     @Nested
     @DisplayName("Given a CollectionDaoMapper instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var mapper: CollectionDaoMapper
 
@@ -25,7 +26,7 @@ internal class CollectionDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
             private val model = makeCollectionDao()
             private var result: Collection? = null
@@ -51,7 +52,7 @@ internal class CollectionDaoMapperTest {
 
             @Nested
             @DisplayName("And model is null")
-            inner class modelIsNull {
+            inner class ModelIsNull {
 
                 private val model: CollectionDao? = null
                 private var result: Collection? = null
@@ -71,7 +72,7 @@ internal class CollectionDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntityCalled {
+        inner class MapFromEntityCalled {
 
             private val entity = makeCollection()
             private var result: CollectionDao? = null
@@ -97,7 +98,7 @@ internal class CollectionDaoMapperTest {
 
             @Nested
             @DisplayName("And model is null")
-            inner class modelIsNull {
+            inner class ModelIsNull {
 
                 private val model: Collection? = null
                 private var result: CollectionDao? = null

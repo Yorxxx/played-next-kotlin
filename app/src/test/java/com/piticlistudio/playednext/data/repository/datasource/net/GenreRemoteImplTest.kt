@@ -4,9 +4,9 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
 import com.piticlistudio.playednext.domain.model.Genre
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -45,7 +45,7 @@ internal class GenreRemoteImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = makeGenre()
+            private val entity1 = makeGenre()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -67,11 +67,11 @@ internal class GenreRemoteImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             var observer: TestObserver<List<Genre>>? = null
             val game = GameFactory.makeGameRemote()
-            val result = makeGenreList()
+            val result = randomListOf{ makeGenre() }
 
             @BeforeEach
             internal fun setUp() {
@@ -101,9 +101,9 @@ internal class GenreRemoteImplTest {
 
         @Nested
         @DisplayName("When we call insertGameGenre")
-        inner class insertGameGenreCalled {
+        inner class InsertGameGenreCalled {
 
-            val entity1 = makeGenre()
+            private val entity1 = makeGenre()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach

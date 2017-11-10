@@ -5,8 +5,8 @@ import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.repository.datasource.dao.platform.PlatformDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.platform.PlatformDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.Platform
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -26,7 +26,7 @@ internal class PlatformRepositoryImplTest {
 
     @Nested
     @DisplayName("Given PlatformRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         @Rule
         @JvmField
@@ -47,9 +47,9 @@ internal class PlatformRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
             val id = 10
-            val entity = makePlatformList()
+            val entity = randomListOf{ makePlatform() }
             var result: TestObserver<List<Platform>>? = null
 
             @BeforeEach
@@ -84,7 +84,7 @@ internal class PlatformRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -122,9 +122,9 @@ internal class PlatformRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveForGame")
-        inner class saveForGameCalled {
+        inner class SaveForGameCalled {
 
-            val data = makePlatformList()
+            val data = randomListOf { makePlatform() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -161,7 +161,7 @@ internal class PlatformRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
             val id = 10
             val entity = makePlatform()
             var result: TestObserver<Platform>? = null
@@ -198,7 +198,7 @@ internal class PlatformRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {

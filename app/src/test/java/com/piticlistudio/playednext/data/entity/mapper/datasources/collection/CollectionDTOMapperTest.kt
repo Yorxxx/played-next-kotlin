@@ -1,6 +1,6 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.collection
 
-import com.piticlistudio.playednext.data.entity.dao.CollectionDao
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
 import com.piticlistudio.playednext.data.entity.net.CollectionDTO
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
@@ -13,7 +13,7 @@ internal class CollectionDTOMapperTest {
 
     @Nested
     @DisplayName("Given CollectionDTOMapper instance")
-    inner class mapperInstance {
+    inner class MapperInstance {
 
         private lateinit var mapper: CollectionDTOMapper
 
@@ -24,9 +24,9 @@ internal class CollectionDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
-            val source = makeCollectionDTO()
+            private val source = makeCollectionDTO()
             var result: Collection? = null
 
             @BeforeEach
@@ -50,7 +50,7 @@ internal class CollectionDTOMapperTest {
 
             @Nested
             @DisplayName("And model is null")
-            inner class modelIsNull {
+            inner class ModelIsNull {
 
                 private val model: CollectionDTO? = null
                 private var result: Collection? = null
@@ -70,7 +70,7 @@ internal class CollectionDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntity {
+        inner class MapFromEntity {
 
             private val source = makeCollection()
             private var result: CollectionDTO? = null

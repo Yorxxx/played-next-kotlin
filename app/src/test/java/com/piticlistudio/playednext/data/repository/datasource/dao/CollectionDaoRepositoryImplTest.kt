@@ -22,7 +22,7 @@ internal class CollectionDaoRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a CollectionDaoRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: CollectionDaoRepositoryImpl
         @Mock
@@ -38,7 +38,7 @@ internal class CollectionDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
 
             private var observer: TestObserver<Collection>? = null
             private val source = makeCollectionDao()
@@ -48,7 +48,7 @@ internal class CollectionDaoRepositoryImplTest {
             internal fun setUp() {
                 whenever(dao.find(source.id.toLong())).thenReturn(Single.just(source))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
-                observer = repository.load(source.id).test();
+                observer = repository.load(source.id).test()
             }
 
             @Test
@@ -72,7 +72,7 @@ internal class CollectionDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCollection()
@@ -104,7 +104,7 @@ internal class CollectionDaoRepositoryImplTest {
 
             @Nested
             @DisplayName("And map fails")
-            inner class mappingFails {
+            inner class MappingFails {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -128,7 +128,7 @@ internal class CollectionDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             private var observer: TestObserver<Collection>? = null
             private val source = makeCollectionDao()
@@ -162,7 +162,7 @@ internal class CollectionDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveForGame")
-        inner class saveForGameCalled {
+        inner class SaveForGameCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCollection()

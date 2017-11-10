@@ -6,7 +6,7 @@ import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoRep
 import com.piticlistudio.playednext.data.repository.datasource.net.CompanyRemoteImpl
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -26,7 +26,7 @@ internal class CompanyRepositoryImplTest {
 
     @Nested
     @DisplayName("Given CompanyRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         @Rule
         @JvmField
@@ -84,7 +84,7 @@ internal class CompanyRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -122,9 +122,9 @@ internal class CompanyRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadDevelopersForGameId")
-        inner class loadDevelopersForGameIdCalled {
+        inner class LoadDevelopersForGameIdCalled {
             val id = 10
-            val entity = makeCompanyList()
+            val entity = randomListOf(factory = ::makeCompany)
             var result: TestObserver<List<Company>>? = null
 
             @BeforeEach
@@ -159,7 +159,7 @@ internal class CompanyRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -197,9 +197,9 @@ internal class CompanyRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveDevelopersForGame")
-        inner class saveDevelopersForGameCalled {
+        inner class SaveDevelopersForGameCalled {
 
-            val companies = makeCompanyList()
+            private val companies = randomListOf(factory = ::makeCompany)
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -236,9 +236,9 @@ internal class CompanyRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadPublishersForGame")
-        inner class loadPublishersForGameCalled {
+        inner class LoadPublishersForGameCalled {
             val id = 10
-            val entity = makeCompanyList()
+            val entity = randomListOf(factory = ::makeCompany)
             var result: TestObserver<List<Company>>? = null
 
             @BeforeEach
@@ -273,7 +273,7 @@ internal class CompanyRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -311,9 +311,9 @@ internal class CompanyRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call savePublishersForGame")
-        inner class savePublishersForGameCalled {
+        inner class SavePublishersForGameCalled {
 
-            val companies = makeCompanyList()
+            private val companies = randomListOf(factory = ::makeCompany)
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
