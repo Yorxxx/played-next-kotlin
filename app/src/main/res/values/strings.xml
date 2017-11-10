@@ -27,4 +27,7 @@
 
     <!-- GameRelation Detail Loading -->
     <string name="gamerelation_detail_loading">Loading…</string>
+
+    <!-- Game Search view -->
+    <string name="gamesearch_hint">Enter game name</string>
 </resources>

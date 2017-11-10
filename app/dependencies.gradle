@@ -12,7 +12,9 @@ ext {
             dagger        : '2.11',
             butterKnife   : '8.6.0',
             archComp      : '1.0.0',
-            picasso       : '2.5.2'
+            picasso       : '2.5.2',
+            constraint_layout: "1.0.2",
+            glide         : '4.1.1'
     ]
 
     mockito = [mockito: "org.mockito:mockito-core:2.8.9"]
@@ -25,7 +27,8 @@ ext {
             design           : "com.android.support:design:$versions.support",
             recyclerView     : "com.android.support:recyclerview-v7:$versions.support",
             supportAnnotation: "com.android.support:support-annotations:$versions.support",
-            gridLayout       : "com.android.support:gridlayout-v7:$versions.support"
+            gridLayout       : "com.android.support:gridlayout-v7:$versions.support",
+            contraint        : "com.android.support.constraint:constraint-layout:${versions.constraint_layout}"
     ]
 
     dagger = [
