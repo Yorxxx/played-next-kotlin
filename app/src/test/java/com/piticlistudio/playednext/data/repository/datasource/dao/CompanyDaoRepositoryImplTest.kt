@@ -7,8 +7,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMap
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDao
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDaoList
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,7 +23,7 @@ internal class CompanyDaoRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a CompanyDaoRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: CompanyDaoRepositoryImpl
         @Mock
@@ -40,7 +39,7 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
 
             private var observer: TestObserver<Company>? = null
             private val source = makeCompanyDao()
@@ -50,7 +49,7 @@ internal class CompanyDaoRepositoryImplTest {
             internal fun setUp() {
                 whenever(dao.find(10)).thenReturn(Single.just(source))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
-                observer = repository.load(10).test();
+                observer = repository.load(10).test()
             }
 
             @Test
@@ -74,7 +73,7 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCompany()
@@ -107,11 +106,11 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadDevelopersForGame")
-        inner class loadDevelopersForGameCalled {
+        inner class LoadDevelopersForGameCalled {
 
             private var observer: TestObserver<List<Company>>? = null
-            private val source = makeCompanyDaoList()
-            private val result = makeCompanyList()
+            private val source = randomListOf(factory = ::makeCompanyDao)
+            private val result = randomListOf(factory = ::makeCompany)
 
             @BeforeEach
             internal fun setUp() {
@@ -140,11 +139,11 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadPublishersForGame")
-        inner class loadPublishersForGameCalled {
+        inner class LoadPublishersForGameCalled {
 
             private var observer: TestObserver<List<Company>>? = null
-            private val source = makeCompanyDaoList()
-            private val result = makeCompanyList()
+            private val source = randomListOf(factory = ::makeCompanyDao)
+            private val result = randomListOf(factory = ::makeCompany)
 
             @BeforeEach
             internal fun setUp() {
@@ -173,7 +172,7 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveDeveloperForGame")
-        inner class saveDeveloperForGameCalled {
+        inner class SaveDeveloperForGameCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCompany()
@@ -216,7 +215,7 @@ internal class CompanyDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call savePublisherForGame")
-        inner class savePublisherForGameCalled {
+        inner class SavePublisherForGameCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeCompany()

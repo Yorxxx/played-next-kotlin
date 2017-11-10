@@ -22,29 +22,5 @@ class PlatformFactory {
             return PlatformDTO(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
-
-        fun makePlatformList(size: Int = DataFactory.randomInt()): List<Platform> {
-            val items: MutableList<Platform> = mutableListOf()
-            repeat(size) {
-                items.add(makePlatform())
-            }
-            return items
-        }
-
-        fun makePlatformDTOList(size: Int = DataFactory.randomInt()): List<PlatformDTO> {
-            val items: MutableList<PlatformDTO> = mutableListOf()
-            repeat(size) {
-                items.add(makePlatformDTO())
-            }
-            return items
-        }
-
-        fun makePlatformDaoList(size: Int = DataFactory.randomInt()): List<PlatformDao> {
-            val items: MutableList<PlatformDao> = mutableListOf()
-            repeat(size) {
-                items.add(makePlatformDao())
-            }
-            return items
-        }
     }
 }

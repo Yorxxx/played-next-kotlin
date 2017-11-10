@@ -25,29 +25,5 @@ class CompanyFactory {
             return CompanyDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
                     randomLong())
         }
-
-        fun makeCompanyList(size: Int = randomInt()): List<Company> {
-            val items: MutableList<Company> = mutableListOf()
-            repeat(size) {
-                items.add(makeCompany())
-            }
-            return items
-        }
-
-        fun makeCompanyDTOList(size: Int = randomInt()): List<CompanyDTO> {
-            val items: MutableList<CompanyDTO> = mutableListOf()
-            repeat(size) {
-                items.add(makeCompanyDTO())
-            }
-            return items
-        }
-
-        fun makeCompanyDaoList(size: Int = randomInt()): List<CompanyDao> {
-            val items: MutableList<CompanyDao> = mutableListOf()
-            repeat(size) {
-                items.add(makeCompanyDao())
-            }
-            return items
-        }
     }
 }

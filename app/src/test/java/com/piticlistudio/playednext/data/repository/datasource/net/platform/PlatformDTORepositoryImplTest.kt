@@ -5,10 +5,10 @@ import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.domain.model.Platform
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -49,7 +49,7 @@ internal class PlatformDTORepositoryImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = makePlatform()
+            private val entity1 = makePlatform()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -71,11 +71,11 @@ internal class PlatformDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             var observer: TestObserver<List<Platform>>? = null
             val game = GameFactory.makeGameRemote()
-            val result = makePlatformList()
+            val result = randomListOf{ makePlatform() }
 
             @BeforeEach
             internal fun setUp() {
@@ -105,9 +105,9 @@ internal class PlatformDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call insertGameGenre")
-        inner class insertGameGenreCalled {
+        inner class InsertGameGenreCalled {
 
-            val entity1 = makePlatform()
+            private val entity1 = makePlatform()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -129,10 +129,10 @@ internal class PlatformDTORepositoryImplTest {
 
         @Nested
         @DisplayName("When we call load")
-        inner class loadCalled {
+        inner class LoadCalled {
 
             var observer: TestObserver<Platform>? = null
-            val platformDTO = makePlatformDTO()
+            private val platformDTO = makePlatformDTO()
             val result = makePlatform()
 
             @BeforeEach

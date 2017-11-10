@@ -52,5 +52,3 @@ data class ReleaseDateDTO(val game: Int, val category: Int, val platform: Int?, 
 data class ImageDTO(val url: String, val cloudinary_id: String?, val width: Int?, val height: Int?)
 
 data class VideoDTO(val name: String, val video_id: String)
-
-data class ExternalRemote(val steam: String? = null)

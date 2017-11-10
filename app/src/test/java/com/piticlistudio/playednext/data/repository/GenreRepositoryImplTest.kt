@@ -4,7 +4,8 @@ import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GenreRemoteImpl
 import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -23,7 +24,7 @@ internal class GenreRepositoryImplTest {
 
     @Nested
     @DisplayName("Given GenreRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         @Rule
         @JvmField
@@ -44,9 +45,9 @@ internal class GenreRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
             val id = 10
-            val entity = makeGenreList()
+            val entity = randomListOf{ makeGenre() }
             var result: TestObserver<List<Genre>>? = null
 
             @BeforeEach
@@ -81,7 +82,7 @@ internal class GenreRepositoryImplTest {
 
             @Nested
             @DisplayName("And there is no result in local repository")
-            inner class withoutLocalResult {
+            inner class WithoutLocalResult {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -119,9 +120,9 @@ internal class GenreRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call saveForGame")
-        inner class saveForGameCalled {
+        inner class SaveForGameCalled {
 
-            val data = makeGenreList()
+            val data = randomListOf { makeGenre() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach

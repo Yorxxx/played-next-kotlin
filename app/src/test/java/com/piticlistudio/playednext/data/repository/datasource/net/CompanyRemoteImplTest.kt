@@ -6,7 +6,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMap
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
@@ -46,7 +46,7 @@ internal class CompanyRemoteImplTest {
         inner class Load {
 
             var result: TestObserver<Company>? = null
-            val source = makeCompanyDTO()
+            private val source = makeCompanyDTO()
             val entity = makeCompany()
 
             @BeforeEach
@@ -86,7 +86,7 @@ internal class CompanyRemoteImplTest {
         @DisplayName("When we call save")
         inner class Save {
 
-            val entity1 = makeCompany()
+            private val entity1 = makeCompany()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -108,11 +108,11 @@ internal class CompanyRemoteImplTest {
 
         @Nested
         @DisplayName("When we call loadDevelopersForGame")
-        inner class loadDevelopersForGameCalled {
+        inner class LoadDevelopersForGameCalled {
 
             var observer: TestObserver<List<Company>>? = null
             val game = makeGameRemote()
-            val result = makeCompanyList()
+            val result = randomListOf(factory = ::makeCompany)
 
             @BeforeEach
             internal fun setUp() {
@@ -142,11 +142,11 @@ internal class CompanyRemoteImplTest {
 
         @Nested
         @DisplayName("When we call loadPublishersForGame")
-        inner class loadPublishersForGameCalled {
+        inner class LoadPublishersForGameCalled {
 
             var observer: TestObserver<List<Company>>? = null
             val game = makeGameRemote()
-            val result = makeCompanyList()
+            val result = randomListOf(factory = ::makeCompany)
 
             @BeforeEach
             internal fun setUp() {
@@ -176,9 +176,9 @@ internal class CompanyRemoteImplTest {
 
         @Nested
         @DisplayName("When we call saveDeveloperForGame")
-        inner class saveDeveloperForGameCalled {
+        inner class SaveDeveloperForGameCalled {
 
-            val entity1 = makeCompany()
+            private val entity1 = makeCompany()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -200,9 +200,9 @@ internal class CompanyRemoteImplTest {
 
         @Nested
         @DisplayName("When we call savePublisherForGame")
-        inner class savePublisherForGameCalled {
+        inner class SavePublisherForGameCalled {
 
-            val entity1 = makeCompany()
+            private val entity1 = makeCompany()
             var observer: TestObserver<Void>? = null
 
             @BeforeEach

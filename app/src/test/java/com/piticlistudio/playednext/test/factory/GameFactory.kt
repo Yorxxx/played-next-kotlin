@@ -9,17 +9,18 @@ import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDTO
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTOList
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyList
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTOList
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTOList
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformList
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
 
 /**
  * Factory class for Game instances
@@ -32,8 +33,12 @@ class GameFactory {
             return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
-                    makeTimeToBeat(), makeCompanyList(), makeCompanyList(), makeGenreList(), makeCollection(),
-                    randomLong(), makePlatformList())
+                    makeTimeToBeat(),
+                    randomListOf(factory = ::makeCompany),
+                    randomListOf(factory = ::makeCompany),
+                    randomListOf(factory = ::makeGenre),
+                    makeCollection(), randomLong(),
+                    randomListOf(factory = ::makePlatform))
         }
 
         fun makeCover(): Cover {
@@ -64,24 +69,16 @@ class GameFactory {
             return GameDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
                     randomLong(), randomString(), randomString(), makeCollectionDTO(), randomInt(),
                     randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
-                    randomInt(), randomDouble(), randomInt(), makeCompanyDTOList(),
-                    makeCompanyDTOList(), randomIntList(), makeTimeToBeatRemote(),
-                    makeGenreDTOList(), randomLong(), listOf(makeReleaseDateRemote(),
-                    makeReleaseDateRemote()), listOf(makeImageRemote(), makeImageRemote(), makeImageRemote()),
-                    listOf(makeVideoRemote()), makeImageRemote(), randomIntList(), makePlatformDTOList())
-        }
-
-        fun makeEnumeratedEntityList(size: Int = randomInt()): List<BaseEnumeratedEntity> {
-            val items: MutableList<BaseEnumeratedEntity> = mutableListOf()
-            repeat(size) {
-                items.add(makeEnumeratedEntity())
-            }
-            return items
-        }
-
-        fun makeEnumeratedEntity(): BaseEnumeratedEntity {
-            return BaseEnumeratedEntity(randomInt(), randomString(), randomString(), randomString(),
-                    randomLong(), randomLong())
+                    randomInt(), randomDouble(), randomInt(),
+                    randomListOf(factory = ::makeCompanyDTO),
+                    randomListOf(factory = ::makeCompanyDTO),
+                    randomIntList(), makeTimeToBeatRemote(),
+                    randomListOf(factory = ::makeGenreDTO), randomLong(),
+                    randomListOf(factory = this::makeReleaseDateRemote),
+                    randomListOf(factory = this::makeImageRemote),
+                    randomListOf(factory = this::makeVideoRemote),
+                    makeImageRemote(), randomIntList(),
+                    randomListOf(factory = ::makePlatformDTO))
         }
 
         fun makeTimeToBeatRemote(): TimeToBeatDTO {

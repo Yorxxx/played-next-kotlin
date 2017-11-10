@@ -5,11 +5,10 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDaoMapper
 import com.piticlistudio.playednext.domain.model.Genre
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDAOList
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreList
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -24,7 +23,7 @@ internal class GenreDaoRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a GenreDaoRepositoryImpl instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var repository: GenreDaoRepositoryImpl
         @Mock
@@ -32,7 +31,7 @@ internal class GenreDaoRepositoryImplTest {
         @Mock
         private lateinit var mapper: GenreDaoMapper
 
-        private val gameId = 10;
+        private val gameId = 10
 
         @BeforeEach
         internal fun setUp() {
@@ -42,11 +41,11 @@ internal class GenreDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call loadForGame")
-        inner class loadForGameCalled {
+        inner class LoadForGameCalled {
 
             private var observer: TestObserver<List<Genre>>? = null
-            private val source = makeGenreDAOList()
-            private val result = makeGenreList()
+            private val source = randomListOf { makeGenreDao() }
+            private val result = randomListOf { makeGenre() }
 
             @BeforeEach
             internal fun setUp() {
@@ -75,7 +74,7 @@ internal class GenreDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call save")
-        inner class saveCalled {
+        inner class SaveCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeGenre()
@@ -108,7 +107,7 @@ internal class GenreDaoRepositoryImplTest {
 
         @Nested
         @DisplayName("When we call insertGameGenre")
-        inner class insertGameGenreCalled {
+        inner class InsertGameGenreCalled {
 
             private var observer: TestObserver<Void>? = null
             private val source = makeGenre()

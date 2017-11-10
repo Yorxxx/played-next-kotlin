@@ -16,7 +16,7 @@ internal class LoadPlatformUseCaseTest {
 
     @Nested
     @DisplayName("Given LoadPlatformUseCase instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var usecase: LoadPlatformUseCase
         @Mock
@@ -30,7 +30,7 @@ internal class LoadPlatformUseCaseTest {
 
         @Nested
         @DisplayName("When we call execute")
-        inner class executeIsCalled {
+        inner class ExecuteIsCalled {
 
             private var testObserver: TestObserver<Platform>? = null
             private val platformId = 100
@@ -61,7 +61,7 @@ internal class LoadPlatformUseCaseTest {
 
             @Nested
             @DisplayName("And repository emits error")
-            inner class errorEmitted {
+            inner class ErrorEmitted {
 
                 private val error = Throwable("foo")
 

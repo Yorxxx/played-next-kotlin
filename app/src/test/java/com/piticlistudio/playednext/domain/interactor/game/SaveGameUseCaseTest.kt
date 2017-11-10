@@ -47,13 +47,13 @@ internal class SaveGameUseCaseTest {
 
         @Nested
         @DisplayName("When execute is called")
-        inner class executeIsCalled {
+        inner class ExecuteIsCalled {
 
             var observer: TestObserver<Void>? = null
 
             @Nested
             @DisplayName("and does have developers")
-            inner class withDevelopers {
+            inner class WithDevelopers {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -86,7 +86,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does not have developers")
-            inner class withoutDevelopers {
+            inner class WithoutDevelopers {
 
                 var observer: TestObserver<Void>? = null
 
@@ -116,7 +116,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does have publishers")
-            inner class withPublishers {
+            inner class WithPublishers {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -149,7 +149,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does not have publishers")
-            inner class withoutPublishers {
+            inner class WithoutPublishers {
 
                 var observer: TestObserver<Void>? = null
 
@@ -179,7 +179,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does have genres")
-            inner class withGenres {
+            inner class WithGenres {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -212,7 +212,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does not have genres")
-            inner class withoutGenres {
+            inner class WithoutGenres {
 
                 var observer: TestObserver<Void>? = null
 
@@ -242,7 +242,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does have collection")
-            inner class withCollection {
+            inner class WithCollection {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -275,7 +275,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does not collection")
-            inner class withoutCollection {
+            inner class WithoutCollection {
 
                 var observer: TestObserver<Void>? = null
 
@@ -305,7 +305,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does have platforms")
-            inner class withPlatforms {
+            inner class WithPlatforms {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -338,7 +338,7 @@ internal class SaveGameUseCaseTest {
 
             @Nested
             @DisplayName("and does not have platforms")
-            inner class withoutPlatforms {
+            inner class WithoutPlatforms {
 
                 var observer: TestObserver<Void>? = null
 

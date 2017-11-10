@@ -25,7 +25,7 @@ internal class RelationDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
             private var result: GameRelation? = null
             private val model = makeGameRelationDao()
@@ -51,7 +51,7 @@ internal class RelationDaoMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntityCalled {
+        inner class MapFromEntityCalled {
 
             private var result: GameRelationDao? = null
             private val entity = makeGameRelation()

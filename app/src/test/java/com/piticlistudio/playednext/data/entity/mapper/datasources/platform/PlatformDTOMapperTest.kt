@@ -2,7 +2,9 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.platform
 
 import com.piticlistudio.playednext.data.entity.net.PlatformDTO
 import com.piticlistudio.playednext.domain.model.Platform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTOList
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -11,7 +13,7 @@ internal class PlatformDTOMapperTest {
 
     @Nested
     @DisplayName("Given a PlatformDTOMapper instance")
-    inner class instance {
+    inner class Instance {
 
         private lateinit var mapper: PlatformDTOMapper
 
@@ -22,9 +24,9 @@ internal class PlatformDTOMapperTest {
 
         @Nested
         @DisplayName("When we call mapFromModel")
-        inner class mapFromModelCalled {
+        inner class MapFromModelCalled {
 
-            private val model = makePlatformDTOList()
+            private val model = randomListOf { makePlatformDTO() }
             private var result: List<Platform> = listOf()
 
             @BeforeEach
@@ -38,21 +40,21 @@ internal class PlatformDTOMapperTest {
                 assertNotNull(result)
                 assertEquals(model.size, result.size)
                 model.forEachIndexed { index, platformDao ->
-                    assertEquals(platformDao.created_at, result.get(index).createdAt)
-                    assertEquals(platformDao.updated_at, result.get(index).updatedAt)
-                    assertEquals(platformDao.id, result.get(index).id)
-                    assertEquals(platformDao.name, result.get(index).name)
-                    assertEquals(platformDao.slug, result.get(index).slug)
-                    assertEquals(platformDao.url, result.get(index).url)
+                    assertEquals(platformDao.created_at, result[index].createdAt)
+                    assertEquals(platformDao.updated_at, result[index].updatedAt)
+                    assertEquals(platformDao.id, result[index].id)
+                    assertEquals(platformDao.name, result[index].name)
+                    assertEquals(platformDao.slug, result[index].slug)
+                    assertEquals(platformDao.url, result[index].url)
                 }
             }
         }
 
         @Nested
         @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntity {
+        inner class MapFromEntity {
 
-            private val sources = listOf<Platform>()
+            private val sources = randomListOf { makePlatform() }
             private var result: List<PlatformDTO>? = null
 
             @Test
