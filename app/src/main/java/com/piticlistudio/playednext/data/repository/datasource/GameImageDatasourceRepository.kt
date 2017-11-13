@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource
 
 import com.piticlistudio.playednext.domain.model.GameImage
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 /**
@@ -10,7 +11,7 @@ import io.reactivex.Single
  */
 interface GameImageDatasourceRepository {
 
-    fun loadForGame(id: Int): Single<List<GameImage>>
+    fun loadForGame(id: Int): Flowable<List<GameImage>>
 
     fun saveForGame(id: Int, data: GameImage): Completable
 }
