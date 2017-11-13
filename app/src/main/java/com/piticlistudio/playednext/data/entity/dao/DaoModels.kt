@@ -87,3 +87,10 @@ data class GamePlatformDao(val gameId: Int, val platformId: Int)
                 (ForeignKey(entity = PlatformDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))
         ))
 data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
+
+@Entity(tableName = "game_screenshots",
+        primaryKeys = arrayOf("cloudinary_id"),
+        foreignKeys = arrayOf(
+                (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE))
+        ))
+data class ScreenshotDao(val id: String, val gameId: Int?, val url: String, val width: Int?, val height: Int?)
