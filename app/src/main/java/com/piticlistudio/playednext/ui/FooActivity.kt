@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.ui
 
-import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -15,7 +14,6 @@ import javax.inject.Inject
 
 class FooActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
