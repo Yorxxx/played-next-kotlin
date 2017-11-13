@@ -13,7 +13,7 @@ class GameImageDTORepositoryImpl @Inject constructor(private val service: IGDBSe
                                                      private val mapper: ImageDTOMapper) : GameImageDatasourceRepository {
 
     override fun loadForGame(id: Int): Flowable<List<GameImage>> {
-        return service.loadGame(id, "id,name,slug,url,created_at,updated_at,screenshots", null)
+        return service.loadGame(id, "id,name,slug,url,created_at,updated_at,screenshots", "id")
                 .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
                 .map {
                     val result = mutableListOf<GameImage>()

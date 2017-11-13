@@ -32,13 +32,13 @@ interface IGDBService {
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/companies/{id}/")
-    fun loadCompany(@Path("id") id: Int, @Query("fields") fields: String): Single<CompanyDTO>
+    fun loadCompany(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<CompanyDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/collections/{id}/")
-    fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "*"): Single<CollectionDTO>
+    fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<CollectionDTO>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/platforms/{id}/")
-    fun loadPlatform(@Path("id") id: Int, @Query("fields") fields: String = "*"): Single<PlatformDTO>
+    fun loadPlatform(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<PlatformDTO>>
 }

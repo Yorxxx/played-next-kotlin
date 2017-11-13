@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
+import android.arch.persistence.room.EmptyResultSetException
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.CompanyDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Company
@@ -12,6 +13,7 @@ class CompanyRemoteImpl @Inject constructor(val service: IGDBService, val mapper
 
     override fun load(id: Int): Single<Company> {
         return service.loadCompany(id, "*")
+                .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
                 .map { mapper.mapFromModel(it) }
     }
 
