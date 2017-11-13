@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
+import android.arch.persistence.room.EmptyResultSetException
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.CollectionDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Collection
@@ -12,6 +13,7 @@ class CollectionDTORepositoryImpl @Inject constructor(private val service: IGDBS
 
     override fun load(id: Int): Single<Collection> {
         return service.loadCollection(id)
+                .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
                 .map {
                     val mapped = mapper.mapFromModel(it)
                     if (mapped != null) mapped else throw Throwable("Could not map into domain entity")

@@ -1,8 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import android.arch.persistence.room.EmptyResultSetException
+import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory
@@ -47,7 +46,7 @@ internal class CollectionDTORepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(service.loadCollection(source.id)).thenReturn(Single.just(source))
+                whenever(service.loadCollection(source.id)).thenReturn(Single.just(listOf(source)))
                 whenever(mapper.mapFromModel(source)).thenReturn(result)
                 observer = repository.load(source.id).test()
             }
@@ -73,6 +72,35 @@ internal class CollectionDTORepositoryImplTest {
                     assertComplete()
                     assertValueCount(1)
                     assertValue(result)
+                }
+            }
+
+            @Nested
+            @DisplayName("And returns empty")
+            inner class EmptyList {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(service.loadCollection(source.id)).thenReturn(Single.just(listOf()))
+                    reset(mapper)
+                    observer = repository.load(source.id).test()
+                }
+
+                @Test
+                @DisplayName("Then should not map")
+                fun noMapping() {
+                    verifyZeroInteractions(mapper)
+                }
+
+                @Test
+                @DisplayName("Then emits error")
+                fun emitsError() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertNoValues()
+                        assertNotComplete()
+                        assertError { it is EmptyResultSetException }
+                    }
                 }
             }
 

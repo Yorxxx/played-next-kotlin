@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.data.repository.datasource.net.platform
 
+import android.arch.persistence.room.EmptyResultSetException
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
@@ -75,7 +78,7 @@ internal class PlatformDTORepositoryImplTest {
 
             var observer: TestObserver<List<Platform>>? = null
             val game = GameFactory.makeGameRemote()
-            val result = randomListOf{ makePlatform() }
+            val result = randomListOf { makePlatform() }
 
             @BeforeEach
             internal fun setUp() {
@@ -137,7 +140,7 @@ internal class PlatformDTORepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(service.loadPlatform(anyInt(), anyString())).thenReturn(Single.just(platformDTO))
+                whenever(service.loadPlatform(anyInt(), anyString())).thenReturn(Single.just(listOf(platformDTO)))
                 whenever(mapper.mapFromModel(platformDTO)).thenReturn(result)
                 observer = repositoryImpl?.load(gameId)?.test()
             }
@@ -145,7 +148,7 @@ internal class PlatformDTORepositoryImplTest {
             @Test
             @DisplayName("Then should request platform")
             fun requestsGame() {
-                verify(service).loadPlatform(gameId, "*")
+                verify(service).loadPlatform(gameId, "id,name,logo,slug,created_at,updated_at")
             }
 
             @Test
@@ -157,6 +160,35 @@ internal class PlatformDTORepositoryImplTest {
                     this?.assertComplete()
                     this?.assertNoErrors()
                     this?.assertValue(result)
+                }
+            }
+
+            @Nested
+            @DisplayName("And returns empty")
+            inner class EmptyList {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(service.loadPlatform(anyInt(), anyString())).thenReturn(Single.just(listOf()))
+                    reset(mapper)
+                    observer = repositoryImpl?.load(gameId)?.test()
+                }
+
+                @Test
+                @DisplayName("Then should not map")
+                fun noMapping() {
+                    verifyZeroInteractions(mapper)
+                }
+
+                @Test
+                @DisplayName("Then emits error")
+                fun emitsError() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertNoValues()
+                        assertNotComplete()
+                        assertError { it is EmptyResultSetException }
+                    }
                 }
             }
         }

@@ -1,6 +1,9 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
+import android.arch.persistence.room.EmptyResultSetException
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.domain.model.Company
@@ -17,6 +20,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -52,7 +57,7 @@ internal class CompanyRemoteImplTest {
             @BeforeEach
             fun setup() {
                 whenever(service.loadCompany(10, "*"))
-                        .thenReturn(Single.just(source))
+                        .thenReturn(Single.just(listOf(source)))
                 whenever(mapper.mapFromModel(source)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
@@ -78,6 +83,36 @@ internal class CompanyRemoteImplTest {
                     this?.assertComplete()
                     this?.assertNoErrors()
                     this?.assertValue(entity)
+                }
+            }
+
+            @Nested
+            @DisplayName("And returns empty")
+            inner class EmptyList {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(service.loadCompany(anyInt(), anyString()))
+                            .thenReturn(Single.just(listOf()))
+                    reset(mapper)
+                    result = repositoryImpl?.load(source.id)?.test()
+                }
+
+                @Test
+                @DisplayName("Then should not map")
+                fun noMapping() {
+                    verifyZeroInteractions(mapper)
+                }
+
+                @Test
+                @DisplayName("Then emits error")
+                fun emitsError() {
+                    assertNotNull(result)
+                    result?.apply {
+                        assertNoValues()
+                        assertNotComplete()
+                        assertError { it is EmptyResultSetException }
+                    }
                 }
             }
         }

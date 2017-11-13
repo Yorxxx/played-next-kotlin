@@ -22,7 +22,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadGameRelati
     fun getError(): LiveData<Throwable?> = errorStatus
 
     fun loadRelation() {
-        loadGameRelationUseCase.execute(Pair(2003, 9))
+        loadGameRelationUseCase.execute(Pair(10, 11))
                 .doOnSubscribe { loadingStatus.postValue(true) }
                 .subscribeOn(Schedulers.io())
                 .toObservable()

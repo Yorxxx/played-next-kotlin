@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.domain.model.GameImage
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import io.reactivex.Single
@@ -53,7 +54,7 @@ internal class GameImageDTORepositoryImplTest {
             @Test
             @DisplayName("Then should request service")
             fun serviceIsRequested() {
-                verify(service).loadGame(gameId, "id,name,slug,url,created_at,updated_at,screenshots", null)
+                verify(service).loadGame(gameId, "id,name,slug,url,created_at,updated_at,screenshots", "id")
             }
 
             @Test
@@ -114,7 +115,7 @@ internal class GameImageDTORepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                observer = repository.saveForGame(anyInt(), makeGameImage()).test()
+                observer = repository.saveForGame(randomInt(), makeGameImage()).test()
             }
 
             @Test

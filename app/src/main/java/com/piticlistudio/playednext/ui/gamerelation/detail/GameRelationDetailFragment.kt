@@ -50,10 +50,10 @@ class GameRelationDetailFragment : Fragment() {
         viewmodel.getError().observe(this, Observer {
             when (it) {
                 null -> {
-                    Log.d("FooActivity", "No error")
+                    Log.d("GameRelationDetailFragm", "No error")
                 }
                 else -> {
-                    Log.d("FooActivity", "Error found ${it}")
+                    Log.d("GameRelationDetailFragm", "Error found ${it}")
                 }
             }
         })

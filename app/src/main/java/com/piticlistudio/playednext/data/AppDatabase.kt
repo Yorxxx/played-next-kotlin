@@ -15,7 +15,7 @@ import com.piticlistudio.playednext.data.repository.datasource.dao.relation.Rela
         GamePublisherDao::class, GenreDao::class, GameGenreDao::class, CollectionDao::class,
         GameCollectionDao::class, PlatformDao::class, GamePlatformDao::class, GameRelationDao::class,
         ScreenshotDao::class),
-        version = 8, exportSchema = false)
+        version = 9, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): GameDaoService
