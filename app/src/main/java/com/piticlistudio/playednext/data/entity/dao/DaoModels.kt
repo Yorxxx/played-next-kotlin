@@ -89,7 +89,7 @@ data class GamePlatformDao(val gameId: Int, val platformId: Int)
 data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
 
 @Entity(tableName = "game_screenshots",
-        primaryKeys = arrayOf("cloudinary_id"),
+        primaryKeys = arrayOf("id"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE))
         ))
