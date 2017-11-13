@@ -17,6 +17,7 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomIntLi
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
@@ -38,7 +39,8 @@ class GameFactory {
                     randomListOf(factory = ::makeCompany),
                     randomListOf(factory = ::makeGenre),
                     makeCollection(), randomLong(),
-                    randomListOf(factory = ::makePlatform))
+                    randomListOf(factory = ::makePlatform),
+                    randomListOf { makeGameImage() })
         }
 
         fun makeCover(): Cover {

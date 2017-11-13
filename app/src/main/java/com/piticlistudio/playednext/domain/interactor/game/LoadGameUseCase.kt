@@ -12,7 +12,8 @@ class LoadGameUseCase @Inject constructor(
         private val comprepository: CompanyRepository,
         private val genre_repository: GenreRepository,
         private val collection_repository: CollectionRepository,
-        private val platformRepository: PlatformRepository) : FlowableUseCaseWithParameter<Int, Game> {
+        private val platformRepository: PlatformRepository,
+        private val imagesRepository: GameImagesRepository) : FlowableUseCaseWithParameter<Int, Game> {
 
     override fun execute(parameter: Int): Flowable<Game> {
         return grepository.load(parameter)
@@ -21,6 +22,7 @@ class LoadGameUseCase @Inject constructor(
                 .flatMap { loadGenres(it) }
                 .flatMap { loadCollection(it) }
                 .flatMap { loadPlatforms(it) }
+                .flatMap { loadImages(it) }
     }
 
     private fun loadDevelopers(game: Game): Flowable<Game> {
@@ -72,5 +74,15 @@ class LoadGameUseCase @Inject constructor(
                     game.platforms = it.takeIf { !it.isEmpty() }
                     game
                 }.toFlowable()
+    }
+
+    private fun loadImages(game: Game): Flowable<Game> {
+        return game.images?.let { Flowable.just(game) }
+                ?: imagesRepository.loadForGame(game.id)
+                .onErrorReturn { listOf() }
+                .map {
+                    game.images = it.takeIf { !it.isEmpty() }
+                    game
+                }
     }
 }

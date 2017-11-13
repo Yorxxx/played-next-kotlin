@@ -70,7 +70,9 @@ class GameRelationDetailFragment : Fragment() {
                 detail_content.visibility = View.VISIBLE
                 data.game?.apply {
                     backdropTitle.text = name
-
+                    images?.forEach {
+                        Log.d("GameRelationDetailFragm", "showData (line 74): ${it}")
+                    }
                 }
             }
         }

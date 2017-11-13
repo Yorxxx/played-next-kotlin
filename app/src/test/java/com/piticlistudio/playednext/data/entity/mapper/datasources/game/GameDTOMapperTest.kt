@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTO
 import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
@@ -37,12 +38,13 @@ internal class GameDTOMapperTest {
         @Mock lateinit var genremapper: GenreDTOMapper
         @Mock lateinit var collectionmapper: CollectionDTOMapper
         @Mock lateinit var platformmapper: PlatformDTOMapper
+        @Mock lateinit var imagesMapper: ImageDTOMapper
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper)
+            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper, imagesMapper)
         }
 
         @Nested
@@ -88,6 +90,9 @@ internal class GameDTOMapperTest {
                 verify(companymapper).mapFromModel(model.developers)
                 verify(genremapper).mapFromModel(model.genres)
                 verify(platformmapper).mapFromModel(model.platforms)
+                model.screenshots?.forEach {
+                    verify(imagesMapper).mapFromModel(it)
+                }
             }
 
             @Test
