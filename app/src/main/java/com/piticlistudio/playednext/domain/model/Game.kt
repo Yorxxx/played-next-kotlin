@@ -25,7 +25,8 @@ data class Game(val id: Int,
                 var genres: List<Genre>?,
                 var collection: Collection?,
                 var syncedAt: Long,
-                var platforms: List<Platform>?)
+                var platforms: List<Platform>?,
+                var images: List<GameImage>?)
 
 data class Cover(val url: String, val width: Int?, val height: Int?)
 

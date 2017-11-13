@@ -2,9 +2,10 @@ package com.piticlistudio.playednext.util.ext
 
 import android.content.Context
 import android.graphics.Canvas
+import android.util.AttributeSet
 import android.widget.ImageView
 
-class ScrollParallaxImageView constructor(ctx: Context) : ImageView(ctx) {
+class ScrollParallaxImageView constructor(ctx: Context, attributeSet: AttributeSet) : ImageView(ctx, attributeSet) {
 
     private val SCALE_RATIO = 0.25f
     private val viewLocation = IntArray(2)

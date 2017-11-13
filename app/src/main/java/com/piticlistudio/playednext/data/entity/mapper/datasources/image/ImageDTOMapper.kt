@@ -3,8 +3,9 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.net.ImageDTO
 import com.piticlistudio.playednext.domain.model.GameImage
+import javax.inject.Inject
 
-class ImageDTOMapper : LayerDataMapper<ImageDTO, GameImage> {
+class ImageDTOMapper @Inject constructor() : LayerDataMapper<ImageDTO, GameImage> {
 
     override fun mapFromModel(type: ImageDTO): GameImage {
         with(type) {
