@@ -92,14 +92,14 @@ class RelationDaoServiceTest {
         Assert.assertNotNull(observer)
         observer?.apply {
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertNoErrors()
             assertValue { it.contains(relation) && it.size == 1 }
         }
     }
 
     @Test
-    fun findForGameAndPlatform_shouldThrowIfNotFound() {
+    fun findForGameAndPlatform_returnsEmptyListIfNoMatch() {
         val game = makeGameCache()
         val platform = makePlatformDao()
         database?.gamesDao()?.insert(game)
@@ -111,9 +111,10 @@ class RelationDaoServiceTest {
         val observer = database?.relationDao()?.findForGameAndPlatform(game.id, platform.id + 1)?.test()
         Assert.assertNotNull(observer)
         observer?.apply {
-            assertNoValues()
+            assertValueCount(1)
             assertNotComplete()
-            assertError { it is EmptyResultSetException }
+            assertNoErrors()
+            assertValue { it.isEmpty() }
         }
     }
 

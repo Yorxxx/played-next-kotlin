@@ -71,5 +71,9 @@ class DomainFactory {
         fun makeRelationStatus(): GameRelationStatus {
             return GameRelationStatus.values().get(randomInt() % GameRelationStatus.values().size)
         }
+
+        fun makeImageDao(id: String = randomString(), gameId: Int = randomInt()): ScreenshotDao {
+            return ScreenshotDao(id, gameId, randomString(), randomInt(), randomInt())
+        }
     }
 }
