@@ -54,8 +54,8 @@ class GameSearchViewModel @Inject constructor(private val searchGamesUseCase: Se
         }
 
         return p.create(0, PagedList.Config.Builder()
-                .setPageSize(10) //number of items loaded at once
-                .setInitialLoadSizeHint(10)
+                .setPageSize(12) //number of items loaded at once
+                .setInitialLoadSizeHint(12)
                 .setEnablePlaceholders(false)
                 .build())
     }

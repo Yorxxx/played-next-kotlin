@@ -54,8 +54,8 @@ class GameSearchFragment : Fragment() {
     private fun initAdapter() {
         adapter = GameSearchPagedListAdapter()
         recyclerview.adapter = adapter
-        recyclerview.addItemDecoration(SpacesItemDecoration(8, 2))
-        recyclerview.layoutManager = GridLayoutManager(activity, 2)
+        recyclerview.addItemDecoration(SpacesItemDecoration(8, 3))
+        recyclerview.layoutManager = GridLayoutManager(activity, 3)
     }
 
     private fun searchForResults(queryFilter: String) {
@@ -71,7 +71,7 @@ class GameSearchFragment : Fragment() {
         }
         RxTextView.textChanges(searchInputView).subscribe { searchSubject.onNext(it.toString()) }
 
-        searchSubject.debounce(250, TimeUnit.MILLISECONDS)
+        searchSubject.debounce(350, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { searchForResults(it) }
