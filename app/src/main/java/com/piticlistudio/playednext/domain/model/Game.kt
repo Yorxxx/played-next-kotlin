@@ -1,5 +1,7 @@
 package com.piticlistudio.playednext.domain.model
 
+import android.app.AlarmManager
+
 /**
  * Representation of a game.
  * Created by jorge on 14/09/17.
@@ -26,8 +28,15 @@ data class Game(val id: Int,
                 var collection: Collection?,
                 var syncedAt: Long,
                 var platforms: List<Platform>?,
-                var images: List<GameImage>?)
+                var images: List<GameImage>?) {
 
-data class Cover(val url: String, val width: Int?, val height: Int?)
+    fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15
+}
+
+data class Cover(val url: String, val width: Int?, val height: Int?) {
+
+    val smallUrl: String = "http:${url}".replace("t_thumb", "t_cover_small")
+    val bigUrl: String = "http:${url}".replace("t_thumb", "t_cover_big")
+}
 
 data class TimeToBeat(val hastly: Int?, val normally: Int?, val completely: Int?)

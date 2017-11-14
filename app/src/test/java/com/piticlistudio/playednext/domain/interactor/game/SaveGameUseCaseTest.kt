@@ -202,8 +202,8 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
@@ -232,8 +232,8 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
@@ -265,8 +265,8 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
@@ -295,8 +295,8 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
@@ -328,8 +328,8 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
@@ -358,13 +358,15 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then emits without errors")
                 fun emits() {
                     assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
+                    observer?.apply {
+                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }
                 }
             }
+
+
         }
     }
 }

@@ -127,8 +127,37 @@ class LoadGameUseCaseTest {
             }
 
             @Nested
-            @DisplayName("And does not have developers assigned")
+            @DisplayName("And has empty developers")
             inner class WithoutDevelopers {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.developers = listOf()
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then does not requests company repository")
+                fun requestsRepository() {
+                    verify(companyrepository, never()).loadDevelopersForGameId(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.developers != null && it.developers!!.isEmpty() }
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And does not have developers assigned")
+            inner class WithNullDevelopers {
 
                 @BeforeEach
                 internal fun setUp() {
@@ -173,8 +202,37 @@ class LoadGameUseCaseTest {
                             assertNoErrors()
                             assertNotComplete()
                             assertValueCount(1)
-                            assertValue { it.developers == null }
+                            assertValue { it.developers != null && it.developers!!.isEmpty() }
                         }
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And has empty publishers")
+            inner class EmptyPublishers {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.publishers = listOf()
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then does not requests company repository")
+                fun requestsRepository() {
+                    verify(companyrepository, never()).loadPublishersForGame(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.publishers != null && it.publishers!!.isEmpty() }
                     }
                 }
             }
@@ -226,8 +284,37 @@ class LoadGameUseCaseTest {
                             assertNoErrors()
                             assertValueCount(1)
                             assertNotComplete()
-                            assertValue { it.publishers == null }
+                            assertValue { it.publishers != null && it.publishers!!.isEmpty() }
                         }
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And has empty genres")
+            inner class EmptyGenres {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.genres = listOf()
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then does not requests genre repository")
+                fun requestsRepository() {
+                    verify(genrerepository, never()).loadForGame(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.genres != null && it.genres!!.isEmpty() }
                     }
                 }
             }
@@ -279,7 +366,7 @@ class LoadGameUseCaseTest {
                             assertNoErrors()
                             assertNotComplete()
                             assertValueCount(1)
-                            assertValue { it.genres == null }
+                            assertValue { it.genres != null && it.genres!!.isEmpty() }
                         }
                     }
                 }
@@ -339,6 +426,35 @@ class LoadGameUseCaseTest {
             }
 
             @Nested
+            @DisplayName("And has empty platforms")
+            inner class EmptyPlatforms {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.platforms = listOf()
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then does not requests platform repository")
+                fun requestsRepository() {
+                    verify(platformRepository, never()).loadForGame(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.platforms != null && it.platforms!!.isEmpty() }
+                    }
+                }
+            }
+
+            @Nested
             @DisplayName("And does not have platforms assigned")
             inner class WithoutPlatforms {
 
@@ -385,8 +501,37 @@ class LoadGameUseCaseTest {
                             assertNoErrors()
                             assertNotComplete()
                             assertValueCount(1)
-                            assertValue { it.platforms == null }
+                            assertValue { it.platforms != null && it.platforms!!.isEmpty() }
                         }
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And has empty images")
+            inner class EmptyImages {
+
+                @BeforeEach
+                internal fun setUp() {
+                    result.images = listOf()
+                    testObserver = useCase?.execute(gameId)!!.test()
+                }
+
+                @Test
+                @DisplayName("Then does not requests images repository")
+                fun requestsRepository() {
+                    verify(imagesRepository, never()).loadForGame(result.id)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun withoutErrors() {
+                    assertNotNull(testObserver)
+                    testObserver?.apply {
+                        assertNoErrors()
+                        assertNotComplete()
+                        assertValueCount(1)
+                        assertValue { it.images != null && it.images!!.isEmpty() }
                     }
                 }
             }
@@ -438,7 +583,7 @@ class LoadGameUseCaseTest {
                             assertNoErrors()
                             assertNotComplete()
                             assertValueCount(1)
-                            assertValue { it.images == null }
+                            assertValue { it.images != null && it.images!!.isEmpty() }
                         }
                     }
                 }
