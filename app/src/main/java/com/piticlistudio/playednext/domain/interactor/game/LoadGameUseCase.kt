@@ -30,8 +30,7 @@ class LoadGameUseCase @Inject constructor(
                 ?: comprepository.loadDevelopersForGameId(game.id)
                 .onErrorReturn { listOf() }
                 .map {
-                    game.developers = it.takeIf { !it.isEmpty() }
-                    game
+                    game.apply { developers = it }
                 }.toFlowable()
     }
 
@@ -40,8 +39,7 @@ class LoadGameUseCase @Inject constructor(
                 ?: comprepository.loadPublishersForGame(game.id)
                 .onErrorReturn { listOf() }
                 .map {
-                    game.publishers = it.takeIf { !it.isEmpty() }
-                    game
+                    game.apply { publishers = it }
                 }.toFlowable()
     }
 
@@ -50,8 +48,7 @@ class LoadGameUseCase @Inject constructor(
                 ?: genre_repository.loadForGame(game.id)
                 .onErrorReturn { listOf() }
                 .map {
-                    game.genres = it.takeIf { !it.isEmpty() }
-                    game
+                    game.apply { genres = it }
                 }.toFlowable()
     }
 
@@ -59,8 +56,7 @@ class LoadGameUseCase @Inject constructor(
         return game.collection?.let { Flowable.just(game) }
                 ?: collection_repository.loadForGame(game.id)
                 .map {
-                    game.collection = it
-                    game
+                    game.apply { collection = it }
                 }
                 .onErrorResumeNext { Single.just(game) }
                 .toFlowable()
@@ -71,8 +67,7 @@ class LoadGameUseCase @Inject constructor(
                 ?: platformRepository.loadForGame(game.id)
                 .onErrorReturn { listOf() }
                 .map {
-                    game.platforms = it.takeIf { !it.isEmpty() }
-                    game
+                    game.apply { platforms = it }
                 }.toFlowable()
     }
 
@@ -81,8 +76,7 @@ class LoadGameUseCase @Inject constructor(
                 ?: imagesRepository.loadForGame(game.id)
                 .onErrorReturn { listOf() }
                 .map {
-                    game.images = it.takeIf { !it.isEmpty() }
-                    game
+                    game.apply { images = it }
                 }
     }
 }

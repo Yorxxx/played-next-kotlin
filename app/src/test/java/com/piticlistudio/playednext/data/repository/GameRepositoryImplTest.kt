@@ -97,7 +97,7 @@ internal class GameRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    entity.syncedAt = System.currentTimeMillis() - AlarmManager.INTERVAL_DAY * 15
+                    entity.syncedAt = System.currentTimeMillis() - AlarmManager.INTERVAL_DAY * 30
                     result = repository?.load(id)?.test()
                 }
 

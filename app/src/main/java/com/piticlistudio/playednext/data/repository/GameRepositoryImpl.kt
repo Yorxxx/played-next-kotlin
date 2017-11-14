@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.data.repository
 
-import android.app.AlarmManager
 import android.arch.persistence.room.EmptyResultSetException
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
@@ -24,7 +23,7 @@ class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteI
                 .onErrorResumeNext { t: Throwable ->
                     if (t is EmptyResultSetException) fetchAndCache(id).toFlowable() else throw t
                 }
-                .flatMap { if (shouldSyncData(it)) fetchAndCache(id).toFlowable().onErrorReturnItem(it) else Flowable.just(it) }
+                .flatMap { if (it.isExpired()) fetchAndCache(id).toFlowable().onErrorReturnItem(it) else Flowable.just(it) }
     }
 
     override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
@@ -39,9 +38,5 @@ class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteI
         return remoteImpl.load(id)
                 .firstOrError()
                 .flatMap { localImpl.save(it).andThen(Single.just(it)) }
-    }
-
-    private fun shouldSyncData(data: Game): Boolean {
-        return System.currentTimeMillis() - data.syncedAt > AlarmManager.INTERVAL_DAY * 10
     }
 }
