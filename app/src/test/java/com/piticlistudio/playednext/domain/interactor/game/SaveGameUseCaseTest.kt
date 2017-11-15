@@ -30,6 +30,8 @@ internal class SaveGameUseCaseTest {
         private lateinit var collectionRepository: CollectionRepository
         @Mock
         private lateinit var platformRepository: PlatformRepository
+        @Mock
+        private lateinit var imagesRepository: GameImagesRepository
         private var usecase: SaveGameUseCase? = null
 
         val game = makeGame()
@@ -42,7 +44,8 @@ internal class SaveGameUseCaseTest {
             whenever(companyRepository.savePublishersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(genreRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
             whenever(platformRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository, platformRepository)
+            whenever(imagesRepository.save(any(), any())).thenReturn(Completable.complete())
+            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository, platformRepository, imagesRepository)
         }
 
         @Nested
@@ -366,7 +369,38 @@ internal class SaveGameUseCaseTest {
                 }
             }
 
+            @Nested
+            @DisplayName("and does have images")
+            inner class WithImages {
 
+                @BeforeEach
+                internal fun setUp() {
+                    observer = usecase?.execute(game)?.test()
+                }
+
+                @Test
+                @DisplayName("Then saves into repository")
+                fun requestsRepository() {
+                    verify(repository).save(game)
+                }
+
+                @Test
+                @DisplayName("Then saves developers")
+                fun savesDevelopers() {
+                    verify(imagesRepository).save(game.id, game.images!!)
+                }
+
+                @Test
+                @DisplayName("Then emits without errors")
+                fun emits() {
+                    assertNotNull(observer)
+                    with(observer) {
+                        this!!.assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+            }
         }
     }
 }
