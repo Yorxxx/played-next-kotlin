@@ -486,22 +486,23 @@ class LoadGameUseCaseTest {
                 @DisplayName("And request fails")
                 inner class RequestFails {
 
+                    private val error = Throwable("foo")
+
                     @BeforeEach
                     internal fun setUp() {
                         result.platforms = null
-                        whenever(platformRepository.loadForGame(anyInt())).thenReturn(Single.error(Throwable("foo")))
+                        whenever(platformRepository.loadForGame(anyInt())).thenReturn(Single.error(error))
                         testObserver = useCase?.execute(gameId)!!.test()
                     }
 
                     @Test
-                    @DisplayName("Then emits ignores errors")
+                    @DisplayName("Then emits error")
                     fun withoutErrors() {
                         assertNotNull(testObserver)
                         testObserver?.apply {
-                            assertNoErrors()
+                            assertNoValues()
                             assertNotComplete()
-                            assertValueCount(1)
-                            assertValue { it.platforms != null && it.platforms!!.isEmpty() }
+                            assertError(error)
                         }
                     }
                 }

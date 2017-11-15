@@ -30,8 +30,8 @@ class GameFactory {
 
     companion object Factory {
 
-        fun makeGame(): Game {
-            return Game(randomInt(), randomString(), randomLong(), randomLong(), randomString(),
+        fun makeGame(id: Int = randomInt()): Game {
+            return Game(id, randomString(), randomLong(), randomLong(), randomString(),
                     randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
                     makeTimeToBeat(),
@@ -39,7 +39,7 @@ class GameFactory {
                     randomListOf(factory = ::makeCompany),
                     randomListOf(factory = ::makeGenre),
                     makeCollection(), randomLong(),
-                    randomListOf(factory = ::makePlatform),
+                    randomListOf(size = 5, factory = ::makePlatform),
                     randomListOf { makeGameImage() })
         }
 

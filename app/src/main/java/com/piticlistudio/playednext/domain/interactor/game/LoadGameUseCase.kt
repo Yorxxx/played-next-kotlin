@@ -65,7 +65,6 @@ class LoadGameUseCase @Inject constructor(
     private fun loadPlatforms(game: Game): Flowable<Game> {
         return game.platforms?.let { Flowable.just(game) }
                 ?: platformRepository.loadForGame(game.id)
-                .onErrorReturn { listOf() }
                 .map {
                     game.apply { platforms = it }
                 }.toFlowable()

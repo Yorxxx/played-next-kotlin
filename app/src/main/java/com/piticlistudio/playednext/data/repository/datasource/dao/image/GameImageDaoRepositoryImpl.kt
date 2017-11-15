@@ -22,7 +22,7 @@ class GameImageDaoRepositoryImpl @Inject constructor(private val dao: GameImages
 
     override fun saveForGame(id: Int, data: GameImage): Completable {
         return Completable.defer {
-            dao.insert(mapper.mapFromEntity(data))
+            dao.insert(mapper.mapFromEntity(data).apply { gameId = id })
             Completable.complete()
         }
     }

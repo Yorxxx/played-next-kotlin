@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.domain.model.GameRelation
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
 import kotlinx.android.synthetic.main.gamerelation_detail.*
@@ -46,7 +47,20 @@ class GameRelationDetailFragment : Fragment() {
                 }
             }
         })
-        viewmodel.getData().observe(this, Observer { showData(it) })
+        viewmodel.getGame().observe(this, Observer {
+            it?.let {
+                Log.d("GameRelationDetailFragm", "Game retrieved ${it}")
+            }
+        })
+        viewmodel.getRelations().observe(this, Observer {
+            it?.forEach {
+                Log.d("GameRelationDetailFragm", "Retrieved relation with status ${it.currentStatus.name} for platform ${it.platform?.name}")
+            }
+            it?.apply {
+                val relation = it[1].apply { currentStatus = GameRelationStatus.PLAYING }
+                viewmodel.saveRelation(relation)
+            }
+        })
         viewmodel.getError().observe(this, Observer {
             when (it) {
                 null -> {
@@ -58,7 +72,7 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelation()
+            viewmodel.loadRelationForGame(10)
     }
 
     private fun showData(data: GameRelation?) {
