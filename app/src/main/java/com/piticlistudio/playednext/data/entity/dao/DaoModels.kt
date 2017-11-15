@@ -93,4 +93,4 @@ data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE))
         ))
-data class ScreenshotDao(val id: String, val gameId: Int?, val url: String, val width: Int?, val height: Int?)
+data class ScreenshotDao(val id: String, var gameId: Int?, val url: String, val width: Int?, val height: Int?)
