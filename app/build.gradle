@@ -160,6 +160,7 @@ dependencies {
     implementation picassoLibs
 
     compile 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.0.0'
+    compile 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
 }
 
 // Tests copy
