@@ -15,14 +15,14 @@ class GameSearchViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
 
     var item: Game? = null
 
-    fun bindTo(item: Game?) {
+    fun bindTo(item: Game?, coverImage: String?) {
         this.item = item
         itemView.title.text = item?.name?.capitalize()
 
         item?.let {
             if (item.cover != null) {
                 Glide.with(itemView.context)
-                        .load(item.cover.url)
+                        .load(coverImage)
                         .apply(RequestOptions().placeholder(R.drawable.ic_image_black_24dp))
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(itemView.image)

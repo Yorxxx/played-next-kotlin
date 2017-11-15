@@ -30,4 +30,5 @@
 
     <!-- Game Search view -->
     <string name="gamesearch_hint">Enter game name</string>
+    <string name="gamesearch_nonetwork_available">No Internet available. Cannot perform any search</string>
 </resources>

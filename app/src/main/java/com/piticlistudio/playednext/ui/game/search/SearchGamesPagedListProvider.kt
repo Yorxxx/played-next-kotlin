@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.ui.game.search
 
 import android.arch.paging.TiledDataSource
-import android.util.Log
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SearchQuery
 import com.piticlistudio.playednext.domain.model.Game
@@ -22,11 +21,14 @@ class SearchGamesPagedListProvider @Inject constructor(private val searchGamesUs
     override fun loadRange(startPosition: Int, count: Int): MutableList<Game> {
         results.clear()
         query?.takeIf { !query.isNullOrEmpty() }?.let {
-            results.addAll(searchGamesUseCase.execute(SearchQuery(it, startPosition, count)).blockingLast())
-            listener?.onSearchCompleted(it, startPosition, count)
+            try {
+                results.addAll(searchGamesUseCase.execute(SearchQuery(it, startPosition, count)).blockingLast())
+                listener?.onSearchCompleted(it, startPosition, count)
+            } catch (e: Exception) {
+                listener?.onSearchFailed(e)
+            }
             return results
         }
-        Log.d("GameSearchViewModel", "Returning empty data")
         listener?.onSearchCompleted(null, startPosition, count)
         return results
     }
@@ -34,4 +36,5 @@ class SearchGamesPagedListProvider @Inject constructor(private val searchGamesUs
 
 interface SearchGamesPagedListListener {
     fun onSearchCompleted(query: String?, startPosition: Int, count: Int)
+    fun onSearchFailed(error: Exception)
 }

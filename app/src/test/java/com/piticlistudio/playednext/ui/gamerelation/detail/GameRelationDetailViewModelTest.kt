@@ -62,7 +62,7 @@ class GameRelationDetailViewModelTest {
 
         viewModel.loadRelation()
 
-        verify(usecase).execute(Pair(2003, 9))
+        verify(usecase).execute(Pair(10, 11))
     }
 
     @Test

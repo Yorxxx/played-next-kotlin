@@ -4,18 +4,19 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.piticlistudio.playednext.R
+import com.piticlistudio.playednext.util.NoNetworkAvailableException
 import com.piticlistudio.playednext.util.SpacesItemDecoration
+import com.piticlistudio.playednext.util.ext.snackbar
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -26,11 +27,12 @@ import javax.inject.Inject
 class GameSearchFragment : Fragment() {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var adapter: GameSearchPagedListAdapter
     private val viewModel by lazy {
         ViewModelProviders.of(this, mViewModelFactory).get(GameSearchViewModel::class.java)
     }
     private val searchSubject: PublishSubject<String> = PublishSubject.create()
-    private var adapter: GameSearchPagedListAdapter? = null
+    private var errorSnackBar: Snackbar? = null
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -49,10 +51,10 @@ class GameSearchFragment : Fragment() {
         viewModel.getLoading().observe(this, Observer {
             if (it == true) searchLoading.show() else searchLoading.hide()
         })
+        viewModel.getError().observe(this, Observer { handleError(it) })
     }
 
     private fun initAdapter() {
-        adapter = GameSearchPagedListAdapter()
         recyclerview.adapter = adapter
         recyclerview.addItemDecoration(SpacesItemDecoration(8, 3))
         recyclerview.layoutManager = GridLayoutManager(activity, 3)
@@ -60,7 +62,7 @@ class GameSearchFragment : Fragment() {
 
     private fun searchForResults(queryFilter: String) {
         viewModel.setQueryFilter(queryFilter)
-        adapter?.let { viewModel.searchResults.observe(this, Observer(adapter!!::setList)) }
+        viewModel.searchResults.observe(this, Observer(adapter::setList))
     }
 
     private fun initSearchField() {
@@ -75,5 +77,23 @@ class GameSearchFragment : Fragment() {
                 .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { searchForResults(it) }
+    }
+
+    private fun handleError(error: Exception?) {
+        if (error == null) {
+            errorSnackBar?.dismiss()
+            searchInputView.isEnabled = true
+        }
+
+        Log.d("GameSearchFragment", "onActivityCreated (line 58): ${error}")
+        error?.let {
+            when (it) {
+                is NoNetworkAvailableException -> {
+                    errorSnackBar = this.snackbar(R.string.gamesearch_nonetwork_available, android.support.design.widget.Snackbar.LENGTH_INDEFINITE)
+                    searchInputView.isEnabled = false
+                }
+                else -> errorSnackBar = this.snackbar(it.localizedMessage)
+            }
+        }
     }
 }
