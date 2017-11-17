@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.ui.gamerelation.detail
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
@@ -10,9 +11,13 @@ import com.piticlistudio.playednext.domain.interactor.relation.SaveGameRelationU
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameRelation
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.gamerelation_detail.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -23,18 +28,29 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                                                       private val saveGameUseCase: SaveGameUseCase,
                                                       private val saveGameRelationUseCase: SaveGameRelationUseCase) : ViewModel() {
 
+    private var disposable: Disposable? = null
     private val loadingStatus = MutableLiveData<Boolean>()
     private val relationStatus = MutableLiveData<List<GameRelation>>()
     private val errorStatus = MutableLiveData<Throwable?>()
     private val gameStatus = MutableLiveData<Game?>()
+    private val imageStatus = MutableLiveData<String>()
     fun getLoading(): LiveData<Boolean> = loadingStatus
     fun getRelations(): LiveData<List<GameRelation>> = relationStatus
     fun getError(): LiveData<Throwable?> = errorStatus
     fun getGame(): LiveData<Game?> = gameStatus
+    fun getScreenshot(): LiveData<String> = imageStatus
+
+    override fun onCleared() {
+        super.onCleared()
+        disposable?.dispose()
+    }
 
     fun loadRelationForGame(gameId: Int) {
         loadGameUseCase.execute(gameId)
-                .doOnNext { gameStatus.postValue(it) }
+                .doOnNext {
+                    gameStatus.postValue(it)
+                    loadImageToShow(it)
+                }
                 .flatMap { loadRelationsForGameUseCase.execute(it) }
                 .doOnSubscribe { loadingStatus.postValue(true) }
                 .subscribeOn(Schedulers.io())
@@ -66,5 +82,19 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                         onError = { errorStatus.postValue(it) },
                         onComplete = { errorStatus.postValue(null)}
                 )
+    }
+
+    private fun loadImageToShow(data: Game) {
+        data.images?.let {
+            if (it.isNotEmpty()) {
+                imageStatus.postValue(it[0].mediumSizeUrl)
+                disposable = Flowable.interval(5, TimeUnit.SECONDS)
+                    .take( it.size.toLong())
+                    .map { data.images!!.get(it.toInt()) }
+                    .repeat()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { imageStatus.postValue(it.mediumSizeUrl) }
+            }
+        }
     }
 }
