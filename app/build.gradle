@@ -18,6 +18,10 @@ android {
         javaMaxHeapSize "4g"
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
         defaultPublishConfig 'debug'
 
@@ -109,6 +113,7 @@ junitPlatform {
 
 dependencies {
     implementation supportLibs
+    kapt 'com.android.databinding:compiler:2.3.3'
     implementation networkLibs
     implementation rxJavaLibs
 
