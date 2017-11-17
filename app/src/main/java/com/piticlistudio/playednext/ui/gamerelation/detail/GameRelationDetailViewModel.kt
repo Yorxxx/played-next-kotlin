@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.ui.gamerelation.detail
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
@@ -66,6 +67,20 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                         .repeat()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl) }
+            }
+        }
+    }
+
+    private fun loadImageToShow(data: Game) {
+        data.images?.let {
+            if (it.isNotEmpty()) {
+                imageStatus.postValue(it[0].mediumSizeUrl)
+                disposable = Flowable.interval(5, TimeUnit.SECONDS)
+                    .take( it.size.toLong())
+                    .map { data.images!!.get(it.toInt()) }
+                    .repeat()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { imageStatus.postValue(it.mediumSizeUrl) }
             }
         }
     }
