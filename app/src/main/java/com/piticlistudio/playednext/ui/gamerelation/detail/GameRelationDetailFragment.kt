@@ -132,4 +132,10 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
 
         toolbar.setOnClickListener { appbar.setExpanded(true) }
     }
+
+    private fun showGame(data: Game) {
+        detail_content.visibility = View.VISIBLE
+        toolbar.title = data.name
+        backdropTitle.text = data.name
+    }
 }
