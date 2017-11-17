@@ -6,22 +6,28 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
-import com.piticlistudio.playednext.domain.model.GameRelation
-import com.piticlistudio.playednext.domain.model.GameRelationStatus
-import com.squareup.picasso.Picasso
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.gamerelation_detail.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class GameRelationDetailFragment : Fragment() {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
-    @Inject lateinit var picasso: Picasso
+
+    private var isAppBarCollapsed = false
+    private val doubleClickSubject = PublishSubject.create<View>()
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -35,31 +41,30 @@ class GameRelationDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        initView()
         val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
 
         viewmodel.getLoading().observe(this, Observer {
-            when (it) {
-                false -> {
-                    gamerelation_detail_loading.hide()
-                }
-                else -> {
-                    gamerelation_detail_loading.show()
-                }
+            it?.let {
+                if (it) gamerelation_detail_loading.show() else gamerelation_detail_loading.hide()
             }
         })
         viewmodel.getGame().observe(this, Observer {
-            it?.let {
-                Log.d("GameRelationDetailFragm", "Game retrieved ${it}")
-            }
+            if (it == null) detail_content.visibility = View.INVISIBLE else showGame(it)
+        })
+        viewmodel.getScreenshot().observe(this, Observer {
+            if (!isAppBarCollapsed)
+                Glide.with(context).load(it).into(backdrop)
         })
         viewmodel.getRelations().observe(this, Observer {
             it?.forEach {
                 Log.d("GameRelationDetailFragm", "Retrieved relation with status ${it.currentStatus.name} for platform ${it.platform?.name}")
             }
-            it?.apply {
-                val relation = it[1].apply { currentStatus = GameRelationStatus.PLAYING }
-                viewmodel.saveRelation(relation)
-            }
+//            it?.apply {
+//                val relation = it[1].apply { currentStatus = GameRelationStatus.PLAYING }
+//                viewmodel.saveRelation(relation)
+//            }
         })
         viewmodel.getError().observe(this, Observer {
             when (it) {
@@ -72,23 +77,42 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(10)
+            viewmodel.loadRelationForGame(80)
     }
 
-    private fun showData(data: GameRelation?) {
-        when (data) {
-            null -> {
-                detail_content.visibility = View.INVISIBLE
-            }
-            else -> {
-                detail_content.visibility = View.VISIBLE
-                data.game?.apply {
-                    backdropTitle.text = name
-                    images?.forEach {
-                        Log.d("GameRelationDetailFragm", "showData (line 74): ${it}")
-                    }
-                }
+    private fun initView() {
+
+        val parent: AppCompatActivity = activity as AppCompatActivity
+        parent.setSupportActionBar(toolbar)
+        parent.supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setTitle(null)
+        }
+
+        backdrop.layoutParams.height = activity.getScreenHeight()
+        appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+            backdrop.invalidate()
+            isAppBarCollapsed = verticalOffset == -1 * appBarLayout.totalScrollRange
+            if (isAppBarCollapsed) {
+                collapsing_toolbar.title = toolbar.title
+            } else {
+                collapsing_toolbar.title = ""
             }
         }
+
+        appbar.setOnClickListener { doubleClickSubject.onNext(it) }
+        doubleClickSubject.buffer(300, TimeUnit.MILLISECONDS)
+                .map { it.size == 2 }
+                .filter { it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { appbar.setExpanded(false) }
+
+        toolbar.setOnClickListener { appbar.setExpanded(true) }
+    }
+
+    private fun showGame(data: Game) {
+        detail_content.visibility = View.VISIBLE
+        toolbar.title = data.name
+        backdropTitle.text = data.name
     }
 }
