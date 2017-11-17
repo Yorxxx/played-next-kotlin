@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
+import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
@@ -28,6 +30,7 @@ class GameRelationDetailFragment : Fragment() {
 
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
+    private lateinit var binding: GamerelationDetailBinding
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -35,8 +38,10 @@ class GameRelationDetailFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view: View? = inflater?.inflate(R.layout.gamerelation_detail, container, false)
-        return view!!
+        val view = DataBindingUtil.inflate<GamerelationDetailBinding>(inflater, R.layout.gamerelation_detail, container, false).also {
+            binding = it
+        }.root
+        return view
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -51,7 +56,8 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         viewmodel.getGame().observe(this, Observer {
-            if (it == null) detail_content.visibility = View.INVISIBLE else showGame(it)
+            binding.game = it
+//            if (it == null) detail_content.visibility = View.INVISIBLE else showGame(it)
         })
         viewmodel.getScreenshot().observe(this, Observer {
             if (!isAppBarCollapsed)
@@ -77,7 +83,7 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(80)
+            viewmodel.loadRelationForGame(90)
     }
 
     private fun initView() {
@@ -108,11 +114,5 @@ class GameRelationDetailFragment : Fragment() {
                 .subscribe { appbar.setExpanded(false) }
 
         toolbar.setOnClickListener { appbar.setExpanded(true) }
-    }
-
-    private fun showGame(data: Game) {
-        detail_content.visibility = View.VISIBLE
-        toolbar.title = data.name
-        backdropTitle.text = data.name
     }
 }
