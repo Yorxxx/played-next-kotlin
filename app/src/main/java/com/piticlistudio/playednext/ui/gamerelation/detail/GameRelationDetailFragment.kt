@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -24,7 +23,7 @@ import kotlinx.android.synthetic.main.gamerelation_detail.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class GameRelationDetailFragment : Fragment() {
+class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var adapter: GameRelationDetailAdapter
