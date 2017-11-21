@@ -11,6 +11,8 @@ import javax.inject.Inject
 
 class GameSearchPagedListAdapter @Inject constructor(private val connectivity: BehaviorSubject<Connectivity>) : PagedListAdapter<Game, GameSearchViewHolder>(diffCallback) {
 
+     var onClickListener: ((Game) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): GameSearchViewHolder = GameSearchViewHolder(parent!!)
 
     override fun onBindViewHolder(holder: GameSearchViewHolder?, position: Int) {
@@ -19,7 +21,9 @@ class GameSearchPagedListAdapter @Inject constructor(private val connectivity: B
         if (connectivity.value.type == ConnectivityManager.TYPE_WIFI) {
             coverToLoad = game?.cover?.bigUrl
         }
-        holder?.bindTo(game, coverToLoad)
+        onClickListener?.let {
+            holder?.bindTo(game, coverToLoad, it)
+        }
     }
 
     companion object {

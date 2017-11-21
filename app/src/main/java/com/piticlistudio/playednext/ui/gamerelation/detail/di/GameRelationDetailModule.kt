@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.ui.gamerelation.detail.di
 
 import android.arch.lifecycle.ViewModel
-import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationDetailFragment
+import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationDetailActivity
 import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationDetailViewModel
 import com.piticlistudio.playednext.ui.injection.ViewModelKey
 import dagger.Binds
@@ -16,7 +16,7 @@ internal abstract class GameRelationDetailModule {
     @IntoMap
     @ViewModelKey(GameRelationDetailViewModel::class)
     abstract fun bindRelationDetailViewModel(viewModel: GameRelationDetailViewModel): ViewModel
-
-    @ContributesAndroidInjector
-    abstract fun contributeDetailFragment(): GameRelationDetailFragment
+//
+//    @ContributesAndroidInjector
+//    abstract fun contributeDetailFragment(): GameRelationDetailActivity
 }

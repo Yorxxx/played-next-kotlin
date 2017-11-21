@@ -58,7 +58,7 @@
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/lato</item>
     </style>
-    
+
     <style name="AppTheme.GameItemTitle">
         <item name="android:fontFamily">@font/lato</item>
         <item name="android:textSize">12sp</item>
