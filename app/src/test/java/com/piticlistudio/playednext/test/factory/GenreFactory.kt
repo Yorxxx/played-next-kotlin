@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.test.factory
 import com.piticlistudio.playednext.data.entity.dao.GenreDao
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
 import com.piticlistudio.playednext.domain.model.Genre
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 
 class GenreFactory {
 
@@ -13,8 +14,8 @@ class GenreFactory {
                     DataFactory.randomLong())
         }
 
-        fun makeGenre(): Genre {
-            return Genre(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
+        fun makeGenre(name: String = randomString()): Genre {
+            return Genre(DataFactory.randomInt(), name, DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
 

@@ -30,6 +30,14 @@ data class Game(val id: Int,
                 var platforms: List<Platform>?,
                 var images: List<GameImage>?) {
 
+    val developersName: String?
+        get() { return developers?.joinToString{ it.name } }
+    val genresName: String?
+        get() { return genres?.joinToString { it.name }}
+    val publishersName: String?
+        get() { return publishers?.joinToString { it.name }}
+
+
     fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15
 }
 

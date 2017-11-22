@@ -110,7 +110,7 @@ internal class CompanyDaoRepositoryImplTest {
 
             private var observer: TestObserver<List<Company>>? = null
             private val source = randomListOf(factory = ::makeCompanyDao)
-            private val result = randomListOf(factory = ::makeCompany)
+            private val result = randomListOf { makeCompany() }
 
             @BeforeEach
             internal fun setUp() {
@@ -143,7 +143,7 @@ internal class CompanyDaoRepositoryImplTest {
 
             private var observer: TestObserver<List<Company>>? = null
             private val source = randomListOf(factory = ::makeCompanyDao)
-            private val result = randomListOf(factory = ::makeCompany)
+            private val result = randomListOf { makeCompany() }
 
             @BeforeEach
             internal fun setUp() {
