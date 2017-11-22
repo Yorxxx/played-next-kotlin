@@ -16,8 +16,8 @@ class CompanyFactory {
                     randomLong())
         }
 
-        fun makeCompany(): Company {
-            return Company(randomInt(), randomString(), randomString(), randomString(), randomLong(),
+        fun makeCompany(name: String = randomString()): Company {
+            return Company(randomInt(), name, randomString(), randomString(), randomLong(),
                     randomLong())
         }
 

@@ -54,7 +54,7 @@ class LoadGameUseCaseTest {
 
             private var testObserver: TestSubscriber<Game>? = null
             val result = makeGame()
-            val companyList = randomListOf(factory = ::makeCompany)
+            val companyList = randomListOf { makeCompany() }
             val genreList = randomListOf { makeGenre() }
             val collection = makeCollection()
             val platforms = randomListOf { makePlatform() }
