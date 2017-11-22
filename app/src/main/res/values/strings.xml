@@ -6,9 +6,11 @@
     <string name="dialog_error_title">Sorry</string>
 
     <!-- Detail Activity -->
-    <!--<string name="text_pokemon_id">Id: %s</string>-->
-    <!--<string name="text_pokemon_name">Name: %s</string>-->
-    <!--<string name="text_pokemon_experience">Experience: %s</string>-->
+    <string name="game_detail_info_label_title">Information</string>
+    <string name="game_detail_developers_title">Developers</string>
+    <string name="game_detail_publishers_title">Publishers</string>
+    <string name="game_detail_genres_title">Genres</string>
+    <string name="game_detail_saga_title">Saga</string>
 
     <!-- Error View -->
     <string name="error_title">Oops</string>
