@@ -147,7 +147,7 @@ internal class CompanyRemoteImplTest {
 
             var observer: TestObserver<List<Company>>? = null
             val game = makeGameRemote()
-            val result = randomListOf(factory = ::makeCompany)
+            val result = randomListOf { makeCompany() }
 
             @BeforeEach
             internal fun setUp() {
@@ -181,7 +181,7 @@ internal class CompanyRemoteImplTest {
 
             var observer: TestObserver<List<Company>>? = null
             val game = makeGameRemote()
-            val result = randomListOf(factory = ::makeCompany)
+            val result = randomListOf { makeCompany() }
 
             @BeforeEach
             internal fun setUp() {

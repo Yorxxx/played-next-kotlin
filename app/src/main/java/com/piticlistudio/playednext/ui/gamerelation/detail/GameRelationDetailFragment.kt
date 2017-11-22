@@ -83,7 +83,7 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(102)
+            viewmodel.loadRelationForGame(103)
     }
 
     private fun initView() {
