@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
-import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,6 +26,7 @@ import javax.inject.Inject
 class GameRelationDetailFragment : Fragment() {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var adapter: GameRelationDetailAdapter
 
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
@@ -57,7 +57,7 @@ class GameRelationDetailFragment : Fragment() {
         })
         viewmodel.getGame().observe(this, Observer {
             binding.game = it
-//            if (it == null) detail_content.visibility = View.INVISIBLE else showGame(it)
+            adapter.game = it
         })
         viewmodel.getScreenshot().observe(this, Observer {
             if (!isAppBarCollapsed)
@@ -83,7 +83,7 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(90)
+            viewmodel.loadRelationForGame(102)
     }
 
     private fun initView() {
@@ -94,6 +94,8 @@ class GameRelationDetailFragment : Fragment() {
             setDisplayHomeAsUpEnabled(true)
             setTitle(null)
         }
+
+        detail_recyclerview.adapter = adapter
 
         backdrop.layoutParams.height = activity.getScreenHeight()
         appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
