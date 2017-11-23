@@ -37,7 +37,7 @@ class GameFactory {
                     makeTimeToBeat(),
                     randomListOf { makeCompany() },
                     randomListOf { makeCompany() },
-                    randomListOf(factory = ::makeGenre),
+                    randomListOf { makeGenre() },
                     makeCollection(), randomLong(),
                     randomListOf(size = 5, factory = ::makePlatform),
                     randomListOf { makeGameImage() })
