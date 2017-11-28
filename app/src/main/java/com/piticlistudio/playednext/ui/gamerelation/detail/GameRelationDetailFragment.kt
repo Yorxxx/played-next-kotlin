@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -64,13 +65,16 @@ class GameRelationDetailFragment : Fragment() {
                 Glide.with(context).load(it).into(backdrop)
         })
         viewmodel.getRelations().observe(this, Observer {
+            it?.let { adapter.relations = it }
             it?.forEach {
                 Log.d("GameRelationDetailFragm", "Retrieved relation with status ${it.currentStatus.name} for platform ${it.platform?.name}")
             }
-//            it?.apply {
-//                val relation = it[1].apply { currentStatus = GameRelationStatus.PLAYING }
-//                viewmodel.saveRelation(relation)
-//            }
+//            it?.forEachIndexed({index, gameRelation ->
+//                if (gameRelation.currentStatus !== GameRelationStatus.values()[index]) {
+//                    gameRelation.currentStatus = GameRelationStatus.values()[index];
+//                    viewmodel.saveRelation(gameRelation)
+//                }
+//            })
         })
         viewmodel.getError().observe(this, Observer {
             when (it) {
@@ -83,7 +87,7 @@ class GameRelationDetailFragment : Fragment() {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(123)
+            viewmodel.loadRelationForGame(124)
     }
 
     private fun initView() {

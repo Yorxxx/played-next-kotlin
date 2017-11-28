@@ -104,7 +104,7 @@
                 android:id="@+id/detail_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/game_detail_bottom_margin"
+                android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:descendantFocusability="beforeDescendants"
                 android:focusable="true"

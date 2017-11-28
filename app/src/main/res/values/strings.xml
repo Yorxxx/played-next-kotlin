@@ -6,6 +6,12 @@
     <!--<string name="dialog_action_cancel">Cancel</string>-->
     <string name="dialog_error_title">Sorry</string>
 
+    <string name="gamerelation_backlog_status">Backlogged</string>
+    <string name="gamerelation_playing_status">Playing</string>
+    <string name="gamerelation_played_status">Played</string>
+    <string name="gamerelation_beaten_status">Beaten</string>
+    <string name="gamerelation_completed_status">Completed</string>
+
     <!-- Detail Activity -->
     <string name="game_detail_info_label_title">Information</string>
     <string name="game_detail_developers_title">Developers</string>

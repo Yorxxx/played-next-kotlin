@@ -39,6 +39,7 @@ android {
         buildConfigField("String", "IGDB_API_KEY", "\"${IGDBApiKey}\"")
 
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
