@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
