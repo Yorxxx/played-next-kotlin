@@ -3,20 +3,17 @@ package com.piticlistudio.playednext.ui.gamerelation.detail
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.SaveGameRelationUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameRelation
-import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.gamerelation_detail.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -74,6 +71,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
         if (relation.game == null) throw RuntimeException("Relation does not have game")
         if (relation.platform == null) throw RuntimeException("Relation does not have game")
 
+        relation.updatedAt = System.currentTimeMillis();
         saveGameUseCase.execute(relation.game!!)
                 .andThen(saveGameRelationUseCase.execute(relation))
                 .subscribeOn(Schedulers.io())

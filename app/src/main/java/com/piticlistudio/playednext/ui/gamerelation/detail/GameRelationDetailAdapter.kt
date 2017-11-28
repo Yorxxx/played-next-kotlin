@@ -12,7 +12,10 @@ import android.widget.TextView
 import com.piticlistudio.playednext.BR
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.GameRelation
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import kotlinx.android.synthetic.main.game_detail_description_item_row.view.*
+import kotlinx.android.synthetic.main.gamerelation_detail_status_item_row.view.*
 import javax.inject.Inject
 
 class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -20,9 +23,15 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
     companion object {
         const val ITEM_TYPE_INFO = 100
         const val ITEM_TYPE_DESCRIPTION = 101
+        const val ITEM_TYPE_STATUS = 102
     }
 
     var game: Game? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+    var relations: List<GameRelation> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -32,18 +41,19 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
         when (holder) {
             is GameInfoHolder -> holder.bindTo(game)
             is GameDescriptionHolder -> holder.bindTo(game!!.summary)
+            is GameRelationStatusHolder -> holder.bindTo(relations)
         }
     }
 
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getItemViewType(position: Int): Int {
         when (position) {
             0 -> return ITEM_TYPE_INFO
-            1 -> return ITEM_TYPE_DESCRIPTION
-            else -> return 10
+            1 -> return ITEM_TYPE_STATUS
+            else -> return ITEM_TYPE_DESCRIPTION
         }
     }
 
@@ -57,8 +67,10 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
             ITEM_TYPE_DESCRIPTION -> {
                 return GameDescriptionHolder(parent)
             }
+            else -> {
+                return GameRelationStatusHolder(parent)
+            }
         }
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private class GameInfoHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -89,6 +101,27 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
                 }
                 spannableString.setSpan(RelativeSizeSpan(3.0f), position, position + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 itemView.detail_description.setText(spannableString, TextView.BufferType.SPANNABLE)
+            }
+        }
+    }
+
+    private class GameRelationStatusHolder(parent: ViewGroup?) : RecyclerView.ViewHolder(
+            LayoutInflater.from(parent!!.context).inflate(R.layout.gamerelation_detail_status_item_row, parent, false)
+    ) {
+        fun bindTo(relations: List<GameRelation>) {
+            relations.forEach {
+                val relation = it
+                it.platform?.let {
+                    when (relation.currentStatus) {
+                        GameRelationStatus.PLAYING -> itemView.playingPlatforms.text = it.name
+                        GameRelationStatus.UNPLAYED -> itemView.backloggedPlatforms.text = it.name
+                        GameRelationStatus.BEATEN -> itemView.beatenPlatforms.text = it.name
+                        GameRelationStatus.COMPLETED -> itemView.completedPlatforms.text = it.name
+                        GameRelationStatus.PLAYED -> itemView.playedPlatforms.text = it.name
+                        else -> {
+                        }
+                    }
+                }
             }
         }
     }
