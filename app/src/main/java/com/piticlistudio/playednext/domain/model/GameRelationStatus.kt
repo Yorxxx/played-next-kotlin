@@ -1,3 +1,3 @@
 package com.piticlistudio.playednext.domain.model
 
-enum class GameRelationStatus { NONE, UNPLAYED, ABANDONED, PLAYING, BEATEN, COMPLETED }
+enum class GameRelationStatus { NONE, UNPLAYED, PLAYED, PLAYING, BEATEN, COMPLETED }

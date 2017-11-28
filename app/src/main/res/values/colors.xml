@@ -11,4 +11,5 @@
     <!--<color name="divider">#B6B6B6</color>-->
 
     <color name="game_detail_backdrop_overlay">#77000000</color>
+    <color name="radiobutton_checked">#FF5722</color>
 </resources>
