@@ -3,7 +3,6 @@ package com.piticlistudio.playednext.ui.gamerelation.detail
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
