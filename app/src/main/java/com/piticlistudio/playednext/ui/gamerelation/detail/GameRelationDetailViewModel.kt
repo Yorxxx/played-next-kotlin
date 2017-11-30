@@ -4,9 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
-import com.piticlistudio.playednext.domain.interactor.game.SaveGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
-import com.piticlistudio.playednext.domain.interactor.relation.SaveGameRelationUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameRelation
 import io.reactivex.Flowable
@@ -21,9 +19,7 @@ import javax.inject.Inject
  * ViewModel for GameRelationDetail view.
  */
 class GameRelationDetailViewModel @Inject constructor(private val loadRelationsForGameUseCase: LoadRelationsForGameUseCase,
-                                                      private val loadGameUseCase: LoadGameUseCase,
-                                                      private val saveGameUseCase: SaveGameUseCase,
-                                                      private val saveGameRelationUseCase: SaveGameRelationUseCase) : ViewModel() {
+                                                      private val loadGameUseCase: LoadGameUseCase) : ViewModel() {
 
     private var disposable: Disposable? = null
     private val loadingStatus = MutableLiveData<Boolean>()
@@ -64,21 +60,6 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                             errorStatus.postValue(it)
                             loadingStatus.postValue(false)
                         }
-                )
-    }
-
-    fun saveRelation(relation: GameRelation) {
-        if (relation.game == null) throw RuntimeException("Relation does not have game")
-        if (relation.platform == null) throw RuntimeException("Relation does not have game")
-
-        relation.updatedAt = System.currentTimeMillis();
-        saveGameUseCase.execute(relation.game!!)
-                .andThen(saveGameRelationUseCase.execute(relation))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onError = { errorStatus.postValue(it) },
-                        onComplete = { errorStatus.postValue(null)}
                 )
     }
 
