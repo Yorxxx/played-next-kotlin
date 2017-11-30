@@ -9,21 +9,34 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
-import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.gamerelation_detail.*
+import org.jetbrains.anko.AnkoLogger
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
+class GameRelationDetailFragment : Fragment(), AnkoLogger {
+
+    companion object {
+        private val ARG_GAMEID = "game_id"
+
+        fun newInstance(id: Int): GameRelationDetailFragment {
+            val args = Bundle()
+            args.putSerializable(ARG_GAMEID, id)
+            val fragment = GameRelationDetailFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var adapter: GameRelationDetailAdapter
@@ -31,6 +44,7 @@ class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
     private lateinit var binding: GamerelationDetailBinding
+    private var gameId: Int? = null
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -48,6 +62,10 @@ class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
         super.onActivityCreated(savedInstanceState)
 
         initView()
+        gameId = activity.intent.getIntExtra("id", 0)
+        if (gameId == 0) {
+            throw RuntimeException("No gameId supplied")
+        }
         val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
 
         viewmodel.getLoading().observe(this, Observer {
@@ -68,12 +86,6 @@ class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
             it?.forEach {
                 Log.d("GameRelationDetailFragm", "Retrieved relation with status ${it.currentStatus.name} for platform ${it.platform?.name}")
             }
-//            it?.forEachIndexed({index, gameRelation ->
-//                if (gameRelation.currentStatus !== GameRelationStatus.values()[index]) {
-//                    gameRelation.currentStatus = GameRelationStatus.values()[index];
-//                    viewmodel.saveRelation(gameRelation)
-//                }
-//            })
         })
         viewmodel.getError().observe(this, Observer {
             when (it) {
@@ -86,7 +98,7 @@ class GameRelationDetailActivity : AppCompatActivity(), AnkoLogger {
             }
         })
         if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(124)
+            viewmodel.loadRelationForGame(gameId!!)
     }
 
     private fun initView() {
