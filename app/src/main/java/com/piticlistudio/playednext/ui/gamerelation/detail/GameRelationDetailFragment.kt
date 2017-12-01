@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
-import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -132,5 +131,30 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
                 .subscribe { appbar.setExpanded(false) }
 
         toolbar.setOnClickListener { appbar.setExpanded(true) }
+    }
+
+    private fun render(viewState: ViewState) {
+        when (viewState.isLoading) {
+            true -> gamerelation_detail_loading.show()
+            false -> gamerelation_detail_loading.hide()
+        }
+        viewState.game?.let {
+            binding.game = it
+            adapter.game = it
+        }
+        adapter.relations = viewState.relations
+
+        when (viewState.error) {
+            null -> {
+                Log.d("GameRelationDetailFragm", "No error")
+            }
+            else -> {
+                Log.d("GameRelationDetailFragm", "Error found ${viewState.error}")
+            }
+        }
+        viewState.showImage?.let {
+            if (!isAppBarCollapsed)
+                Glide.with(context).load(it).into(backdrop)
+        }
     }
 }
