@@ -47,7 +47,7 @@ internal class GameSearchViewModelTest {
     @Mock private lateinit var errorObserver: Observer<Exception?>
     @Mock private lateinit var currentConnection: Connectivity
     @Mock private lateinit var provider: TiledDataSource<Game>
-    private val games = randomListOf { makeGame() }
+    private val games = randomListOf(30) { makeGame() }
 
     @Before
     fun setUp() {

@@ -47,7 +47,7 @@ internal class GenreRepositoryImplTest {
         @DisplayName("When we call loadForGame")
         inner class LoadForGameCalled {
             val id = 10
-            val entity = randomListOf{ makeGenre() }
+            val entity = randomListOf(20){ makeGenre() }
             var result: TestObserver<List<Genre>>? = null
 
             @BeforeEach
@@ -122,7 +122,7 @@ internal class GenreRepositoryImplTest {
         @DisplayName("When we call saveForGame")
         inner class SaveForGameCalled {
 
-            val data = randomListOf { makeGenre() }
+            val data = randomListOf(5) { makeGenre() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
