@@ -24,13 +24,51 @@ internal class CoverTest {
         @Test
         @DisplayName("Then should return small cover value")
         fun smallCoverValue() {
-            assertEquals("http://images.igdb.com/igdb/image/upload/t_cover_small/kh5qruqeea8zeiq9phiw.jpg", cover.smallUrl)
+            assertEquals("https://images.igdb.com/igdb/image/upload/t_cover_small/kh5qruqeea8zeiq9phiw.jpg", cover.smallUrl)
         }
 
         @Test
         @DisplayName("Then should return big cover value")
         fun bigCoverValue() {
-            assertEquals("http://images.igdb.com/igdb/image/upload/t_cover_big/kh5qruqeea8zeiq9phiw.jpg", cover.bigUrl)
+            assertEquals("https://images.igdb.com/igdb/image/upload/t_cover_big/kh5qruqeea8zeiq9phiw.jpg", cover.bigUrl)
+        }
+    }
+
+    @DisplayName("Given a Cover instance with http preffix")
+    @Nested
+    inner class InstanceWithHTTP {
+
+        private lateinit var cover: Cover
+        private val url = "http://images.igdb.com/igdb/image/upload/t_thumb/kh5qruqeea8zeiq9phiw.jpg"
+
+        @BeforeEach
+        internal fun setUp() {
+            cover = Cover(url, randomInt(), randomInt())
+        }
+
+        @DisplayName("it should return correct smallUrl")
+        @Test
+        fun smallUrl() {
+            assertEquals("https://images.igdb.com/igdb/image/upload/t_cover_small/kh5qruqeea8zeiq9phiw.jpg", cover.smallUrl)
+        }
+    }
+
+    @DisplayName("Given a GameImage instance with https preffix")
+    @Nested
+    inner class InstanceWithHTTPS {
+
+        private lateinit var cover: Cover
+        private val url = "https://images.igdb.com/igdb/image/upload/t_thumb/kh5qruqeea8zeiq9phiw.jpg"
+
+        @BeforeEach
+        internal fun setUp() {
+            cover = Cover(url, randomInt(), randomInt())
+        }
+
+        @DisplayName("it should return correct mediumUrl")
+        @Test
+        fun smallUrl() {
+            assertEquals("https://images.igdb.com/igdb/image/upload/t_cover_small/kh5qruqeea8zeiq9phiw.jpg", cover.smallUrl)
         }
     }
 }
