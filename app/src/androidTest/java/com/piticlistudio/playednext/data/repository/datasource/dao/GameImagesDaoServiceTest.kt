@@ -42,7 +42,7 @@ class GameImagesDaoServiceTest {
         val result = database?.imagesDao()?.insert(data)
 
         Assert.assertNotNull(result)
-        assertEquals(1, result)
+        assertEquals(1L, result)
     }
 
     @Test

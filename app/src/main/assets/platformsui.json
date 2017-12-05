@@ -1,0 +1,202 @@
+{
+  "linux": {
+    "color": "#ffcc00",
+    "acronym": "lnx"
+  },
+  "Nintendo 64": {
+    "color": "#C1BED1",
+    "acronym": "n64"
+  },
+  "Wii": {
+    "color": "#d9d9d9",
+    "acronym": "Wii"
+  },
+  "PC (Microsoft Windows)": {
+    "color": "#78909C",
+    "acronym": "PC"
+  },
+  "PlayStation": {
+    "color": "#E3E3E3",
+    "acronym": "PSone"
+  },
+  "PlayStation 2": {
+    "color": "#0000CC",
+    "acronym": "PS2"
+  },
+  "PlayStation 3": {
+    "color": "#192730",
+    "acronym": "PS3"
+  },
+  "Xbox": {
+    "color": "#353535",
+    "acronym": "XBX"
+  },
+  "Xbox 360": {
+    "color": "#90C048",
+    "acronym": "X360"
+  },
+  "PC DOS": {
+    "color": "#000000",
+    "acronym": "DOS"
+  },
+  "Mac": {
+    "color": "#ffffff",
+    "acronym": "OSX"
+  },
+  "Commodore C64/128": {
+    "color": "#6C8995",
+    "acronym": "C64"
+  },
+  "Amiga": {
+    "color": "#d3d3d3",
+    "acronym": "AMIGA"
+  },
+  "Nintendo Entertainment System (NES)": {
+    "color": "#D8D8D8",
+    "acronym": "NES"
+  },
+  "Super Nintendo Entertainment System (SNES)": {
+    "color": "#DAE0F0",
+    "acronym": "SNES"
+  },
+  "Nintendo DS": {
+    "color": "#3085B0",
+    "acronym": "NDS"
+  },
+  "Nintendo GameCube": {
+    "color": "#6509cb",
+    "acronym": "NGC"
+  },
+  "Game Boy Color": {
+    "color": "#ffcc00",
+    "acronym": "GBC"
+  },
+  "Dreamcast": {
+    "color": "#FF6A00",
+    "acronym": "DC"
+  },
+  "Game Boy Advance": {
+    "color": "#682c9e",
+    "acronym": "GBA"
+  },
+  "Amstrad CPC": {
+    "color": "#dbdbdb",
+    "acronym": "ACPC"
+  },
+  "ZX Spectrum": {
+    "color": "#000000",
+    "acronym": "ZXS"
+  },
+  "MSX": {
+    "color": "#000000",
+    "acronym": "MSX"
+  },
+  "Sega Mega Drive/Genesis": {
+    "color": "#2B2728",
+    "acronym": "MD"
+  },
+  "Sega 32X": {
+    "color": "#2B2728",
+    "acronym": "32X"
+  },
+  "Sega Saturn": {
+    "color": "#797979",
+    "acronym": "SAT"
+  },
+  "Game Boy": {
+    "color": "#76818C",
+    "acronym": "GB"
+  },
+  "Android": {
+    "color": "#4CAF50",
+    "acronym": "AND"
+  },
+  "Sega Game Gear": {
+    "color": "#2B2728",
+    "acronym": "GG"
+  },
+  "Xbox Live Arcade": {
+    "color": "#90C048",
+    "acronym": "XBLA"
+  },
+  "Nintendo 3DS": {
+    "color": "#d5000c",
+    "acronym": "3DS"
+  },
+  "PlayStation Portable": {
+    "color": "#373944",
+    "acronym": "PSP"
+  },
+  "iOS": {
+    "color": "#ffffff",
+    "acronym": "IOS"
+  },
+  "Wii U": {
+    "color": "#1C9DFF",
+    "acronym": "WIIU"
+  },
+  "N-Gage": {
+    "color": "#a8a8a8",
+    "acronym": "NGAGE"
+  },
+  "Tapwave Zodiac": {
+    "color": "#939393",
+    "acronym": "ZOD"
+  },
+  "PlayStation Network": {
+    "color": "#192730",
+    "acronym": "PSN"
+  },
+  "PlayStation Vita": {
+    "color": "#003287",
+    "acronym": "VITA"
+  },
+  "Virtual Console (Nintendo)": {
+    "color": "#ff0000",
+    "acronym": "VC"
+  },
+  "PlayStation 4": {
+    "color": "#025bd9",
+    "acronym": "PS4"
+  },
+  "Xbox One": {
+    "color": "#3b7e14",
+    "acronym": "ONE"
+  },
+  "3DO Interactive Multiplayer": {
+    "color": "#424242",
+    "acronym": "3D0"
+  },
+  "Arcade": {
+    "color": "#343434",
+    "acronym": "ARCADE"
+  },
+  "WonderSwan": {
+    "color": "#8D8D8D",
+    "acronym": "WS"
+  },
+  "Super Famicom": {
+    "color": "#A99EE8",
+    "acronym": "SFC"
+  },
+  "Atari 2600": {
+    "color": "#212121",
+    "acronym": "A2600"
+  },
+  "Atari 7800": {
+    "color": "#131313",
+    "acronym": "A7800"
+  },
+  "Atari Lynx": {
+    "color": "#7A7A7A",
+    "acronym": "LYNX"
+  },
+  "Atari Jaguar": {
+    "color": "#000000",
+    "acronym": "JAGUAR"
+  },
+  "Sega Master System": {
+    "color": "#888888",
+    "acronym": "MS"
+  }
+}
