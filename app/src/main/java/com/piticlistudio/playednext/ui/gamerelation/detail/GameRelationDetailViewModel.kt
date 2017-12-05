@@ -22,43 +22,35 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                                                       private val loadGameUseCase: LoadGameUseCase) : ViewModel() {
 
     private var disposable: Disposable? = null
-    private val loadingStatus = MutableLiveData<Boolean>()
-    private val relationStatus = MutableLiveData<List<GameRelation>>()
-    private val errorStatus = MutableLiveData<Throwable?>()
-    private val gameStatus = MutableLiveData<Game?>()
-    private val imageStatus = MutableLiveData<String>()
-    fun getLoading(): LiveData<Boolean> = loadingStatus
-    fun getRelations(): LiveData<List<GameRelation>> = relationStatus
-    fun getError(): LiveData<Throwable?> = errorStatus
-    fun getGame(): LiveData<Game?> = gameStatus
-    fun getScreenshot(): LiveData<String> = imageStatus
+    private val viewState = MutableLiveData<ViewState>()
+    fun getCurrentState(): LiveData<ViewState> = viewState
 
     override fun onCleared() {
         super.onCleared()
         disposable?.dispose()
     }
 
+    private fun currentViewState(): ViewState = viewState.value!!
+
     fun loadRelationForGame(gameId: Int) {
         loadGameUseCase.execute(gameId)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
-                    gameStatus.postValue(it)
+                    viewState.value = currentViewState().copy(game = it)
                     loadImageToShow(it)
                 }
+                .observeOn(Schedulers.io())
                 .flatMap { loadRelationsForGameUseCase.execute(it) }
-                .doOnSubscribe { loadingStatus.postValue(true) }
+                .doOnSubscribe { viewState.postValue(ViewState(true, listOf(), null, null, null)) }
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()
                 .subscribeBy(
                         onNext = {
-                            relationStatus.postValue(it)
-                            loadingStatus.postValue(false)
-                            errorStatus.postValue(null)
+                            viewState.value = currentViewState().copy(relations = it, isLoading = false, error = null)
                         },
                         onError = {
-                            gameStatus.postValue(null)
-                            relationStatus.postValue(null)
-                            errorStatus.postValue(it)
-                            loadingStatus.postValue(false)
+                            viewState.value = currentViewState().copy(isLoading = false, error = it)
                         }
                 )
     }
@@ -66,14 +58,17 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
     private fun loadImageToShow(data: Game) {
         data.images?.let {
             if (it.isNotEmpty()) {
-                imageStatus.postValue(it[0].mediumSizeUrl)
+                viewState.value = currentViewState().copy(showImage = it[0].mediumSizeUrl)
                 disposable = Flowable.interval(5, TimeUnit.SECONDS)
-                    .take( it.size.toLong())
-                    .map { data.images!!.get(it.toInt()) }
-                    .repeat()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { imageStatus.postValue(it.mediumSizeUrl) }
+                        .take(it.size.toLong())
+                        .map { data.images!!.get(it.toInt()) }
+                        .repeat()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl) }
             }
         }
     }
 }
+
+data class ViewState(val isLoading: Boolean = false, val relations: List<GameRelation>,
+                     val error: Throwable? = null, val game: Game? = null, val showImage: String? = null)

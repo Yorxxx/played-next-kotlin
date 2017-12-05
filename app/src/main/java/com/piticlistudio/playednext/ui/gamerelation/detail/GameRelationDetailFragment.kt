@@ -68,35 +68,7 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         }
         val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
 
-        viewmodel.getLoading().observe(this, Observer {
-            it?.let {
-                if (it) gamerelation_detail_loading.show() else gamerelation_detail_loading.hide()
-            }
-        })
-        viewmodel.getGame().observe(this, Observer {
-            binding.game = it
-            adapter.game = it
-        })
-        viewmodel.getScreenshot().observe(this, Observer {
-            if (!isAppBarCollapsed)
-                Glide.with(context).load(it).into(backdrop)
-        })
-        viewmodel.getRelations().observe(this, Observer {
-            it?.let { adapter.relations = it }
-            it?.forEach {
-                Log.d("GameRelationDetailFragm", "Retrieved relation with status ${it.currentStatus.name} for platform ${it.platform?.name}")
-            }
-        })
-        viewmodel.getError().observe(this, Observer {
-            when (it) {
-                null -> {
-                    Log.d("GameRelationDetailFragm", "No error")
-                }
-                else -> {
-                    Log.d("GameRelationDetailFragm", "Error found ${it}")
-                }
-            }
-        })
+        viewmodel.getCurrentState().observe(this, Observer { it?.let { this.render(it) }})
         if (savedInstanceState == null)
             viewmodel.loadRelationForGame(gameId!!)
     }
@@ -131,5 +103,30 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
                 .subscribe { appbar.setExpanded(false) }
 
         toolbar.setOnClickListener { appbar.setExpanded(true) }
+    }
+
+    private fun render(viewState: ViewState) {
+        when (viewState.isLoading) {
+            true -> gamerelation_detail_loading.show()
+            false -> gamerelation_detail_loading.hide()
+        }
+        viewState.game?.let {
+            binding.game = it
+            adapter.game = it
+        }
+        adapter.relations = viewState.relations
+
+        when (viewState.error) {
+            null -> {
+                Log.d("GameRelationDetailFragm", "No error")
+            }
+            else -> {
+                Log.d("GameRelationDetailFragm", "Error found ${viewState.error}")
+            }
+        }
+        viewState.showImage?.let {
+            if (!isAppBarCollapsed)
+                Glide.with(context).load(it).into(backdrop)
+        }
     }
 }
