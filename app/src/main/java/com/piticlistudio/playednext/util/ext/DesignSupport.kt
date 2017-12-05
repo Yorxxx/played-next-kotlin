@@ -1,11 +1,14 @@
 package com.piticlistudio.playednext.util.ext
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Point
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.view.View
+import android.view.WindowManager
 
 
 fun View.snackbar(text: CharSequence, duration: Int = Snackbar.LENGTH_SHORT, init: Snackbar.() -> Unit = {}): Snackbar {
@@ -46,4 +49,13 @@ fun FragmentActivity.setContentFragment(containerViewId: Int, f: () -> Fragment)
     return f().apply {
         manager?.beginTransaction()?.add(containerViewId, this)?.commit()
     }
+}
+
+inline fun Activity.getScreenHeight(): Int {
+    (this.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay?.let {
+        val size = Point()
+        it.getSize(size)
+        return size.y
+    }
+    return 0
 }

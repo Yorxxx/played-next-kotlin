@@ -18,7 +18,6 @@ class FooActivity : AppCompatActivity(), HasSupportFragmentInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.game_search_fragment)
         setContentFragment(android.R.id.content, { GameSearchFragment() })
     }
 
