@@ -49,7 +49,7 @@ internal class PlatformRepositoryImplTest {
         @DisplayName("When we call loadForGame")
         inner class LoadForGameCalled {
             val id = 10
-            val entity = randomListOf{ makePlatform() }
+            val entity = randomListOf(20){ makePlatform() }
             var result: TestObserver<List<Platform>>? = null
 
             @BeforeEach
@@ -124,7 +124,7 @@ internal class PlatformRepositoryImplTest {
         @DisplayName("When we call saveForGame")
         inner class SaveForGameCalled {
 
-            val data = randomListOf { makePlatform() }
+            val data = randomListOf(15) { makePlatform() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach

@@ -45,7 +45,7 @@ internal class GameImagesRepositoryImplTest {
 
             private val gameId = 2000
             private var observer: TestSubscriber<List<GameImage>>? = null
-            private val result = randomListOf { makeGameImage() }
+            private val result = randomListOf(10) { makeGameImage() }
 
             @BeforeEach
             internal fun setUp() {
@@ -152,7 +152,7 @@ internal class GameImagesRepositoryImplTest {
         inner class SaveCalled {
 
             private val gameId = 1000
-            private val data = randomListOf { makeGameImage() }
+            private val data = randomListOf(15) { makeGameImage() }
             private var observer: TestObserver<Void>? = null
 
             @BeforeEach

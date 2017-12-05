@@ -43,7 +43,7 @@ class SearchGamesUseCaseTest {
         @DisplayName("When execute is called")
         inner class Execute {
 
-            private val games = randomListOf{ makeGame() }
+            private val games = randomListOf(25){ makeGame() }
             private var response: TestSubscriber<List<Game>>? = null
             private val query = "mario"
             private val offset = 2

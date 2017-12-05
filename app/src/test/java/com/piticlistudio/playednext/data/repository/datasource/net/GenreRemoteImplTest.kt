@@ -71,7 +71,7 @@ internal class GenreRemoteImplTest {
 
             var observer: TestObserver<List<Genre>>? = null
             val game = GameFactory.makeGameRemote()
-            val result = randomListOf{ makeGenre() }
+            val result = randomListOf(20){ makeGenre() }
 
             @BeforeEach
             internal fun setUp() {

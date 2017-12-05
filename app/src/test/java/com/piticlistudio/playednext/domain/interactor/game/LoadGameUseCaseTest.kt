@@ -54,11 +54,11 @@ class LoadGameUseCaseTest {
 
             private var testObserver: TestSubscriber<Game>? = null
             val result = makeGame()
-            val companyList = randomListOf { makeCompany() }
-            val genreList = randomListOf { makeGenre() }
+            val companyList = randomListOf(10) { makeCompany() }
+            val genreList = randomListOf(4) { makeGenre() }
             val collection = makeCollection()
-            val platforms = randomListOf { makePlatform() }
-            val images = randomListOf { makeGameImage() }
+            val platforms = randomListOf(5) { makePlatform() }
+            val images = randomListOf(10) { makeGameImage() }
 
             @BeforeEach
             internal fun setup() {

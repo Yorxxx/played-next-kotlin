@@ -78,7 +78,7 @@ internal class PlatformDTORepositoryImplTest {
 
             var observer: TestObserver<List<Platform>>? = null
             val game = GameFactory.makeGameRemote()
-            val result = randomListOf { makePlatform() }
+            val result = randomListOf(15) { makePlatform() }
 
             @BeforeEach
             internal fun setUp() {

@@ -124,7 +124,7 @@ internal class CompanyRepositoryImplTest {
         @DisplayName("When we call loadDevelopersForGameId")
         inner class LoadDevelopersForGameIdCalled {
             val id = 10
-            val entity = randomListOf { makeCompany() }
+            val entity = randomListOf(5) { makeCompany() }
             var result: TestObserver<List<Company>>? = null
 
             @BeforeEach
@@ -199,7 +199,7 @@ internal class CompanyRepositoryImplTest {
         @DisplayName("When we call saveDevelopersForGame")
         inner class SaveDevelopersForGameCalled {
 
-            private val companies = randomListOf { makeCompany() }
+            private val companies = randomListOf(10) { makeCompany() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
@@ -238,7 +238,7 @@ internal class CompanyRepositoryImplTest {
         @DisplayName("When we call loadPublishersForGame")
         inner class LoadPublishersForGameCalled {
             val id = 10
-            val entity = randomListOf { makeCompany() }
+            val entity = randomListOf(20) { makeCompany() }
             var result: TestObserver<List<Company>>? = null
 
             @BeforeEach
@@ -313,7 +313,7 @@ internal class CompanyRepositoryImplTest {
         @DisplayName("When we call savePublishersForGame")
         inner class SavePublishersForGameCalled {
 
-            private val companies = randomListOf { makeCompany() }
+            private val companies = randomListOf(10) { makeCompany() }
             var observer: TestObserver<Void>? = null
 
             @BeforeEach
