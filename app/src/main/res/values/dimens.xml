@@ -8,4 +8,9 @@
     <dimen name="text_body">16sp</dimen>
     <!--<dimen name="text_small_body">14sp</dimen>-->
 
+
+    <dimen name="game_detail_bottom_margin">64dp</dimen>
+    <dimen name="game_detail_fab_margin">16dp</dimen>
+    <dimen name="game_detail_loading_size">128dp</dimen>
+
 </resources>

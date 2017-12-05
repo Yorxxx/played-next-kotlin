@@ -1,18 +1,35 @@
 <resources>
     <string name="app_name">MvpStarter</string>
+    <string name="lorem">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus.</string>
 
     <string name="dialog_action_ok">OK</string>
     <!--<string name="dialog_action_cancel">Cancel</string>-->
     <string name="dialog_error_title">Sorry</string>
 
+    <string name="gamerelation_backlog_status">Backlogged</string>
+    <string name="gamerelation_playing_status">Playing</string>
+    <string name="gamerelation_played_status">Played</string>
+    <string name="gamerelation_beaten_status">Beaten</string>
+    <string name="gamerelation_completed_status">Completed</string>
+
     <!-- Detail Activity -->
-    <!--<string name="text_pokemon_id">Id: %s</string>-->
-    <!--<string name="text_pokemon_name">Name: %s</string>-->
-    <!--<string name="text_pokemon_experience">Experience: %s</string>-->
+    <string name="game_detail_info_label_title">Information</string>
+    <string name="game_detail_developers_title">Developers</string>
+    <string name="game_detail_publishers_title">Publishers</string>
+    <string name="game_detail_genres_title">Genres</string>
+    <string name="game_detail_saga_title">Saga</string>
 
     <!-- Error View -->
     <string name="error_title">Oops</string>
     <string name="error_message">There was a problem loading the pokemon, please try again!</string>
     <string name="error_reload">Reload</string>
     <string name="title_activity_maps_sample">Map</string>
+
+    <!-- GameRelation Detail Loading -->
+    <string name="gamerelation_detail_loading">Loading…</string>
+
+    <!-- Game Search view -->
+    <string name="gamesearch_hint">Enter game name</string>
+    <string name="gamesearch_nonetwork_available">No Internet available. Cannot perform any search</string>
+    <string name="gamesearch_retry">Retry</string>
 </resources>

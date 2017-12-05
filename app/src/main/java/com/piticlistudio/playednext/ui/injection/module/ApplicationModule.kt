@@ -3,20 +3,19 @@ package com.piticlistudio.playednext.ui.injection.module
 import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
+import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.piticlistudio.playednext.MvpStarterApplication
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.game.mapper.GameEntityMapper
-import com.piticlistudio.playednext.data.game.mapper.local.GameDaoMapper
-import com.piticlistudio.playednext.data.game.mapper.remote.IGDBGameMapper
-import com.piticlistudio.playednext.data.game.repository.GameRepositoryImpl
-import com.piticlistudio.playednext.data.game.repository.local.GameDao
-import com.piticlistudio.playednext.data.game.repository.local.GameLocalImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameRemoteImpl
-import com.piticlistudio.playednext.data.game.repository.remote.GameService
-import com.piticlistudio.playednext.data.remote.GameServiceFactory
-import com.piticlistudio.playednext.domain.repository.game.GameRepository
+import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
+import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
+import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Observable
+import rx.subjects.BehaviorSubject
 import javax.inject.Singleton
+
 
 @Module
 class ApplicationModule {
@@ -29,37 +28,28 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    internal fun provideGameService(): GameService {
+    internal fun provideConnectivity(app: Application): BehaviorSubject<Connectivity> {
+        return (app as MvpStarterApplication).connectivity
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideIGDBService(): IGDBService {
         return GameServiceFactory.makeGameService()
     }
 
     @Provides
     @Singleton
-    fun provideGamesDao(db: AppDatabase): GameDao {
-        return db.gamesDao()
-    }
-
-    @Provides
-    @Singleton
     fun provideDatabase(ctx: Context): AppDatabase {
-        return Room.databaseBuilder(ctx, AppDatabase::class.java, "my-todo-db").build()
+        return Room.databaseBuilder(ctx, AppDatabase::class.java, "my-todo-db").fallbackToDestructiveMigration().build()
     }
 
     @Provides
     @Singleton
-    fun provideGameLocalRepository(dao: GameDao, mapper: GameDaoMapper): GameLocalImpl {
-        return GameLocalImpl(dao, mapper)
+    fun providePicasso(ctx: Context): Picasso {
+        val picasso = Picasso.with(ctx)
+        picasso.setIndicatorsEnabled(true)
+        return picasso
     }
 
-    @Provides
-    @Singleton
-    fun provideGameRemoteRepository(service: GameService, mapper: IGDBGameMapper): GameRemoteImpl {
-        return GameRemoteImpl(service, mapper)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGameRepositor(localImpl: GameLocalImpl, remoteImpl: GameRemoteImpl, mapper: GameEntityMapper): GameRepository {
-        return GameRepositoryImpl(remoteImpl, localImpl, mapper)
-    }
 }

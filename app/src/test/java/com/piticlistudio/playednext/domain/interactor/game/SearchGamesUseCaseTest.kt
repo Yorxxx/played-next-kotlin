@@ -1,17 +1,22 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.domain.model.game.Game
-import com.piticlistudio.playednext.domain.repository.game.GameRepository
-import io.reactivex.Single
-import io.reactivex.observers.TestObserver
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.repository.GameRepository
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
 /**
@@ -36,37 +41,38 @@ class SearchGamesUseCaseTest {
 
         @Nested
         @DisplayName("When execute is called")
-        inner class execute {
+        inner class Execute {
 
-            val games = listOf<Game>()
-            var response: TestObserver<List<Game>>? = null
+            private val games = randomListOf(25){ makeGame() }
+            private var response: TestSubscriber<List<Game>>? = null
+            private val query = "mario"
+            private val offset = 2
+            private val limit = 8
 
             @BeforeEach
             internal fun setUp() {
-                Mockito.`when`(repository.search("foo"))
-                        .thenReturn(Single.just(games))
-
-                response = useCase?.execute("foo")?.test()
+                val flow = Flowable.create<List<Game>>({ it.onNext(games) }, BackpressureStrategy.MISSING)
+                whenever(repository.search(anyString(), anyInt(), anyInt())).thenReturn(flow)
+                response = useCase?.execute(SearchQuery(query, offset, limit))?.test()
             }
 
             @Test
             @DisplayName("Then requests repository")
             fun repositoryIsCalled() {
-                verify(repository).search("foo")
+                verify(repository).search(query, offset, limit)
             }
 
             @Test
             @DisplayName("Then emits without errors")
             fun withoutErrors() {
                 assertNotNull(response)
-                with(response) {
-                    this!!.assertNoErrors()
-                    assertComplete()
+                response?.apply {
+                    assertNoErrors()
                     assertValueCount(1)
+                    assertNotComplete()
                     assertValue(games)
                 }
             }
         }
-
     }
 }

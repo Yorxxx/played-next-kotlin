@@ -10,12 +10,16 @@ apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.2'
 
     dexOptions {
         maxProcessCount 4
         preDexLibraries false
         javaMaxHeapSize "4g"
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     defaultConfig {
@@ -35,6 +39,7 @@ android {
         buildConfigField("String", "IGDB_API_KEY", "\"${IGDBApiKey}\"")
 
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {
@@ -109,11 +114,13 @@ junitPlatform {
 
 dependencies {
     implementation supportLibs
+    kapt 'com.android.databinding:compiler:2.3.3'
     implementation networkLibs
     implementation rxJavaLibs
 
     implementation 'com.android.support:multidex:1.0.1'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation "com.github.bumptech.glide:glide:${versions.glide}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${versions.glide}"
     implementation('com.github.bumptech.glide:okhttp3-integration:1.4.0') {
         exclude group: 'glide-parent'
     }
@@ -144,6 +151,19 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$versions.archComp"
     implementation "android.arch.persistence.room:rxjava2:$versions.archComp"
     kapt "android.arch.persistence.room:compiler:$versions.archComp"
+
+    implementation "android.arch.lifecycle:extensions:$versions.archComp"
+    testImplementation "android.arch.core:core-testing:$versions.archComp"
+    implementation "android.arch.lifecycle:reactivestreams:$versions.archComp"
+    implementation "android.arch.paging:runtime:1.0.0-alpha3"
+
+    implementation picassoLibs
+
+    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.0.0'
+    compile 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
+    compile "org.jetbrains.anko:anko:$anko_version"
+    compile "org.jetbrains.anko:anko-commons:$anko_version"
+    compile "org.jetbrains.anko:anko-design:$anko_version"
 }
 
 // Tests copy
