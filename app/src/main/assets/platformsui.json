@@ -198,5 +198,9 @@
   "Sega Master System": {
     "color": "#888888",
     "acronym": "MS"
+  },
+  "Nintendo Switch": {
+    "color": "#FF0000",
+    "acronym": "NSW"
   }
 }

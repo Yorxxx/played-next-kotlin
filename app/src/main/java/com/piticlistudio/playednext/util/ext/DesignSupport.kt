@@ -2,6 +2,7 @@ package com.piticlistudio.playednext.util.ext
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Point
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 
 
 fun View.snackbar(text: CharSequence, duration: Int = Snackbar.LENGTH_SHORT, init: Snackbar.() -> Unit = {}): Snackbar {

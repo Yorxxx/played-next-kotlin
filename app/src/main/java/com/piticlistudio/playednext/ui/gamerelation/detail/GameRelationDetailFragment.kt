@@ -23,6 +23,10 @@ import kotlinx.android.synthetic.main.gamerelation_detail.*
 import org.jetbrains.anko.AnkoLogger
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import com.piticlistudio.playednext.R.id.platformsList
+import android.support.v7.widget.GridLayoutManager
+
+
 
 class GameRelationDetailFragment : Fragment(), AnkoLogger {
 
@@ -40,6 +44,7 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var adapter: GameRelationDetailAdapter
+    @Inject lateinit var platformadapter: GamePlatformsAdapter
 
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
@@ -83,6 +88,10 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         }
 
         detail_recyclerview.adapter = adapter
+        val gridLayoutManager = GridLayoutManager(activity, 4)
+        //gridLayoutManager.spanSizeLookup = 4
+        platformsList.layoutManager = gridLayoutManager
+        platformsList.adapter = platformadapter
 
         backdrop.layoutParams.height = activity.getScreenHeight()
         appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
@@ -113,6 +122,7 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         viewState.game?.let {
             binding.game = it
             adapter.game = it
+            platformadapter.platforms = it.platforms ?: listOf()
         }
         adapter.relations = viewState.relations
 
