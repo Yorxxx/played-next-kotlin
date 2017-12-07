@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
 import com.piticlistudio.playednext.domain.interactor.FlowableUseCaseWithParameter
+import com.piticlistudio.playednext.domain.interactor.platform.LoadPlatformsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.*
 import io.reactivex.Flowable
@@ -12,7 +13,7 @@ class LoadGameUseCase @Inject constructor(
         private val comprepository: CompanyRepository,
         private val genre_repository: GenreRepository,
         private val collection_repository: CollectionRepository,
-        private val platformRepository: PlatformRepository,
+        private val platformsForGameUseCase: LoadPlatformsForGameUseCase,
         private val imagesRepository: GameImagesRepository) : FlowableUseCaseWithParameter<Int, Game> {
 
     override fun execute(parameter: Int): Flowable<Game> {
@@ -63,8 +64,7 @@ class LoadGameUseCase @Inject constructor(
     }
 
     private fun loadPlatforms(game: Game): Flowable<Game> {
-        return game.platforms?.let { Flowable.just(game) }
-                ?: platformRepository.loadForGame(game.id)
+        return platformsForGameUseCase.execute(game)
                 .map {
                     game.apply { platforms = it }
                 }.toFlowable()

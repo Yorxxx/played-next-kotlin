@@ -13,7 +13,7 @@ class PlatformUIUtils @Inject constructor(val colorsMap: HashMap<String, Int>, v
     }
 
     fun getColor(platformName: String): Int {
-        return colorsMap.get(platformName.toUpperCase()).takeIf { it != null } ?: colorsMap.get(platformName).takeIf { it != null } ?: Color.WHITE
+        return colorsMap.get(platformName.toUpperCase()).takeIf { it != null } ?: colorsMap.get(platformName).takeIf { it != null } ?: Color.BLACK
     }
 
     class Builder {

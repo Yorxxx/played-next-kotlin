@@ -9,6 +9,7 @@ import com.piticlistudio.playednext.MvpStarterApplication
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
+import com.piticlistudio.playednext.ui.PlatformUIUtils
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
@@ -50,6 +51,13 @@ class ApplicationModule {
         val picasso = Picasso.with(ctx)
         picasso.setIndicatorsEnabled(true)
         return picasso
+    }
+
+    @Provides
+    @Singleton
+    fun providePlatformUIUtils(ctx: Context): PlatformUIUtils {
+        val source = ctx.assets.open("platformsui.json");
+        return PlatformUIUtils.Builder().inputstream(source).build()
     }
 
 }

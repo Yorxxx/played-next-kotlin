@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.model.Platform
 import com.piticlistudio.playednext.domain.repository.PlatformRepository
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.ui.PlatformUIUtils
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.*
@@ -21,11 +22,13 @@ internal class LoadPlatformUseCaseTest {
         private lateinit var usecase: LoadPlatformUseCase
         @Mock
         private lateinit var platformRepository: PlatformRepository
+        @Mock
+        private lateinit var uiutils: PlatformUIUtils
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            usecase = LoadPlatformUseCase(platformRepository)
+            usecase = LoadPlatformUseCase(platformRepository, uiutils)
         }
 
         @Nested
@@ -46,6 +49,13 @@ internal class LoadPlatformUseCaseTest {
             @DisplayName("Then should request repository")
             fun requestsRepository() {
                 verify(platformRepository).load(platformId)
+            }
+
+            @Test
+            @DisplayName("Then should request display values")
+            fun requestDisplayValues() {
+                verify(uiutils).getColor(result.name)
+                verify(uiutils).getAcronym(result.name)
             }
 
             @Test

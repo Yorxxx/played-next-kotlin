@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.domain.interactor.platform.LoadPlatformsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.*
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
@@ -36,7 +37,7 @@ class LoadGameUseCaseTest {
         @Mock lateinit var companyrepository: CompanyRepository
         @Mock lateinit var genrerepository: GenreRepository
         @Mock lateinit var collectionrepository: CollectionRepository
-        @Mock lateinit var platformRepository: PlatformRepository
+        @Mock lateinit var platformRepository: LoadPlatformsForGameUseCase
         @Mock lateinit var imagesRepository: GameImagesRepository
 
         private val gameId = 10
@@ -68,7 +69,7 @@ class LoadGameUseCaseTest {
                 whenever(companyrepository.loadPublishersForGame(result.id)).thenReturn(Single.just(companyList))
                 whenever(genrerepository.loadForGame(result.id)).thenReturn(Single.just(genreList))
                 whenever(collectionrepository.loadForGame(result.id)).thenReturn(Single.just(collection))
-                whenever(platformRepository.loadForGame(result.id)).thenReturn(Single.just(platforms))
+                whenever(platformRepository.execute(result)).thenReturn(Single.just(platforms))
                 whenever(imagesRepository.loadForGame(result.id)).thenReturn(Flowable.just(images))
                 testObserver = useCase?.execute(gameId)!!.test()
             }
@@ -77,6 +78,12 @@ class LoadGameUseCaseTest {
             @DisplayName("Then requests repository")
             fun requestsRepository() {
                 verify(repository).load(gameId)
+            }
+
+            @Test
+            @DisplayName("Then requests platforms")
+            fun requestPlatforms() {
+                verify(platformRepository).execute(result)
             }
 
             @Test
@@ -112,12 +119,6 @@ class LoadGameUseCaseTest {
             @DisplayName("Then should not request collection")
             fun noCollectionRequest() {
                 verify(collectionrepository, never()).loadForGame(gameId)
-            }
-
-            @Test
-            @DisplayName("Then should not request platforms")
-            fun noPlatformsRequest() {
-                verify(platformRepository, never()).loadForGame(gameId)
             }
 
             @Test
@@ -420,89 +421,6 @@ class LoadGameUseCaseTest {
                             assertNotComplete()
                             assertValueCount(1)
                             assertValue { it.collection == null }
-                        }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And has empty platforms")
-            inner class EmptyPlatforms {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.platforms = listOf()
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then does not requests platform repository")
-                fun requestsRepository() {
-                    verify(platformRepository, never()).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.platforms != null && it.platforms!!.isEmpty() }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And does not have platforms assigned")
-            inner class WithoutPlatforms {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.platforms = null
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then requests repository")
-                fun requestsRepository() {
-                    verify(platformRepository).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.platforms == platforms }
-                    }
-                }
-
-                @Nested
-                @DisplayName("And request fails")
-                inner class RequestFails {
-
-                    private val error = Throwable("foo")
-
-                    @BeforeEach
-                    internal fun setUp() {
-                        result.platforms = null
-                        whenever(platformRepository.loadForGame(anyInt())).thenReturn(Single.error(error))
-                        testObserver = useCase?.execute(gameId)!!.test()
-                    }
-
-                    @Test
-                    @DisplayName("Then emits error")
-                    fun withoutErrors() {
-                        assertNotNull(testObserver)
-                        testObserver?.apply {
-                            assertNoValues()
-                            assertNotComplete()
-                            assertError(error)
                         }
                     }
                 }
