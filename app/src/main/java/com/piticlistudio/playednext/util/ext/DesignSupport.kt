@@ -61,3 +61,12 @@ inline fun Activity.getScreenHeight(): Int {
     }
     return 0
 }
+
+fun Context.getScreenHeight(): Int {
+    (this.applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay?.let {
+        val size = Point()
+        it.getSize(size)
+        return size.y
+    }
+    return 0
+}

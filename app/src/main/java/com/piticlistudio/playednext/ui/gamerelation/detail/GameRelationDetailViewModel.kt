@@ -69,20 +69,6 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
             }
         }
     }
-
-    private fun loadImageToShow(data: Game) {
-        data.images?.let {
-            if (it.isNotEmpty()) {
-                imageStatus.postValue(it[0].mediumSizeUrl)
-                disposable = Flowable.interval(5, TimeUnit.SECONDS)
-                    .take( it.size.toLong())
-                    .map { data.images!!.get(it.toInt()) }
-                    .repeat()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { imageStatus.postValue(it.mediumSizeUrl) }
-            }
-        }
-    }
 }
 
 data class ViewState(val isLoading: Boolean = false, val relations: List<GameRelation>,
