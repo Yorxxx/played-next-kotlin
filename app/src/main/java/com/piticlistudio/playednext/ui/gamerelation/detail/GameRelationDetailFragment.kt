@@ -140,10 +140,4 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
                 Glide.with(context).load(it).into(backdrop)
         }
     }
-
-    private fun showGame(data: Game) {
-        detail_content.visibility = View.VISIBLE
-        toolbar.title = data.name
-        backdropTitle.text = data.name
-    }
 }
