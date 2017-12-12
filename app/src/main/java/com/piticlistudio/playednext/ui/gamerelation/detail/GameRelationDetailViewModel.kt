@@ -65,7 +65,15 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                         .map { data.images!!.get(it.toInt()) }
                         .repeat()
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl) }
+                        .toObservable()
+                        .subscribeBy(
+                                onNext = {
+                                    viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl)
+                                },
+                                onError = {
+                                    viewState.value = currentViewState().copy()
+                                }
+                        )
             }
         }
     }
