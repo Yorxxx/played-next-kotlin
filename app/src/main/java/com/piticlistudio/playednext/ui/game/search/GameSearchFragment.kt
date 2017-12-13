@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationDetailActivity
@@ -72,6 +73,16 @@ class GameSearchFragment : Fragment(), AnkoLogger {
 
     private fun initSearchField() {
         searchClear.setOnClickListener { searchInputView.text.clear() }
+        searchInputView.setOnEditorActionListener { textView, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_SEARCH -> {
+                    searchForResults(textView.text.toString()).run {
+                        true
+                    }
+                }
+                else -> false
+            }
+        }
 
         appBarView.addOnOffsetChangedListener { _, verticalOffset ->
             searchContainerView.translationY = verticalOffset.toFloat()
