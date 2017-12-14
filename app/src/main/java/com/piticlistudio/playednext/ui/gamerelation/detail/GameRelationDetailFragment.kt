@@ -26,7 +26,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import com.piticlistudio.playednext.R.id.platformsList
 import android.support.v7.widget.GridLayoutManager
-
+import com.bumptech.glide.request.RequestOptions
+import com.squareup.picasso.Picasso
 
 
 class GameRelationDetailFragment : Fragment(), AnkoLogger {
@@ -137,7 +138,9 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         }
         viewState.showImage?.let {
             if (!isAppBarCollapsed)
-                Glide.with(context).load(it).into(backdrop)
+                Picasso.with(context)
+                        .load(it)
+                        .into(backdrop)
         }
     }
 }
