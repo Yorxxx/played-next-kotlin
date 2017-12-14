@@ -60,7 +60,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
         data.images?.let {
             if (it.isNotEmpty()) {
                 viewState.value = currentViewState().copy(showImage = it[0].mediumSizeUrl)
-                disposable = Flowable.interval(5, TimeUnit.SECONDS)
+                disposable = Flowable.interval(10, TimeUnit.SECONDS)
                         .take(it.size.toLong())
                         .map { data.images!!.get(it.toInt()) }
                         .repeat()

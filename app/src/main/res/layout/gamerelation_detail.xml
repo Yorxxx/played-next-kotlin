@@ -48,7 +48,7 @@
                         app:layout_collapseMode="parallax"
                         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                        <ImageView
+                        <com.piticlistudio.playednext.util.ext.ScrollParallaxImageView
                             android:id="@+id/backdrop"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
