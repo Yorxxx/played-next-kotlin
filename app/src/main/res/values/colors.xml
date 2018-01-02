@@ -12,4 +12,10 @@
 
     <color name="game_detail_backdrop_overlay">#77000000</color>
     <color name="radiobutton_checked">#FF5722</color>
+
+    <color name="gamerelation_backlog">#FF5722</color>
+    <color name="gamerelation_playing">#BDFFBD</color>
+    <color name="gamerelation_played">#BDBDBD</color>
+    <color name="gamerelation_beaten">#D66100</color>
+    <color name="gamerelation_completed">#D4AF37</color>
 </resources>

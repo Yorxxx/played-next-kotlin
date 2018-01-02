@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_backlog"
+        android:enabled="true"
+        android:icon="@drawable/ic_access_time_black_24dp"
+        android:title="@string/gamerelation_backlog_status"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_played"
+        android:enabled="true"
+        android:icon="@drawable/ic_check_black_24dp"
+        android:title="@string/gamerelation_played_status"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_playing"
+        android:enabled="true"
+        android:icon="@drawable/google_controller"
+        android:title="@string/gamerelation_playing_status"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_beaten"
+        android:enabled="true"
+        android:icon="@drawable/ic_done_all_black_24dp"
+        android:title="@string/gamerelation_beaten_status"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_completed"
+        android:enabled="true"
+        android:icon="@drawable/trophy_outline"
+        android:title="@string/gamerelation_completed_status"
+        app:showAsAction="ifRoom" />
+
+</menu>
