@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
+import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCompanyDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert.*
 import org.junit.After
@@ -125,6 +127,46 @@ class GameDaoServiceTest {
             assertValueCount(1)
             assertNoErrors()
             assertValue { it.size == 3 && it.containsAll(listOf(game1, game2, game3)) }
+        }
+    }
+
+    @Test
+    fun loadById() {
+
+        val developer1 = makeCompanyDao()
+        val developer2 = makeCompanyDao()
+        val developer3 = makeCompanyDao()
+        database?.companyDao()?.insert(developer1)
+        database?.companyDao()?.insert(developer2)
+        database?.companyDao()?.insert(developer3)
+
+        val game = makeGameCache()
+        database?.gamesDao()?.insert(game)
+
+        val relation = GameDeveloperDao(game.id, developer1.id)
+        val relation2 = GameDeveloperDao(game.id, developer2.id)
+        val relation3 = GameDeveloperDao(game.id, developer3.id)
+        database?.companyDao()?.insertGameDeveloper(relation)
+        database?.companyDao()?.insertGameDeveloper(relation2)
+        database?.companyDao()?.insertGameDeveloper(relation3)
+
+        val observer = database?.gamesDao()?.loadById(game.id.toLong())?.test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertValueCount(1)
+            assertNotComplete()
+            val relations = values().first()
+            assertEquals(3, relations.size)
+            relations.forEach {
+                assertEquals(game, it.game)
+            }
+            assertEquals(relations.first().developer(), developer1)
+            assertEquals(relations.get(1).developer(), developer2)
+            assertEquals(relations.get(2).developer(), developer3)
+            //assertEquals(listOf(relations.first().developer(), relations.get(1).developer(), relations.get(2).developer()),
+              //      listOf(developer1, developer2, developer3))
         }
     }
 
