@@ -7,6 +7,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
+import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCompanyDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
 import junit.framework.Assert.*
@@ -136,9 +137,13 @@ class GameDaoServiceTest {
         val developer1 = makeCompanyDao()
         val developer2 = makeCompanyDao()
         val developer3 = makeCompanyDao()
+        val publisher1 = makeCompanyDao()
+        val publisher2 = makeCompanyDao()
         database?.companyDao()?.insert(developer1)
         database?.companyDao()?.insert(developer2)
         database?.companyDao()?.insert(developer3)
+        database?.companyDao()?.insert(publisher1)
+        database?.companyDao()?.insert(publisher2)
 
         val game = makeGameCache()
         database?.gamesDao()?.insert(game)
@@ -149,6 +154,8 @@ class GameDaoServiceTest {
         database?.companyDao()?.insertGameDeveloper(relation)
         database?.companyDao()?.insertGameDeveloper(relation2)
         database?.companyDao()?.insertGameDeveloper(relation3)
+        database?.companyDao()?.insertGamePublisher(GamePublisherDao(game.id, publisher1.id))
+        database?.companyDao()?.insertGamePublisher(GamePublisherDao(game.id, publisher2.id))
 
         val observer = database?.gamesDao()?.loadById(game.id.toLong())?.test()
 
@@ -158,13 +165,9 @@ class GameDaoServiceTest {
             assertValueCount(1)
             assertNotComplete()
             val relations = values().first()
-            assertEquals(3, relations.size)
-            relations.forEach {
-                assertEquals(game, it.game)
-            }
-            assertEquals(relations.first().developer(), developer1)
-            assertEquals(relations.get(1).developer(), developer2)
-            assertEquals(relations.get(2).developer(), developer3)
+            assertEquals(1, relations.size)
+            assertEquals(game, relations.first().game)
+
             //assertEquals(listOf(relations.first().developer(), relations.get(1).developer(), relations.get(2).developer()),
               //      listOf(developer1, developer2, developer3))
         }
