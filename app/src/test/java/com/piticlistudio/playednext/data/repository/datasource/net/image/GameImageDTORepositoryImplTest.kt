@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net.image
 
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.ImageMapper
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
@@ -28,7 +28,7 @@ internal class GameImageDTORepositoryImplTest {
 
         private lateinit var repository: GameImageDTORepositoryImpl
         @Mock private lateinit var service: IGDBService
-        @Mock private lateinit var mapper: ImageDTOMapper
+        @Mock private lateinit var mapper: ImageMapper.DTOMapper
 
         @BeforeEach
         internal fun setUp() {
@@ -46,7 +46,7 @@ internal class GameImageDTORepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromModel(any())).thenReturn(makeGameImage())
+                whenever(mapper.mapFromDTO(any())).thenReturn(makeGameImage())
                 whenever(service.loadGame(anyInt(), anyString(), anyOrNull())).thenReturn(Single.just(listOf(game)))
                 observer = repository.loadForGame(gameId).test()
             }
@@ -60,7 +60,7 @@ internal class GameImageDTORepositoryImplTest {
             @Test
             @DisplayName("Then should map response")
             fun mapsResult() {
-                verify(mapper, times(game.screenshots?.size!!)).mapFromModel(any())
+                verify(mapper, times(game.screenshots?.size!!)).mapFromDTO(any())
             }
 
             @Test

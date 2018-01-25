@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDao
@@ -28,7 +28,7 @@ internal class CollectionDaoRepositoryImplTest {
         @Mock
         private lateinit var dao: CollectionDaoService
         @Mock
-        private lateinit var mapper: CollectionDaoMapper
+        private lateinit var mapper: CollectionMapper.DaoMapper
 
         @BeforeEach
         internal fun setUp() {
@@ -47,7 +47,7 @@ internal class CollectionDaoRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(dao.find(source.id.toLong())).thenReturn(Single.just(source))
-                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                whenever(mapper.mapFromDao(source)).thenReturn(result)
                 observer = repository.load(source.id).test()
             }
 
@@ -80,7 +80,7 @@ internal class CollectionDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromEntity(source)).thenReturn(result)
+                whenever(mapper.mapIntoDao(source)).thenReturn(result)
                 whenever(dao.insert(result)).thenReturn(randomLong())
                 observer = repository.save(source).test()
             }
@@ -108,7 +108,7 @@ internal class CollectionDaoRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    whenever(mapper.mapFromEntity(source)).thenReturn(null)
+                    whenever(mapper.mapIntoDao(source)).thenReturn(null)
                     whenever(dao.insert(result)).thenReturn(randomLong())
                     observer = repository.save(source).test()
                 }
@@ -137,7 +137,7 @@ internal class CollectionDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                whenever(mapper.mapFromDao(source)).thenReturn(result)
                 whenever(dao.findForGame(gameId)).thenReturn(Single.just(source))
                 observer = repository.loadForGame(gameId).test()
             }
@@ -171,7 +171,7 @@ internal class CollectionDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromEntity(source)).thenReturn(result)
+                whenever(mapper.mapIntoDao(source)).thenReturn(result)
                 whenever(dao.insert(result)).thenReturn(randomLong())
                 whenever(dao.insertGameCollection(any())).thenReturn(randomLong())
                 observer = repository.saveForGame(gameId, source).test()

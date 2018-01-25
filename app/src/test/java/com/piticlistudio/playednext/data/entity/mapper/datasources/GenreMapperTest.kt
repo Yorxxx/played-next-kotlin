@@ -1,10 +1,8 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
+package com.piticlistudio.playednext.data.entity.mapper.datasources
 
 import com.piticlistudio.playednext.data.entity.dao.GenreDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDaoMapper
 import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao
+import com.piticlistudio.playednext.test.factory.GenreFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -12,29 +10,29 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class GenreDaoMapperTest {
+internal class GenreMapperTest {
 
     @Nested
-    @DisplayName("Given a GenreDaoMapper instance")
+    @DisplayName("Given a GenreMapper.DaoMapper instance")
     inner class Instance {
 
-        private lateinit var mapper: GenreDaoMapper
+        private lateinit var mapper: GenreMapper.DaoMapper
 
         @BeforeEach
         internal fun setUp() {
-            mapper = GenreDaoMapper()
+            mapper = GenreMapper.DaoMapper()
         }
 
         @Nested
-        @DisplayName("When we call mapFromModel")
+        @DisplayName("When we call mapFromDao")
         inner class MapFromModelCalled {
 
-            private val model = makeGenreDao()
+            private val model = GenreFactory.makeGenreDao()
             private var result: Genre? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromModel(model)
+                result = mapper.mapFromDao(model)
             }
 
             @Test
@@ -53,15 +51,15 @@ internal class GenreDaoMapperTest {
         }
 
         @Nested
-        @DisplayName("When we call mapFromEntity")
+        @DisplayName("When we call mapIntoDao")
         inner class MapFromEntityCalled {
 
-            private val entity = makeGenre()
+            private val entity = GenreFactory.makeGenre()
             private var result: GenreDao? = null
 
             @BeforeEach
             internal fun setup() {
-                result = mapper.mapFromEntity(entity)
+                result = mapper.mapIntoDao(entity)
             }
 
             @Test
@@ -80,5 +78,42 @@ internal class GenreDaoMapperTest {
         }
     }
 
+    @Nested
+    @DisplayName("Given GenreMapper.DTOMapper instance")
+    inner class MapperInstance {
 
+        private lateinit var mapper: GenreMapper.DTOMapper
+
+        @BeforeEach
+        internal fun setUp() {
+            mapper = GenreMapper.DTOMapper()
+        }
+
+        @Nested
+        @DisplayName("When we call mapFromDTO")
+        inner class MapFromModelCalled {
+
+            private val sources = GenreFactory.makeGenreDTO()
+            var result: Genre? = null
+
+            @BeforeEach
+            internal fun setUp() {
+                result = mapper.mapFromDTO(sources)
+            }
+
+            @Test
+            @DisplayName("Then should map into company")
+            fun mapped() {
+                assertNotNull(result)
+                result?.apply {
+                    assertEquals(sources.id, id)
+                    assertEquals(sources.name, name)
+                    assertEquals(sources.created_at, createdAt)
+                    assertEquals(sources.updated_at, updatedAt)
+                    assertEquals(sources.slug, slug)
+                    assertEquals(sources.url, url)
+                }
+            }
+        }
+    }
 }

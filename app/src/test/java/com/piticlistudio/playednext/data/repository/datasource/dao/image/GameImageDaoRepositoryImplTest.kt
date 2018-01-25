@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao.image
 import android.database.sqlite.SQLiteConstraintException
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.dao.ScreenshotDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImageDao
@@ -28,7 +28,7 @@ internal class GameImageDaoRepositoryImplTest {
     inner class Instance {
 
         @Mock private lateinit var dao: GameImagesDaoService
-        @Mock private lateinit var mapper: ImageDaoMapper
+        @Mock private lateinit var mapper: DaoModelMapper<ScreenshotDao, GameImage>
         private lateinit var repository: GameImageDaoRepositoryImpl
 
         @BeforeEach
@@ -48,7 +48,7 @@ internal class GameImageDaoRepositoryImplTest {
             internal fun setUp() {
                 val flowable = Flowable.create<List<ScreenshotDao>>({ it.onNext(listOf(makeGameImageDao(), makeGameImageDao())) }, BackpressureStrategy.MISSING)
                 whenever(dao.findForGame(anyInt())).thenReturn(flowable)
-                whenever(mapper.mapFromModel(any())).thenReturn(makeGameImage())
+                whenever(mapper.mapFromDao(any())).thenReturn(makeGameImage())
                 observer = repository.loadForGame(gameId).test()
             }
 
@@ -61,7 +61,7 @@ internal class GameImageDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should map result")
             fun shouldMap() {
-                verify(mapper, times(2)).mapFromModel(any())
+                verify(mapper, times(2)).mapFromDao(any())
             }
 
             @Test
@@ -119,7 +119,7 @@ internal class GameImageDaoRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromEntity(any())).thenReturn(daoData)
+                whenever(mapper.mapIntoDao(any())).thenReturn(daoData)
                 whenever(dao.insert(any())).thenReturn(anyLong())
                 observer = repository.saveForGame(gameId, data).test()
             }
@@ -127,7 +127,7 @@ internal class GameImageDaoRepositoryImplTest {
             @Test
             @DisplayName("Then should map result")
             fun mapIsCalled() {
-                verify(mapper).mapFromEntity(data)
+                verify(mapper).mapIntoDao(data)
             }
 
             @Test

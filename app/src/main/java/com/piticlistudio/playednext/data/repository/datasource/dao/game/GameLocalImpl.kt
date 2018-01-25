@@ -31,7 +31,7 @@ class GameLocalImpl @Inject constructor(private val dao: GameDaoService,
 
     override fun save(domainModel: Game): Completable {
         return Completable.defer {
-            mapper.mapFromModel(domainModel).also {
+            mapper.mapIntoDao(domainModel).also {
                 try {
                     dao.insert(it)
                 } catch (e: SQLiteConstraintException) {

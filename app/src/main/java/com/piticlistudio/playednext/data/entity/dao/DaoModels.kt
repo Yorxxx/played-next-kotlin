@@ -94,3 +94,54 @@ data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE))
         ))
 data class ScreenshotDao(val id: String, var gameId: Int?, val url: String, val width: Int?, val height: Int?)
+
+class GameWithRelationalData {
+
+        @Embedded var game: GameDao? = null
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = GameDeveloperDao::class
+        ) var companyIdList: List<GameDeveloperDao>? = listOf()
+
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = GamePublisherDao::class
+        ) var publisherIdList: List<GamePublisherDao>? = listOf()
+
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = ScreenshotDao::class
+        ) var screenshots: List<ScreenshotDao>? = listOf()
+
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = GameGenreDao::class
+        ) var genreIdList: List<GameGenreDao>? = listOf()
+
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = GameCollectionDao::class
+        ) var collectionIdList: List<GameCollectionDao>? = listOf()
+
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "gameId",
+                entity = GamePlatformDao::class
+        ) var platformIdIdList: List<GamePlatformDao>? = listOf()
+}
+
+
+class RelationWithGameAndPlatform {
+        @Embedded var data: GameRelationDao? = null
+
+        @Relation(parentColumn = "gameId", entityColumn = "id")
+        var game: List<GameDao>? = null
+
+        @Relation(parentColumn = "platformId", entityColumn = "id")
+        var platform: List<PlatformDao>? = null
+}

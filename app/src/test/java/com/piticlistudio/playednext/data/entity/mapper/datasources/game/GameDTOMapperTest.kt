@@ -1,15 +1,11 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.DTOModelMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
-import com.piticlistudio.playednext.data.entity.net.GameDTO
-import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
+import com.piticlistudio.playednext.data.entity.net.*
+import com.piticlistudio.playednext.domain.model.*
+import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import org.junit.Rule
@@ -20,7 +16,6 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertNull
 
 
 internal class GameDTOMapperTest {
@@ -34,11 +29,11 @@ internal class GameDTOMapperTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock
-        lateinit var companymapper: CompanyDTOMapper
-        @Mock lateinit var genremapper: GenreDTOMapper
-        @Mock lateinit var collectionmapper: CollectionDTOMapper
-        @Mock lateinit var platformmapper: PlatformDTOMapper
-        @Mock lateinit var imagesMapper: ImageDTOMapper
+        lateinit var companymapper: DTOModelMapper<CompanyDTO, Company>
+        @Mock lateinit var genremapper: DTOModelMapper<GenreDTO, Genre>
+        @Mock lateinit var collectionmapper: DTOModelMapper<CollectionDTO, Collection>
+        @Mock lateinit var platformmapper: DTOModelMapper<PlatformDTO, Platform>
+        @Mock lateinit var imagesMapper: DTOModelMapper<ImageDTO, GameImage>
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
@@ -48,7 +43,7 @@ internal class GameDTOMapperTest {
         }
 
         @Nested
-        @DisplayName("When we call mapFromModel")
+        @DisplayName("When we call mapFromDTO")
         inner class MapFromModel {
 
             val model = makeGameRemote()
@@ -56,7 +51,7 @@ internal class GameDTOMapperTest {
 
             @BeforeEach
             fun setup() {
-                result = mapper.mapFromModel(model)
+                result = mapper.mapFromDTO(model)
             }
 
             @Test
@@ -85,13 +80,21 @@ internal class GameDTOMapperTest {
             @Test
             @DisplayName("Then requests mapping for inner classes")
             fun childMaps() {
-                verify(collectionmapper).mapFromModel(model.collection)
-                verify(companymapper).mapFromModel(model.publishers)
-                verify(companymapper).mapFromModel(model.developers)
-                verify(genremapper).mapFromModel(model.genres)
-                verify(platformmapper).mapFromModel(model.platforms)
+                verify(collectionmapper).mapFromDTO(model.collection!!)
+                model.developers?.forEach {
+                    verify(companymapper).mapFromDTO(it)
+                }
+                model.publishers?.forEach {
+                    verify(companymapper).mapFromDTO(it)
+                }
+                model.genres?.forEach {
+                    verify(genremapper).mapFromDTO(it)
+                }
+                model.platforms?.forEach {
+                    verify(platformmapper).mapFromDTO(it)
+                }
                 model.screenshots?.forEach {
-                    verify(imagesMapper).mapFromModel(it)
+                    verify(imagesMapper).mapFromDTO(it)
                 }
             }
 
@@ -114,25 +117,6 @@ internal class GameDTOMapperTest {
                     assertEquals(url, result!!.cover?.url)
                     assertEquals(width, result!!.cover?.width)
                     assertEquals(height, result!!.cover?.height)
-                }
-            }
-        }
-
-        @Nested
-        @DisplayName("When we call mapFromEntity")
-        inner class mapFromEntity {
-
-            private val entity = makeGame()
-            private var result: GameDTO? = null
-
-            @Test
-            @DisplayName("Then throws error")
-            fun errorThrown() {
-                try {
-                    result = mapper.mapFromEntity(entity)
-                    fail<String>("SHould have thrown")
-                } catch (e: Throwable) {
-                    assertNull(result)
                 }
             }
         }

@@ -130,14 +130,14 @@ internal class GameLocalImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(mapper.mapFromModel(source)).thenReturn(data)
+                whenever(mapper.mapIntoDao(source)).thenReturn(data)
                 observer = repository.save(source).test()
             }
 
             @Test
             @DisplayName("Then maps entity into Dao model")
             fun mapsEntity() {
-                verify(mapper).mapFromModel(source)
+                verify(mapper).mapIntoDao(source)
             }
 
             @Test

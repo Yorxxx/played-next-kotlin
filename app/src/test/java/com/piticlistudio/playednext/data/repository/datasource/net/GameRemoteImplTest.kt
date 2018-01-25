@@ -56,7 +56,7 @@ internal class GameRemoteImplTest {
             fun setup() {
                 val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model))  }
                 whenever(service.loadGame(10)).thenReturn(flowable)
-                whenever(mapper.mapFromModel(model)).thenReturn(entity)
+                whenever(mapper.mapFromDTO(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
 
@@ -69,7 +69,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should map service response")
             fun mapIsCalled() {
-                verify(mapper).mapFromModel(model)
+                verify(mapper).mapFromDTO(model)
             }
 
             @Test
@@ -121,8 +121,8 @@ internal class GameRemoteImplTest {
             fun setup() {
                 val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model, model2))  }
                 whenever(service.searchGames(anyInt(), anyString(), anyString(), anyInt())).thenReturn(flowable)
-                whenever(mapper.mapFromModel(model)).thenReturn(entity1)
-                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
+                whenever(mapper.mapFromDTO(model)).thenReturn(entity1)
+                whenever(mapper.mapFromDTO(model2)).thenReturn(entity2)
                 result = repositoryImpl?.search("query", 5, 15)?.test()
             }
 
@@ -135,8 +135,8 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then maps result into data model")
             fun mapIsCalled() {
-                verify(mapper).mapFromModel(model)
-                verify(mapper).mapFromModel(model2)
+                verify(mapper).mapFromDTO(model)
+                verify(mapper).mapFromDTO(model2)
             }
 
             @Test

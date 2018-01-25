@@ -39,7 +39,7 @@ class GameFactory {
                     randomListOf { makeCompany() },
                     randomListOf { makeGenre() },
                     makeCollection(), randomLong(),
-                    randomListOf(size = 5, factory = ::makePlatform),
+                    randomListOf(5) { makePlatform()},
                     randomListOf { makeGameImage() })
         }
 

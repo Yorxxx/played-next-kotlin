@@ -44,6 +44,10 @@ class DomainFactory {
                     randomLong(), makeTimeToBeatCache(), makeCoverCache(), randomLong())
         }
 
+        fun makeGenreDao(id: Int = randomInt()): GenreDao {
+            return GenreDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
+        }
+
         fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
             return CompanyDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
         }

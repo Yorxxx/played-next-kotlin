@@ -1,7 +1,8 @@
 package com.piticlistudio.playednext.data.repository.datasource.net.image
 
 import android.arch.persistence.room.EmptyResultSetException
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.DTOModelMapper
+import com.piticlistudio.playednext.data.entity.net.ImageDTO
 import com.piticlistudio.playednext.data.repository.datasource.GameImageDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.domain.model.GameImage
@@ -10,7 +11,7 @@ import io.reactivex.Flowable
 import javax.inject.Inject
 
 class GameImageDTORepositoryImpl @Inject constructor(private val service: IGDBService,
-                                                     private val mapper: ImageDTOMapper) : GameImageDatasourceRepository {
+                                                     private val mapper: DTOModelMapper<ImageDTO, GameImage>) : GameImageDatasourceRepository {
 
     override fun loadForGame(id: Int): Flowable<List<GameImage>> {
         return service.loadGame(id, "id,name,slug,url,created_at,updated_at,screenshots", "id")
@@ -18,7 +19,7 @@ class GameImageDTORepositoryImpl @Inject constructor(private val service: IGDBSe
                 .map {
                     val result = mutableListOf<GameImage>()
                     it.screenshots?.forEach {
-                        result.add(mapper.mapFromModel(it))
+                        result.add(mapper.mapFromDTO(it))
                     }
                     result.toList()
                 }.toFlowable()

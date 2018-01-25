@@ -1,7 +1,8 @@
 package com.piticlistudio.playednext.data.repository.datasource.net.platform
 
 import android.arch.persistence.room.EmptyResultSetException
-import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.DTOModelMapper
+import com.piticlistudio.playednext.data.entity.net.PlatformDTO
 import com.piticlistudio.playednext.data.repository.datasource.PlatformDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
 import com.piticlistudio.playednext.domain.model.Platform
@@ -10,12 +11,12 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class PlatformDTORepositoryImpl @Inject constructor(private val service: IGDBService,
-                                                    private val mapper: PlatformDTOMapper) : PlatformDatasourceRepository {
+                                                    private val mapper: DTOModelMapper<PlatformDTO, Platform>) : PlatformDatasourceRepository {
 
     override fun load(id: Int): Single<Platform> {
         return service.loadPlatform(id)
                 .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
-                .map { mapper.mapFromModel(it) }
+                .map { mapper.mapFromDTO(it) }
     }
 
     override fun save(data: Platform): Completable {
@@ -26,7 +27,13 @@ class PlatformDTORepositoryImpl @Inject constructor(private val service: IGDBSer
         return service.loadGame(id, "id,name,slug,url,created_at,updated_at,platforms", "platforms")
                 .filter { it.size == 1 }
                 .map { it.get(0) }
-                .map { mapper.mapFromModel(it.platforms) }
+                .map {
+                    val list = mutableListOf<Platform>()
+                    it.platforms?.forEach {
+                        list.add(mapper.mapFromDTO(it))
+                    }
+                    list.toList()
+                }
                 .toSingle()
     }
 

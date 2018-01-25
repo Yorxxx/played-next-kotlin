@@ -7,8 +7,7 @@ package com.piticlistudio.playednext.data.entity.mapper
  * @param <M> the data model input type
  * @param <E> the entity model output type
  */
-interface LayerDataMapper<M, E> {
+interface EntityDataMapper<M, E> {
 
-    fun mapFromModel(type: M): E
     fun mapFromEntity(type: E): M
 }

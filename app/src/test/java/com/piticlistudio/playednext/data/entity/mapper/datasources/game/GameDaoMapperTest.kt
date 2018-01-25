@@ -96,7 +96,7 @@ internal class GameDaoMapperTest {
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromModel(entity)
+                result = mapper.mapIntoDao(entity)
             }
 
             @Test

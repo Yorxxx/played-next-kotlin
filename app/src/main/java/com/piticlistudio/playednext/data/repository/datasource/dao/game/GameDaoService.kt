@@ -7,9 +7,6 @@ import io.reactivex.Flowable
 @Dao
 interface GameDaoService {
 
-    @Query("select * from game")
-    fun findAll(): Flowable<List<GameDao>>
-
     @Query("select * from game where id = :id")
     fun findById(id: Long): Flowable<List<GameDao>>
 
@@ -23,11 +20,5 @@ interface GameDaoService {
     fun findByName(name: String): Flowable<List<GameDao>>
 
     @Query("SELECT * FROM game WHERE id = :id ")
-    fun loadById(id: Long): Flowable<List<GameQueryResult>>
-
-    data class GameQueryResult(@Embedded var game: GameDao,
-                          @Relation(
-                                  parentColumn = "id",
-                                  entityColumn = "gameId"
-                          ) var companyIdList: List<GameDeveloperDao>)
+    fun loadById(id: Long): Flowable<List<GameWithRelationalData>>
 }

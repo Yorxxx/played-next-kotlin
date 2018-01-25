@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.data.repository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.repository.datasource.RelationDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.dao.relation.RelationDaoRepositoryImpl
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
@@ -33,7 +34,7 @@ internal class GameRelationRepositoryImplTest {
         @JvmField
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
-        @Mock private lateinit var localImpl: RelationDaoRepositoryImpl
+        @Mock private lateinit var localImpl: RelationDatasourceRepository
 
         private var repository: GameRelationRepositoryImpl? = null
 
@@ -92,14 +93,13 @@ internal class GameRelationRepositoryImplTest {
                 }
 
                 @Test
-                @DisplayName("Then should emit default game relation")
+                @DisplayName("Then should emit error")
                 fun withoutErrors() {
                     assertNotNull(result)
                     result?.apply {
-                        assertNoErrors()
+                        assertNoValues()
                         assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.currentStatus == GameRelationStatus.NONE }
+                        assertError(Throwable::class.java)
                     }
                 }
             }
@@ -197,7 +197,6 @@ internal class GameRelationRepositoryImplTest {
                     assertValueAt(1, { it.containsAll(emission2) })
                 }
             }
-
         }
     }
 }

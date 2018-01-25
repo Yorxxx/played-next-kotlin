@@ -6,10 +6,12 @@ import android.database.sqlite.SQLiteConstraintException
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
-import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
+import com.piticlistudio.playednext.data.entity.dao.*
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCollectionDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCompanyDao
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGenreDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makePlatformDao
 import junit.framework.Assert.*
 import org.junit.After
 import org.junit.Before
@@ -111,28 +113,7 @@ class GameDaoServiceTest {
     }
 
     @Test
-    fun findAllShouldReturnAllStoredGames() {
-        val game1 = makeGameCache()
-        val game2 = makeGameCache()
-        val game3 = makeGameCache()
-
-        database?.gamesDao()?.insert(game1)
-        database?.gamesDao()?.insert(game2)
-        database?.gamesDao()?.insert(game3)
-
-        val observer = database?.gamesDao()?.findAll()?.test()
-
-        assertNotNull(observer)
-        observer?.apply {
-            assertNotComplete()
-            assertValueCount(1)
-            assertNoErrors()
-            assertValue { it.size == 3 && it.containsAll(listOf(game1, game2, game3)) }
-        }
-    }
-
-    @Test
-    fun loadById() {
+    fun loadById_shouldReturnGameAndRelationships() {
 
         val developer1 = makeCompanyDao()
         val developer2 = makeCompanyDao()
@@ -145,6 +126,17 @@ class GameDaoServiceTest {
         database?.companyDao()?.insert(publisher1)
         database?.companyDao()?.insert(publisher2)
 
+        val genre1 = makeGenreDao()
+        database?.genreDao()?.insert(genre1)
+
+        val collection = makeCollectionDao()
+        database?.collectionDao()?.insert(collection)
+
+        val platform1 = makePlatformDao()
+        val platform2 = makePlatformDao()
+        database?.platformDao()?.insert(platform1)
+        database?.platformDao()?.insert(platform2)
+
         val game = makeGameCache()
         database?.gamesDao()?.insert(game)
 
@@ -156,6 +148,10 @@ class GameDaoServiceTest {
         database?.companyDao()?.insertGameDeveloper(relation3)
         database?.companyDao()?.insertGamePublisher(GamePublisherDao(game.id, publisher1.id))
         database?.companyDao()?.insertGamePublisher(GamePublisherDao(game.id, publisher2.id))
+        database?.genreDao()?.insertGameGenre(GameGenreDao(game.id, genre1.id))
+        database?.collectionDao()?.insertGameCollection(GameCollectionDao(game.id, collection.id))
+        database?.platformDao()?.insertGamePlatform(GamePlatformDao(game.id, platform1.id))
+        database?.platformDao()?.insertGamePlatform(GamePlatformDao(game.id, platform2.id))
 
         val observer = database?.gamesDao()?.loadById(game.id.toLong())?.test()
 
@@ -165,11 +161,14 @@ class GameDaoServiceTest {
             assertValueCount(1)
             assertNotComplete()
             val relations = values().first()
-            assertEquals(1, relations.size)
-            assertEquals(game, relations.first().game)
-
-            //assertEquals(listOf(relations.first().developer(), relations.get(1).developer(), relations.get(2).developer()),
-              //      listOf(developer1, developer2, developer3))
+            assertEquals("Should have only one element", 1, relations.size)
+            //assertEquals("Should have game entity", game, relations.first().game)
+            assertEquals("Should have three developers", 3, relations.first().companyIdList?.size)
+            assertEquals("Should have two publishers", 2, relations.first().publisherIdList?.size)
+            assertEquals("Should have one genre", 1, relations.first().genreIdList?.size)
+            assertEquals("Should have one collection", 1, relations.first().collectionIdList?.size)
+            assertEquals("Should have two platforms", 2, relations.first().platformIdIdList?.size)
+            assertEquals("Should have no screenshots", 0, relations.first().screenshots?.size)
         }
     }
 

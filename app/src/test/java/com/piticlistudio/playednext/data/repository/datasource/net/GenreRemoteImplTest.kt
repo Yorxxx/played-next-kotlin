@@ -1,14 +1,8 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
-import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
-import com.piticlistudio.playednext.test.factory.GameFactory
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreMapper
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -30,7 +24,7 @@ internal class GenreRemoteImplTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock lateinit var service: IGDBService
-        @Mock lateinit var mapper: GenreDTOMapper
+        @Mock lateinit var mapper: GenreMapper.DTOMapper
 
         private var repositoryImpl: GenreRemoteImpl? = null
         private val gameId = 10
@@ -65,7 +59,7 @@ internal class GenreRemoteImplTest {
             }
         }
 
-        @Nested
+        /*@Nested
         @DisplayName("When we call loadForGame")
         inner class LoadForGameCalled {
 
@@ -97,7 +91,7 @@ internal class GenreRemoteImplTest {
                     this?.assertValue(result)
                 }
             }
-        }
+        }*/
 
         @Nested
         @DisplayName("When we call insertGameGenre")

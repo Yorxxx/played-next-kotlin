@@ -3,7 +3,8 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
-import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
+import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
+import com.piticlistudio.playednext.data.entity.mapper.EntityDataMapper
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
@@ -12,10 +13,10 @@ import javax.inject.Inject
 /**
  * Mapper between [GameDao] and [Game]
  */
-class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
+class GameDaoMapper @Inject constructor() :  DaoModelMapper<GameDao, Game>, EntityDataMapper<Game, GameDao> {
 
-    override fun mapFromEntity(type: GameDao): Game {
-        with(type) {
+    override fun mapFromDao(dao: GameDao): Game {
+        with(dao) {
             return Game(id, name, createdAt, updatedAt, summary, storyline, url, rating, ratingCount,
                     agregatedRating, aggregatedRatingCount, totalRating, totalRatingCount,
                     firstReleaseAt, mapFromCoverModel(cover), mapFromTimeToBeatModel(timeToBeat),
@@ -23,12 +24,21 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         }
     }
 
-    override fun mapFromModel(type: Game): GameDao {
-        with(type) {
+    override fun mapIntoDao(entity: Game): GameDao {
+        with(entity) {
             return GameDao(id, name, url, createdAt, updatedAt, summary, storyline, null,
                     null, null, null, rating, ratingCount, aggregatedRating,
                     aggregatedRatingCount, totalRating, totalRatingCount, null,
                     mapFromTimeToBeatEntity(timeToBeat), mapFromCoverEntity(cover), syncedAt)
+        }
+    }
+
+    override fun mapFromEntity(type: GameDao): Game {
+        with(type) {
+            return Game(id, name, createdAt, updatedAt, summary, storyline, url, rating, ratingCount,
+                    agregatedRating, aggregatedRatingCount, totalRating, totalRatingCount,
+                    firstReleaseAt, mapFromCoverModel(cover), mapFromTimeToBeatModel(timeToBeat),
+                    null, null, null, null, syncedAt, null, null)
         }
     }
 

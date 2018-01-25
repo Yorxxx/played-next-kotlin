@@ -1,8 +1,12 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
 import android.arch.persistence.room.EmptyResultSetException
-import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
+import com.nhaarman.mockito_kotlin.reset
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.data.entity.mapper.DTOModelMapper
+import com.piticlistudio.playednext.data.entity.net.CollectionDTO
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
@@ -28,7 +32,7 @@ internal class CollectionDTORepositoryImplTest {
         @Mock
         private lateinit var service: IGDBService
         @Mock
-        private lateinit var mapper: CollectionDTOMapper
+        private lateinit var mapper: DTOModelMapper<CollectionDTO, Collection>
 
         @BeforeEach
         internal fun setUp() {
@@ -47,7 +51,7 @@ internal class CollectionDTORepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(service.loadCollection(source.id)).thenReturn(Single.just(listOf(source)))
-                whenever(mapper.mapFromModel(source)).thenReturn(result)
+                whenever(mapper.mapFromDTO(source)).thenReturn(result)
                 observer = repository.load(source.id).test()
             }
 
@@ -60,7 +64,7 @@ internal class CollectionDTORepositoryImplTest {
             @Test
             @DisplayName("Then should map result")
             fun shouldMap() {
-                verify(mapper).mapFromModel(source)
+                verify(mapper).mapFromDTO(source)
             }
 
             @Test
@@ -103,28 +107,6 @@ internal class CollectionDTORepositoryImplTest {
                     }
                 }
             }
-
-            @Nested
-            @DisplayName("And mapping fails")
-            inner class MappingFailure {
-
-                @BeforeEach
-                internal fun setUp() {
-                    whenever(mapper.mapFromModel(any())).thenReturn(null)
-                    observer = repository.load(source.id).test()
-                }
-
-                @Test
-                @DisplayName("Then should emit error")
-                fun withoutErrors() {
-                    assertNotNull(observer)
-                    observer?.apply {
-                        assertError(Throwable::class.java)
-                        assertNoValues()
-                        assertNotComplete()
-                    }
-                }
-            }
         }
 
         @Nested
@@ -162,7 +144,7 @@ internal class CollectionDTORepositoryImplTest {
             internal fun setUp() {
                 whenever(service.loadGame(gameId, "id,name,slug,url,created_at,updated_at,collection", "collection"))
                         .thenReturn(Single.just(listOf(game)))
-                whenever(mapper.mapFromModel(game.collection)).thenReturn(result)
+                whenever(mapper.mapFromDTO(game.collection!!)).thenReturn(result)
                 observer = repository.loadForGame(gameId).test()
             }
 
