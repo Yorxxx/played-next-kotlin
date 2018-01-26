@@ -15,7 +15,6 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ApplicationModule::class,
         BuildersModule::class,
-        GameModule::class,
         CompanyModule::class,
         GenreModule::class,
         CollectionModule::class,

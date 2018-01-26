@@ -1,17 +1,13 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao.relation
 
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.entity.dao.GameRelationDao
-import com.piticlistudio.playednext.data.entity.dao.GameWithRelationalData
 import com.piticlistudio.playednext.data.entity.dao.RelationWithGameAndPlatform
 import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.relation.RelationDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.PlatformDatasourceRepository
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.test.factory.DataFactory
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelationDao
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelationWithGameAndPlatform
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable

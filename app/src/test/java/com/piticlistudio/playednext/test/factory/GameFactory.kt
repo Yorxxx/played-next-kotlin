@@ -1,8 +1,6 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.CoverDao
-import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
+import com.piticlistudio.playednext.data.entity.dao.*
 import com.piticlistudio.playednext.data.entity.net.*
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
@@ -57,6 +55,13 @@ class GameFactory {
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache(),
                     randomLong())
+        }
+
+        fun makeGameWithRelationalData(id: Int = randomInt()): GameWithRelationalData {
+            return GameWithRelationalData().apply {
+                game = makeGameCache(id)
+                companyIdList = randomListOf(2) { GameDeveloperDao(randomInt(), randomInt())  }
+            }
         }
 
         fun makeCoverCache(): CoverDao {

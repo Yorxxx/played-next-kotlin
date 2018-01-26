@@ -7,15 +7,21 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.dao.GameDao
+import com.piticlistudio.playednext.data.entity.dao.GameWithRelationalData
+import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.data.repository.datasource.CompanyDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameCache
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameWithRelationalData
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.Rule
@@ -24,8 +30,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.*
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -41,15 +46,15 @@ internal class GameLocalImplTest {
 
         @Mock
         private lateinit var daoService: GameDaoService
-        @Mock
-        private lateinit var mapper: GameDaoMapper
+        @Mock private lateinit var mapper: DaoModelMapper<GameWithRelationalData, Game>
+        @Mock private lateinit var companydao: CompanyDatasourceRepository
 
         private lateinit var repository: GameLocalImpl
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            repository = GameLocalImpl(daoService, mapper)
+            repository = GameLocalImpl(daoService, companydao, mapper)
         }
 
         @Nested
@@ -57,30 +62,41 @@ internal class GameLocalImplTest {
         inner class LoadIsCalled {
 
             private var observer: TestSubscriber<Game>? = null
-            private val model = makeGameCache()
-            private val entity = makeGame()
+            private val model = makeGameWithRelationalData()
+            private val entity = makeGame().apply {
+                developers = null
+            }
 
             @BeforeEach
             internal fun setUp() {
-                val flowable = Flowable.create<List<GameDao>>({
+                val flowable = Flowable.create<List<GameWithRelationalData>>({
                     it.onNext(listOf(model))
                     it.onNext(listOf(model))
                 }, BackpressureStrategy.MISSING)
-                whenever(daoService.findById(10)).thenReturn(flowable)
-                whenever(mapper.mapFromEntity(model)).thenReturn(entity)
+                whenever(daoService.loadById(10)).thenReturn(flowable)
+                whenever(mapper.mapFromDao(model)).thenReturn(entity)
+                whenever(companydao.load(anyInt())).thenReturn(Single.just(makeCompany()))
                 observer = repository.load(10).test()
             }
 
             @Test
             @DisplayName("Then should request DAO")
             fun daoIsCalled() {
-                verify(daoService).findById(10)
+                verify(daoService).loadById(10)
+            }
+
+            @Test
+            @DisplayName("Then should request developers")
+            fun requestdevelopers() {
+                model.companyIdList?.forEach {
+                    verify(companydao).load(it.companyId)
+                }
             }
 
             @Test
             @DisplayName("Then should map daoService result")
             fun mapIsCalled() {
-                verify(mapper).mapFromEntity(model)
+                verify(mapper).mapFromDao(model)
             }
 
             @Test
@@ -92,6 +108,14 @@ internal class GameLocalImplTest {
                     assertValueCount(1)
                     assertNoErrors()
                     assertValue(entity)
+                    assertValue {
+                        it.developers != null
+                    }
+                    assertValue {
+                        with(it.developers!!) {
+                            size == model.companyIdList!!.size
+                        }
+                    }
                 }
             }
 
@@ -101,8 +125,8 @@ internal class GameLocalImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    val flowable = Flowable.create<List<GameDao>>({ it.onNext(listOf()) }, BackpressureStrategy.MISSING)
-                    whenever(daoService.findById(anyLong())).thenReturn(flowable)
+                    val flowable = Flowable.create<List<GameWithRelationalData>>({ it.onNext(listOf()) }, BackpressureStrategy.MISSING)
+                    whenever(daoService.loadById(anyLong())).thenReturn(flowable)
                     observer = repository.load(10).test()
                 }
 
@@ -120,7 +144,7 @@ internal class GameLocalImplTest {
             }
         }
 
-        @Nested
+        /*@Nested
         @DisplayName("When save is called")
         inner class SaveIsCalled {
 
@@ -190,9 +214,9 @@ internal class GameLocalImplTest {
                     }
                 }
             }
-        }
+        }*/
 
-        @Nested
+        /*@Nested
         @DisplayName("When search is called")
         inner class SearchCalled {
 
@@ -244,6 +268,6 @@ internal class GameLocalImplTest {
                     assertValueAt(1, { it.containsAll(listOf(entity1, entity2, entity3)) })
                 }
             }
-        }
+        }*/
     }
 }

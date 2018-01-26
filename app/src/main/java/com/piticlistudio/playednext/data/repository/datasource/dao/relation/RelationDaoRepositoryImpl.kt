@@ -2,7 +2,6 @@ package com.piticlistudio.playednext.data.repository.datasource.dao.relation
 
 import com.piticlistudio.playednext.data.entity.dao.RelationWithGameAndPlatform
 import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.relation.RelationDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.PlatformDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.RelationDatasourceRepository
@@ -18,10 +17,8 @@ class RelationDaoRepositoryImpl @Inject constructor(private val dao: RelationDao
                                                     private val mapper: DaoModelMapper<RelationWithGameAndPlatform, GameRelation>) : RelationDatasourceRepository {
 
     override fun save(data: GameRelation): Completable {
-        assert(data.game != null)
-        assert(data.platform != null)
-        return gamesdao.save(data.game!!)
-                .andThen(platformDAO.save(data.platform!!))
+        return gamesdao.save(data.game)
+                .andThen(platformDAO.save(data.platform))
                 .andThen {
                     val result = dao.insert(mapper.mapIntoDao(data).data!!)
                     if (result > 0L) it.onComplete() else it.onError(Throwable("Could not store relation"))

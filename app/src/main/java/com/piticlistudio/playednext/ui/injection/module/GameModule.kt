@@ -2,26 +2,25 @@ package com.piticlistudio.playednext.ui.injection.module
 
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.dao.ScreenshotDao
+import com.piticlistudio.playednext.data.entity.dao.GameWithRelationalData
 import com.piticlistudio.playednext.data.entity.mapper.DTOModelMapper
 import com.piticlistudio.playednext.data.entity.mapper.DaoModelMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.ImageMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.GameWithRelationDaoMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module
+@Module(includes = arrayOf(CompanyModule::class))
 class GameModule {
 
     @Provides
@@ -45,4 +44,7 @@ class GameModule {
 
     @Provides
     fun provideDAOMapper(mapper: GameDaoMapper): DaoModelMapper<GameDao, Game> = mapper
+
+    @Provides
+    fun provideRelationalMapper(mapper: GameWithRelationDaoMapper): DaoModelMapper<GameWithRelationalData, Game> = mapper
 }
