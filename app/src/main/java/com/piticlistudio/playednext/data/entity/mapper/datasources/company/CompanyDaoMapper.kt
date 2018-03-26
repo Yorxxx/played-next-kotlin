@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
 import com.piticlistudio.playednext.data.entity.dao.CompanyDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
@@ -9,13 +9,13 @@ class CompanyDaoMapper @Inject constructor() : LayerDataMapper<List<CompanyDao>?
 
     fun mapFromModel(type: CompanyDao): Company {
         with(type) {
-            return Company(id, name, slug, url, created_at, updated_at)
+            return Company(id, name, url)
         }
     }
 
     fun mapFromEntity(type: Company): CompanyDao {
         with(type) {
-            return CompanyDao(id, name, slug, url, createdAt, updatedAt)
+            return CompanyDao(id, name, url)
         }
     }
 

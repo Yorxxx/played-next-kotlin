@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.piticlistudio.playednext.data.entity.dao.GameCollectionDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.CollectionDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Collection
 import io.reactivex.Completable

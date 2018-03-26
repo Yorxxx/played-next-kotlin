@@ -1,9 +1,8 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper

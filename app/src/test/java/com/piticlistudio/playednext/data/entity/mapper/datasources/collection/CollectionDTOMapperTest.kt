@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.collection
 
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
 import com.piticlistudio.playednext.data.entity.net.CollectionDTO
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
@@ -41,9 +41,6 @@ internal class CollectionDTOMapperTest {
                 with(result!!) {
                     assertEquals(source.id, id)
                     assertEquals(source.name, name)
-                    assertEquals(source.created_at, createdAt)
-                    assertEquals(source.updated_at, updatedAt)
-                    assertEquals(source.slug, slug)
                     assertEquals(source.url, url)
                 }
             }

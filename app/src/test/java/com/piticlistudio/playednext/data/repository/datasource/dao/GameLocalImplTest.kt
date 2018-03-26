@@ -7,7 +7,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.game.GameDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.domain.model.Game

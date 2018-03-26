@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GameDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.game.GameDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame

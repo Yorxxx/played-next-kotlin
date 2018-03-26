@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.net.CollectionDTO
@@ -10,7 +10,7 @@ class CollectionDTOMapper @Inject constructor() : LayerDataMapper<CollectionDTO?
     override fun mapFromModel(type: CollectionDTO?): Collection? {
         var collection: Collection? = null
         type?.apply {
-            collection = Collection(id, name, slug, url, created_at, updated_at)
+            collection = Collection(id, name, url)
         }
         return collection
     }

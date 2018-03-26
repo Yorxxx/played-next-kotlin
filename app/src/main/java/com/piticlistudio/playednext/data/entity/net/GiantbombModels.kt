@@ -57,5 +57,5 @@ data class GiantbombGameImage(val icon_url: String? = null,
 
 data class GiantbombPlatform(val id: Int, val name: String, val abbreviation: String? = null, val site_detail_url: String? = null)
 data class GiantbombCompany(val id: Int, val name: String, val site_detail_url: String? = null)
-data class GiantbombFranchise(val id: Int, val name: String)
+data class GiantbombFranchise(val id: Int, val name: String, val site_detail_url: String? = null)
 data class GiantbombGenre(val id: Int, val name: String, val site_detail_url: String? = null)
