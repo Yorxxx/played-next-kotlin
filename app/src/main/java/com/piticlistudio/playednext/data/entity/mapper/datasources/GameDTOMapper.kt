@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GameDTO

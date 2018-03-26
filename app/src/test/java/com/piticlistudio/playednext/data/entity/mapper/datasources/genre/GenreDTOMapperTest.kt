@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
@@ -42,9 +41,6 @@ internal class GenreDTOMapperTest {
                     for ((index, value) in this.withIndex()) {
                         kotlin.test.assertEquals(sources[index].id, value.id)
                         kotlin.test.assertEquals(sources[index].name, value.name)
-                        kotlin.test.assertEquals(sources[index].created_at, value.createdAt)
-                        kotlin.test.assertEquals(sources[index].updated_at, value.updatedAt)
-                        kotlin.test.assertEquals(sources[index].slug, value.slug)
                         kotlin.test.assertEquals(sources[index].url, value.url)
                     }
                 }

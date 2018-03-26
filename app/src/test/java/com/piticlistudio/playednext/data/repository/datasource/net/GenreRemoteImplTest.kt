@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory

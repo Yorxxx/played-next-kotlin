@@ -21,6 +21,7 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomStrin
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
 
@@ -66,8 +67,6 @@ class GameFactory {
         fun makeGiantbombPlatform(): GiantbombPlatform = GiantbombPlatform(randomInt(), randomString(), randomString(), randomString())
 
         fun makeGiantbombFranchise(): GiantbombFranchise = GiantbombFranchise(randomInt(), randomString())
-
-        fun makeGiantbombGenre(): GiantbombGenre = GiantbombGenre(randomInt(), randomString())
 
         fun makeCover(): Cover {
             return Cover(randomString(), randomInt(), randomInt())
