@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
@@ -9,7 +9,7 @@ class GenreDTOMapper @Inject constructor() : LayerDataMapper<List<GenreDTO>?, Li
 
     fun mapFromModel(type: GenreDTO): Genre {
         with(type) {
-            return Genre(id, name, slug, url, created_at, updated_at)
+            return Genre(id, name, url)
         }
     }
 

@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.dao.GenreDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDaoMapper
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao
@@ -44,10 +43,7 @@ internal class GenreDaoMapperTest {
                 result?.apply {
                     assertEquals(model.id, id)
                     assertEquals(model.name, name)
-                    assertEquals(model.slug, slug)
                     assertEquals(model.url, url)
-                    assertEquals(model.created_at, createdAt)
-                    assertEquals(model.updated_at, updatedAt)
                 }
             }
         }
@@ -71,10 +67,7 @@ internal class GenreDaoMapperTest {
                 result?.apply {
                     assertEquals(entity.id, id)
                     assertEquals(entity.name, name)
-                    assertEquals(entity.slug, slug)
                     assertEquals(entity.url, url)
-                    assertEquals(entity.createdAt, created_at)
-                    assertEquals(entity.updatedAt, updated_at)
                 }
             }
         }

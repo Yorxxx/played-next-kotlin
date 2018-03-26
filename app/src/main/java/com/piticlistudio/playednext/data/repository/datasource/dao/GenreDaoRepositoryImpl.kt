@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.piticlistudio.playednext.data.entity.dao.GameGenreDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.GenreDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Genre
 import io.reactivex.Completable

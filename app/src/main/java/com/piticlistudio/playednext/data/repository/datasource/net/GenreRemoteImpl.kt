@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
-import com.piticlistudio.playednext.data.entity.mapper.datasources.GenreDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.GenreDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Genre
 import io.reactivex.Completable
