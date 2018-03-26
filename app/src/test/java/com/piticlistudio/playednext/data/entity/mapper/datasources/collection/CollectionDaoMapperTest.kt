@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.collection
 
 import com.piticlistudio.playednext.data.entity.dao.CollectionDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDaoMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDao
@@ -43,10 +43,7 @@ internal class CollectionDaoMapperTest {
                 result?.apply {
                     assertEquals(model.id, id)
                     assertEquals(model.name, name)
-                    assertEquals(model.slug, slug)
                     assertEquals(model.url, url)
-                    assertEquals(model.created_at, createdAt)
-                    assertEquals(model.updated_at, updatedAt)
                 }
             }
 
@@ -89,10 +86,7 @@ internal class CollectionDaoMapperTest {
                 result?.apply {
                     assertEquals(entity.id, id)
                     assertEquals(entity.name, name)
-                    assertEquals(entity.slug, slug)
                     assertEquals(entity.url, url)
-                    assertEquals(entity.createdAt, created_at)
-                    assertEquals(entity.updatedAt, updated_at)
                 }
             }
 

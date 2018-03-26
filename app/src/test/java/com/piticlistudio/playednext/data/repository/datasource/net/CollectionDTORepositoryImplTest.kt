@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CollectionDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection

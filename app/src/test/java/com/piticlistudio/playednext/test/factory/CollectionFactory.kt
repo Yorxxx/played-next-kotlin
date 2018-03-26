@@ -9,13 +9,11 @@ class CollectionFactory {
     companion object Factory {
 
         fun makeCollectionDao(): CollectionDao {
-            return CollectionDao(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
-                    DataFactory.randomLong())
+            return CollectionDao(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString())
         }
 
         fun makeCollection(): Collection {
-            return Collection(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
-                    DataFactory.randomLong())
+            return Collection(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString())
         }
 
         fun makeCollectionDTO(): CollectionDTO {
