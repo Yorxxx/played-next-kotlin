@@ -12,11 +12,14 @@ import javax.inject.Inject
 class GameRelationDetailActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+    private val args by lazy {
+        GameRelationActivityArgs.deserializeFrom(intent)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentFragment(android.R.id.content, { GameRelationDetailFragment.newInstance(intent.getIntExtra("id", 0)) })
+        setContentFragment(android.R.id.content, { GameRelationDetailFragment.newInstance(args.gameId) })
     }
 
     override fun supportFragmentInjector() = fragmentInjector
