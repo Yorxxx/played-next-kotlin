@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDaoMapper
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDao

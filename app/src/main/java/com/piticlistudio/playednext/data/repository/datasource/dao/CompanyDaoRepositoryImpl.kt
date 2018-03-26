@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.data.repository.datasource.dao
 
 import com.piticlistudio.playednext.data.entity.dao.GameDeveloperDao
 import com.piticlistudio.playednext.data.entity.dao.GamePublisherDao
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDaoMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDaoMapper
 import com.piticlistudio.playednext.data.repository.datasource.CompanyDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Company
 import io.reactivex.Completable

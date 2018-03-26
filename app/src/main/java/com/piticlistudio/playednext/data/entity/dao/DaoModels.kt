@@ -34,7 +34,7 @@ data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
                     @ColumnInfo(name = "cover_height") val height: Int?)
 
 @Entity(tableName = "company")
-data class CompanyDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String?, val created_at: Long, val updated_at: Long)
+data class CompanyDao(@PrimaryKey val id: Int, val name: String, val url: String?)
 
 @Entity(tableName = "genre")
 data class GenreDao(@PrimaryKey val id: Int, val name: String, val url: String?)

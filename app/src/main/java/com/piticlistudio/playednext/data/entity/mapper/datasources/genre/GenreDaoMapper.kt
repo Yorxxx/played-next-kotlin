@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.dao.GenreDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
@@ -9,13 +9,13 @@ class GenreDaoMapper @Inject constructor() : LayerDataMapper<List<GenreDao>?, Li
 
     fun mapFromModel(type: GenreDao): Genre {
         with(type) {
-            return Genre(id, name, slug, url, created_at, updated_at)
+            return Genre(id, name, url)
         }
     }
 
     fun mapFromEntity(type: Genre): GenreDao {
         with(type) {
-            return GenreDao(id, name, slug, url, createdAt, updatedAt)
+            return GenreDao(id, name, url)
         }
     }
 

@@ -1,6 +1,6 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
+package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeGiantbombCompany
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
@@ -8,21 +8,21 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 /**
- * Test cases for [GiantbombGenreMapper]
+ * Test cases for [GiantbombCompanyMapper]
  * Created by e-jegi on 3/26/2018.
  */
-internal class GiantbombGenreMapperTest {
+internal class GiantbombCompanyMapperTest {
 
-    val mapper = GiantbombGenreMapper()
+    val mapper = GiantbombCompanyMapper()
 
     @Nested
     @DisplayName("When we call mapFromDataLayer")
     inner class MapFromDataLayer {
 
         @Test
-        fun `then should map into Genre with valid name and id`() {
+        fun `then should map into Company with valid name and id`() {
 
-            val data = makeGiantbombGenre()
+            val data = makeGiantbombCompany()
 
             val result = mapper.mapFromDataLayer(data)
 
