@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
 import android.arch.persistence.room.EmptyResultSetException
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDTOMapper
 import com.piticlistudio.playednext.data.repository.datasource.CompanyDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Company
 import io.reactivex.Completable

@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.test.factory
 
 import com.piticlistudio.playednext.data.entity.dao.ScreenshotDao
+import com.piticlistudio.playednext.data.entity.net.GiantbombGameImage
 import com.piticlistudio.playednext.data.entity.net.ImageDTO
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
@@ -20,6 +21,11 @@ class GameImageFactory {
 
         fun makeImageDTO(): ImageDTO {
             return ImageDTO(randomString(), DataFactory.randomString(), randomInt(), randomInt())
+        }
+
+        fun makeGiantbombGameImage(): GiantbombGameImage {
+            return GiantbombGameImage(randomString(), randomString(), randomString(), randomString(),
+                    randomString(), randomString(), randomString(), randomString(), randomString())
         }
     }
 }

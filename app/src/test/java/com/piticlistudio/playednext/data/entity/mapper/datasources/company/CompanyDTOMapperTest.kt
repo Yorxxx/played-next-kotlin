@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
 import com.piticlistudio.playednext.data.entity.net.CompanyDTO
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
@@ -44,9 +43,6 @@ internal class CompanyDTOMapperTest {
                     for ((index,value) in this.withIndex()) {
                         assertEquals(sources[index].id, value.id)
                         assertEquals(sources[index].name, value.name)
-                        assertEquals(sources[index].created_at, value.createdAt)
-                        assertEquals(sources[index].updated_at, value.updatedAt)
-                        assertEquals(sources[index].slug, value.slug)
                         assertEquals(sources[index].url, value.url)
                     }
                 }

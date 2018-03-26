@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.CompanyDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDTOMapper
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO

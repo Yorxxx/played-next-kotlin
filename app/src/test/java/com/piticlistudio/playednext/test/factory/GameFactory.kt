@@ -11,6 +11,7 @@ import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeC
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDTO
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeGiantbombCompany
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDate
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
@@ -19,9 +20,11 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListO
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
+import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
 
@@ -56,15 +59,6 @@ class GameFactory {
                     randomListOf { makeGiantbombFranchise() },
                     randomListOf { makeGiantbombGenre() })
         }
-
-        fun makeGiantbombGameImage(): GiantbombGameImage {
-            return GiantbombGameImage(randomString(), randomString(), randomString(), randomString(),
-                    randomString(), randomString(), randomString(), randomString(), randomString())
-        }
-
-        fun makeGiantbombCompany(): GiantbombCompany = GiantbombCompany(randomInt(), randomString())
-
-        fun makeGiantbombPlatform(): GiantbombPlatform = GiantbombPlatform(randomInt(), randomString(), randomString(), randomString())
 
         fun makeGiantbombFranchise(): GiantbombFranchise = GiantbombFranchise(randomInt(), randomString())
 
