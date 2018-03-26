@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.test.factory
 
 import net.bytebuddy.utility.RandomString
+import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 class DataFactory {
@@ -13,6 +14,10 @@ class DataFactory {
 
         fun randomLong(): Long {
             return randomInt().toLong()
+        }
+
+        fun randomDate(): Date {
+            return Date(randomLong())
         }
 
         fun randomBoolean(): Boolean {
