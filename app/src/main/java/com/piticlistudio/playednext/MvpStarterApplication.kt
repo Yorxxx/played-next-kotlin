@@ -6,14 +6,15 @@ import android.util.Log
 import com.facebook.stetho.Stetho
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombServiceFactory
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
-import rx.subjects.ReplaySubject
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -41,6 +42,17 @@ class MvpStarterApplication : Application(), HasActivityInjector {
             Timber.plant(Timber.DebugTree())
             Stetho.initializeWithDefaults(this)
         }
+
+        val service = GiantbombServiceFactory.makeGameService()
+        service.fetchGame(49994)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onError = { Log.e("VIRUTA", "Received error ${it.localizedMessage}") },
+                        onSuccess = {
+                            Log.d("VIRUTA", it.results?.name)
+                        }
+                )
 
         ReactiveNetwork.observeNetworkConnectivity(this)
                 .subscribeOn(Schedulers.io())

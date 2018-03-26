@@ -33,7 +33,7 @@ class PlatformDaoMapper @Inject constructor() : LayerDataMapper<List<PlatformDao
 
     fun mapFromEntity(type: Platform): PlatformDao {
         with(type) {
-            return PlatformDao(id, name, slug, url, createdAt, updatedAt)
+            return PlatformDao(id, name, slug!!, url, createdAt, updatedAt)
         }
     }
 }
