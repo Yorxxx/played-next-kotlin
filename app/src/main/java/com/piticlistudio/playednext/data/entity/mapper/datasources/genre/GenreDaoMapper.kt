@@ -22,18 +22,14 @@ class GenreDaoMapper @Inject constructor() : LayerDataMapper<List<GenreDao>?, Li
     override fun mapFromModel(type: List<GenreDao>?): List<Genre> {
         val result = mutableListOf<Genre>()
         type?.apply {
-            type.forEach {
-                result.add(mapFromModel(it))
-            }
+            forEach { result.add(mapFromModel(it)) }
         }
         return result
     }
 
     override fun mapFromEntity(type: List<Genre>): List<GenreDao> {
         val result = mutableListOf<GenreDao>()
-        type.forEach {
-            result.add(mapFromEntity(it))
-        }
+        type.forEach { result.add(mapFromEntity(it)) }
         return result
     }
 }

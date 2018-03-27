@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
 import com.piticlistudio.playednext.data.entity.dao.CollectionDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
@@ -10,7 +10,7 @@ class CollectionDaoMapper @Inject constructor() : LayerDataMapper<CollectionDao?
     override fun mapFromModel(type: CollectionDao?): Collection? {
         var collection: Collection? = null
         type?.apply {
-            collection = Collection(id, name, slug, url, created_at, updated_at)
+            collection = Collection(id, name, url)
         }
         return collection
     }
@@ -18,7 +18,7 @@ class CollectionDaoMapper @Inject constructor() : LayerDataMapper<CollectionDao?
     override fun mapFromEntity(type: Collection?): CollectionDao? {
         var collection: CollectionDao? = null
         type?.apply {
-            collection = CollectionDao(id, name, slug, url, createdAt, updatedAt)
+            collection = CollectionDao(id, name, url)
         }
         return collection
     }

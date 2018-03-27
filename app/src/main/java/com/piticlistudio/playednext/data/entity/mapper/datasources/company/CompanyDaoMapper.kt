@@ -22,19 +22,15 @@ class CompanyDaoMapper @Inject constructor() : LayerDataMapper<List<CompanyDao>?
     override fun mapFromModel(type: List<CompanyDao>?): List<Company> {
         val result = mutableListOf<Company>()
         type?.apply {
-            type.forEach {
-                result.add(mapFromModel(it))
-            }
+            forEach { result.add(mapFromModel(it)) }
         }
         return result
     }
 
     override fun mapFromEntity(type: List<Company>): List<CompanyDao> {
         val result = mutableListOf<CompanyDao>()
-        type?.apply {
-            type.forEach {
-                result.add(mapFromEntity(it))
-            }
+        type.apply {
+            forEach { result.add(mapFromEntity(it)) }
         }
         return result
     }

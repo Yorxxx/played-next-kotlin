@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.entity.mapper.datasources
+package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao

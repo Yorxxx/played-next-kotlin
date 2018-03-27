@@ -4,6 +4,8 @@ import com.piticlistudio.playednext.data.entity.dao.PlatformDao
 import com.piticlistudio.playednext.data.entity.net.GiantbombPlatform
 import com.piticlistudio.playednext.data.entity.net.PlatformDTO
 import com.piticlistudio.playednext.domain.model.Platform
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 
 class PlatformFactory {
 
@@ -14,8 +16,8 @@ class PlatformFactory {
                     DataFactory.randomLong())
         }
 
-        fun makePlatform(): Platform {
-            return Platform(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
+        fun makePlatform(id: Int = randomInt(), name: String = randomString()): Platform {
+            return Platform(id, name, DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
 

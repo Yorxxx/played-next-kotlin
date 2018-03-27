@@ -10,7 +10,7 @@ class PlatformDaoMapper @Inject constructor() : LayerDataMapper<List<PlatformDao
     override fun mapFromModel(type: List<PlatformDao>?): List<Platform> {
         val result = mutableListOf<Platform>()
         type?.apply {
-            type.forEach {
+            forEach {
                 result.add(mapFromModel(it))
             }
         }

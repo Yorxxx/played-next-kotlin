@@ -16,8 +16,8 @@ class CompanyFactory {
             return CompanyDao(randomInt(), randomString(), randomString())
         }
 
-        fun makeCompany(name: String = randomString()): Company {
-            return Company(randomInt(), name, randomString())
+        fun makeCompany(name: String = randomString(), id: Int = randomInt()): Company {
+            return Company(id, name, randomString())
         }
 
         fun makeCompanyDTO(): CompanyDTO {

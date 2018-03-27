@@ -8,6 +8,8 @@ import javax.inject.Inject
 class GiantbombCompanyMapper @Inject constructor(): DataLayerMapper<GiantbombCompany, Company>{
 
     override fun mapFromDataLayer(model: GiantbombCompany): Company {
-        return Company(model.id, model.name, model.site_detail_url)
+        with(model) {
+            return Company(id, name, site_detail_url)
+        }
     }
 }
