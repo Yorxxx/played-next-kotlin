@@ -5,7 +5,7 @@ import android.arch.persistence.room.*
 @Entity(tableName = "game")
 data class GameDao(@PrimaryKey val id: Int,
                    val name: String,
-                   val url: String,
+                   val url: String? = null,
                    @ColumnInfo(name = "created_at") val createdAt: Long,
                    @ColumnInfo(name = "updated_at") val updatedAt: Long,
                    val summary: String?,

@@ -16,9 +16,7 @@ class GenreDTOMapper @Inject constructor() : LayerDataMapper<List<GenreDTO>?, Li
     override fun mapFromModel(type: List<GenreDTO>?): List<Genre> {
         val result = mutableListOf<Genre>()
         type?.apply {
-            type.forEach {
-                result.add(mapFromModel(it))
-            }
+            forEach { result.add(mapFromModel(it)) }
         }
         return result
     }

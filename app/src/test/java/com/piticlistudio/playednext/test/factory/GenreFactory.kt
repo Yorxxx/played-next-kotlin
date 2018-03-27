@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.data.entity.dao.GenreDao
 import com.piticlistudio.playednext.data.entity.net.GenreDTO
 import com.piticlistudio.playednext.data.entity.net.GiantbombGenre
 import com.piticlistudio.playednext.domain.model.Genre
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 
 class GenreFactory {
@@ -14,8 +15,8 @@ class GenreFactory {
             return GenreDao(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString())
         }
 
-        fun makeGenre(name: String = randomString()): Genre {
-            return Genre(DataFactory.randomInt(), name, DataFactory.randomString())
+        fun makeGenre(name: String = randomString(), id: Int = randomInt()): Genre {
+            return Genre(id, name, DataFactory.randomString())
         }
 
         fun makeGenreDTO(): GenreDTO {

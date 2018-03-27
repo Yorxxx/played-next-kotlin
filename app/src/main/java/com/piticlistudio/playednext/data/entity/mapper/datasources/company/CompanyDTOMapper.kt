@@ -16,9 +16,7 @@ class CompanyDTOMapper @Inject constructor() : LayerDataMapper<List<CompanyDTO>?
     override fun mapFromModel(type: List<CompanyDTO>?): List<Company> {
         val result = mutableListOf<Company>()
         type?.apply {
-            type.forEach {
-                result.add(mapFromModel(it))
-            }
+            forEach { result.add(mapFromModel(it)) }
         }
         return result
     }

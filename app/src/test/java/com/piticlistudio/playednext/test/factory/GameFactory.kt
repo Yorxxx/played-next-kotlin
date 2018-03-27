@@ -44,20 +44,31 @@ class GameFactory {
                     randomListOf { makeCompany() },
                     randomListOf { makeGenre() },
                     makeCollection(), randomLong(),
-                    randomListOf(size = 5, factory = ::makePlatform),
+                    randomListOf(5) { makePlatform() },
                     randomListOf { makeGameImage() })
         }
 
         fun makeGiantbombGame(): GiantbombGame {
-            return GiantbombGame(randomDate(),
-                    randomDate(), randomString(), randomString(), randomInt(), randomInt(), randomInt(),
-                    randomInt(), randomInt(), makeGiantbombGameImage(), randomString(), randomDate(),
-                    randomListOf { makeGiantbombPlatform() },
-                    randomListOf { makeGiantbombGameImage() },
-                    randomListOf { makeGiantbombCompany() },
-                    randomListOf { makeGiantbombCompany() },
-                    randomListOf { makeGiantbombFranchise() },
-                    randomListOf { makeGiantbombGenre() })
+            return GiantbombGame(
+                    date_added = randomDate(),
+                    date_last_updated = randomDate(),
+                    deck = randomString(),
+                    description = randomString(),
+                    id = randomInt(),
+                    expected_release_day = randomInt(),
+                    expected_release_month = randomInt(),
+                    expected_release_quarter = randomInt(),
+                    expected_release_year = randomInt(),
+                    image = makeGiantbombGameImage(),
+                    name = randomString(),
+                    original_release_date = randomDate(),
+                    platforms = randomListOf(10) { makeGiantbombPlatform() },
+                    images = randomListOf(10) { makeGiantbombGameImage() },
+                    publishers = randomListOf(10) { makeGiantbombCompany() },
+                    developers = randomListOf(10) { makeGiantbombCompany() },
+                    franchises = randomListOf(10) { makeGiantbombFranchise() },
+                    genres = randomListOf(10) { makeGiantbombGenre() },
+                    site_detail_url = randomString())
         }
 
         fun makeGiantbombFranchise(): GiantbombFranchise = GiantbombFranchise(randomInt(), randomString())

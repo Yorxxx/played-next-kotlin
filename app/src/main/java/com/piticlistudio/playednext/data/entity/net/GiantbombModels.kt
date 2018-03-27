@@ -43,7 +43,9 @@ data class GiantbombGame(val date_added: Date,
                          val developers: List<GiantbombCompany>? = listOf(),
                          val publishers: List<GiantbombCompany>? = listOf(),
                          val franchises: List<GiantbombFranchise>? = listOf(),
-                         val genres: List<GiantbombGenre>? = listOf())
+                         val genres: List<GiantbombGenre>? = listOf(),
+                         val site_detail_url: String? = null,
+                         val similar_games: List<GiantbombRelatedGame>? = listOf())
 
 data class GiantbombGameImage(val icon_url: String? = null,
                               val medium_url: String? = null,
@@ -59,3 +61,5 @@ data class GiantbombPlatform(val id: Int, val name: String, val abbreviation: St
 data class GiantbombCompany(val id: Int, val name: String, val site_detail_url: String? = null)
 data class GiantbombFranchise(val id: Int, val name: String, val site_detail_url: String? = null)
 data class GiantbombGenre(val id: Int, val name: String, val site_detail_url: String? = null)
+// TODO not used in domain model
+data class GiantbombRelatedGame(val id: Int, val name: String, val site_detail_url: String? = null)
