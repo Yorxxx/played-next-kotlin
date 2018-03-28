@@ -6,6 +6,13 @@ import android.util.Log
 import com.facebook.stetho.Stetho
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.GiantbombCompanyMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.GiantbombCollectionMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.game.GiantbombGameMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GiantbombGenreMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.image.GiantbombImageMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.GiantbombPlatformMapper
+import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombGameDatasourceRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombServiceFactory
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
@@ -44,13 +51,22 @@ class MvpStarterApplication : Application(), HasActivityInjector {
         }
 
         val service = GiantbombServiceFactory.makeGameService()
-        service.fetchGame(49994)
+        val gameMapper = GiantbombGameMapper(companyMapper = GiantbombCompanyMapper(),
+                collectionMapper = GiantbombCollectionMapper(),
+                genreMapper = GiantbombGenreMapper(),
+                imagesMapper = GiantbombImageMapper(),
+                platformMapper = GiantbombPlatformMapper())
+        val repositoryImpl = GiantbombGameDatasourceRepositoryImpl(service, gameMapper)
+
+        repositoryImpl.search("mario", 0, 10)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onError = { Log.e("VIRUTA", "Received error ${it.localizedMessage}") },
-                        onSuccess = {
-                            Log.d("VIRUTA", it.results?.name)
+                        onNext = {
+                            it.forEachIndexed { index, game ->
+                                Log.d("VIRUTA", "${index} ---> ${game.name} with id ${game.id}")
+                            }
                         }
                 )
 

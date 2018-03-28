@@ -8,7 +8,9 @@ import javax.inject.Inject
 class GiantbombPlatformMapper @Inject constructor() : DataLayerMapper<GiantbombPlatform, Platform> {
 
     override fun mapFromDataLayer(model: GiantbombPlatform): Platform {
-        return Platform(model.id, model.name)
+        return Platform(id = model.id,
+                name = model.name,
+                url = model.site_detail_url)
                 .apply {
                     displayName = model.abbreviation
                 }

@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.repository
 
 import android.arch.persistence.room.EmptyResultSetException
+import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.domain.model.Game
@@ -9,14 +10,15 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
  * Repository implementation for the interface defined at the domain layer
  */
 @Singleton
-class GameRepositoryImpl @Inject constructor(private val remoteImpl: GameRemoteImpl,
-                                             private val localImpl: GameLocalImpl) : GameRepository {
+class GameRepositoryImpl @Inject constructor(@Named("giantbomb") private val remoteImpl: GameDatasourceRepository,
+                                             @Named("room") private val localImpl: GameDatasourceRepository) : GameRepository {
 
     override fun load(id: Int): Flowable<Game> {
         return localImpl.load(id)

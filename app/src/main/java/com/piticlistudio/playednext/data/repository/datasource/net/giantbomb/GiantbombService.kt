@@ -33,5 +33,5 @@ interface GiantbombService {
                   @Query("field_list") fields: String = FETCH_FIELD_LIST): Single<GiantbombEntityResponse<GiantbombGame>>
 }
 
-private const val SEARCH_FIELD_LIST = "date_added,date_last_updated,deck,description,expected_release_day,expected_release_month,expected_release_quarter,expected_release_year,id,image,name,original_release_date,platforms"
+private const val SEARCH_FIELD_LIST = "id,image,name,platforms,date_added,date_last_updated"
 private const val FETCH_FIELD_LIST = "date_added,date_last_updated,deck,description,expected_release_day,expected_release_month,expected_release_quarter,expected_release_year,id,image,name,original_release_date,platforms,images,developers,publishers,franchises,genres"
