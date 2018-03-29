@@ -6,7 +6,12 @@ apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'de.mannodermaus.android-junit5'
 apply from: rootProject.file("app/codeQuality.gradle")
 apply plugin: 'jacoco'
-//apply plugin: 'io.fabric'
+apply from: 'dependencies.gradle'
+apply plugin: "de.mannodermaus.android-junit5"
+
+jacoco {
+    toolVersion = '0.8.0'
+}
 
 android {
     compileSdkVersion 27
@@ -51,15 +56,9 @@ android {
     }
 
     sourceSets {
-        main {
-            java.srcDirs += 'src/main/kotlin'
-        }
-        test {
-            java.srcDirs += 'src/test/kotlin'
-        }
-        androidTest {
-            java.srcDirs += 'src/androidTest/kotlin'
-        }
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
 
     lintOptions {
@@ -104,13 +103,6 @@ configurations.all {
     }
 }
 
-apply from: 'dependencies.gradle'
-
-junitPlatform {
-    jupiterVersion '5.0.0-M6'
-    platformVersion '1.0.0-M6'
-}
-
 dependencies {
     implementation supportLibs
     kapt 'com.android.databinding:compiler:2.3.3'
@@ -138,10 +130,12 @@ dependencies {
     kaptTest daggerCompiler.values()
     kaptAndroidTest daggerCompiler.values()
 
-    testImplementation unitTestLibs
+    // (Required) Writing and executing Unit Tests on the JUnit Platform.
+    testImplementation junit5.unitTests()
+    testCompileOnly junit5.unitTestsRuntime()
     androidTestImplementation androidTestsLibs
     testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
-    testImplementation junitJupiter()
+
     //androidTestImplementation junitJupiter()
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
@@ -163,20 +157,4 @@ dependencies {
     compile "org.jetbrains.anko:anko:$anko_version"
     compile "org.jetbrains.anko:anko-commons:$anko_version"
     compile "org.jetbrains.anko:anko-design:$anko_version"
-}
-
-// Tests copy
-task copyTestClasses(type: Copy) {
-    from "build/tmp/kotlin-classes/debugUnitTest"
-    into "build/intermediates/classes/debug"
-}
-
-
-// Log out test results to console
-tasks.matching { it instanceof Test }.all {
-    testLogging.events = ["failed", "passed", "skipped"]
-}
-
-afterEvaluate {
-    testDebugUnitTest.dependsOn copyTestClasses
 }

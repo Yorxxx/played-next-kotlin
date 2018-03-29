@@ -45,11 +45,11 @@ class DomainFactory {
         }
 
         fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
-            return CompanyDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
+            return CompanyDao(id, randomString(), randomString())
         }
 
         fun makeCollectionDao(id: Int = randomInt()): CollectionDao {
-            return CollectionDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
+            return CollectionDao(id, randomString(), randomString())
         }
 
         fun makeCoverCache(): CoverDao {
