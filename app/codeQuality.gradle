@@ -18,6 +18,16 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
             '**/Manifest*.*',
             '**/*Test*.*',
             'android/**/*.*',
+            '**/Lambda$*.class',
+            '**/Lambda.class',
+            '**/*Lambda.class',
+            '**/*Lambda*.class',
+            '**/*Lambda*.*',
+            '**/*Builder.*',
+            '**/*_MembersInjector.class', //Dagger2 generated code
+            '**/*_MembersInjector*.*', //Dagger2 generated code
+            '**/*_*Factory*.*', //Dagger2 generated code
+            '**/*Component*.*', //Dagger2 generated code
             '**/*$[0-9].*',
             '**/*_*Factory*.*', // Dagger2 generated code
             '*/*Component*.*', // Dagger2 generated code
@@ -29,6 +39,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
     sourceDirectories = files([mainSrc])
     classDirectories = files([debugTree])
     executionData = fileTree(dir: project.buildDir, includes: [
-            'jacoco/testDebugUnitTest.exec'
+            'jacoco/testDebugUnitTest.exec', '**/*.ec'
     ])
 }
