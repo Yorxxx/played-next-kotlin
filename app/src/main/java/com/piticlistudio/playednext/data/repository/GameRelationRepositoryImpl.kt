@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.repository
 
-import com.piticlistudio.playednext.data.repository.datasource.dao.relation.RelationDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoRepositoryImpl
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.repository.GameRelationRepository
 import io.reactivex.Completable

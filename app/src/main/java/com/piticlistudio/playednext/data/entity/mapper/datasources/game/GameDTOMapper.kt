@@ -1,21 +1,18 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
-import com.piticlistudio.playednext.data.entity.net.GameDTO
-import com.piticlistudio.playednext.data.entity.net.ImageDTO
-import com.piticlistudio.playednext.data.entity.net.TimeToBeatDTO
-import com.piticlistudio.playednext.domain.model.Cover
-import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.model.GameImage
-import com.piticlistudio.playednext.domain.model.TimeToBeat
+import com.piticlistudio.playednext.data.entity.igdb.GameDTO
+import com.piticlistudio.playednext.data.entity.igdb.ImageDTO
+import com.piticlistudio.playednext.data.entity.igdb.TimeToBeatDTO
+import com.piticlistudio.playednext.domain.model.*
 import javax.inject.Inject
 
-class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTOMapper,
+class GameDTOMapper @Inject constructor(private val IGDBCompanyMapper: IGDBCompanyMapper,
                                         private val genreDTOMapper: GenreDTOMapper,
                                         private val collectionDTOMapper: CollectionDTOMapper,
                                         private val platformDTOMapper: PlatformDTOMapper,
@@ -27,11 +24,19 @@ class GameDTOMapper @Inject constructor(private val companyDTOMapper: CompanyDTO
             screenshots?.forEach {
                 images.add(imagesDTOMapper.mapFromModel(it))
             }
+            val devs = mutableListOf<Company>()
+            developers?.forEach {
+                devs.add(IGDBCompanyMapper.mapFromDataLayer(it))
+            }
+            val pubs = mutableListOf<Company>()
+            publishers?.forEach {
+                pubs.add(IGDBCompanyMapper.mapFromDataLayer(it))
+            }
             return Game(id, name, created_at, updated_at, summary, storyline, url, rating,
                     rating_count, aggregated_rating, aggregated_rating_count, total_rating,
                     total_rating_count, first_release_date, mapCoverModel(cover),
-                    mapTimeToBeatModel(time_to_beat), companyDTOMapper.mapFromModel(developers),
-                    companyDTOMapper.mapFromModel(publishers),
+                    mapTimeToBeatModel(time_to_beat), pubs,
+                    devs,
                     genreDTOMapper.mapFromModel(genres),
                     collectionDTOMapper.mapFromModel(collection), System.currentTimeMillis(),
                     platformDTOMapper.mapFromModel(platforms),

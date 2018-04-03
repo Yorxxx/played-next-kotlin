@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.platform
 
-import com.piticlistudio.playednext.data.entity.dao.PlatformDao
+import com.piticlistudio.playednext.data.entity.room.PlatformDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.domain.model.Platform
 import javax.inject.Inject

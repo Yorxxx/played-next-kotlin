@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
-import com.piticlistudio.playednext.data.entity.dao.GameDao
+import com.piticlistudio.playednext.data.entity.room.GameDao
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory
 import org.junit.jupiter.api.Assertions.assertEquals

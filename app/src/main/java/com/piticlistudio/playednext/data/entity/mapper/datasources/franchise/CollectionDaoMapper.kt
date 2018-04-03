@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
-import com.piticlistudio.playednext.data.entity.dao.CollectionDao
+import com.piticlistudio.playednext.data.entity.room.CollectionDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import javax.inject.Inject

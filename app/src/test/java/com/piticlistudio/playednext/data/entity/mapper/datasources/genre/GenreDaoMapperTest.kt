@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
-import com.piticlistudio.playednext.data.entity.dao.GenreDao
+import com.piticlistudio.playednext.data.entity.room.GenreDao
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao

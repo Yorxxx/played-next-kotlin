@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.repository
 
-import com.piticlistudio.playednext.data.repository.datasource.dao.image.GameImageDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.image.GameImageDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.image.GameImageDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.domain.repository.GameImagesRepository

@@ -22,9 +22,7 @@ internal class SaveGameUseCaseTest {
 
         @Mock
         private lateinit var repository: GameRepository
-        @Mock
-        private lateinit var companyRepository: CompanyRepository
-        @Mock
+          @Mock
         private lateinit var genreRepository: GenreRepository
         @Mock
         private lateinit var collectionRepository: CollectionRepository
@@ -40,12 +38,10 @@ internal class SaveGameUseCaseTest {
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
             whenever(repository.save(game)).thenReturn(Completable.complete())
-            whenever(companyRepository.saveDevelopersForGame(any(), any())).thenReturn(Completable.complete())
-            whenever(companyRepository.savePublishersForGame(any(), any())).thenReturn(Completable.complete())
             whenever(genreRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
             whenever(platformRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
             whenever(imagesRepository.save(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, companyRepository, genreRepository, collectionRepository, platformRepository, imagesRepository)
+            usecase = SaveGameUseCase(repository, genreRepository, collectionRepository, platformRepository, imagesRepository)
         }
 
         @Nested
@@ -67,105 +63,6 @@ internal class SaveGameUseCaseTest {
                 @DisplayName("Then saves into repository")
                 fun requestsRepository() {
                     verify(repository).save(game)
-                }
-
-                @Test
-                @DisplayName("Then saves developers")
-                fun savesDevelopers() {
-                    verify(companyRepository).saveDevelopersForGame(game.id, game.developers!!)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does not have developers")
-            inner class WithoutDevelopers {
-
-                var observer: TestObserver<Void>? = null
-
-                @BeforeEach
-                internal fun setUp() {
-                    game.developers = null
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then does not save developers")
-                fun doesNotRequestsRepository() {
-                    verify(companyRepository, never()).saveDevelopersForGame(anyInt(), any())
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does have publishers")
-            inner class WithPublishers {
-
-                @BeforeEach
-                internal fun setUp() {
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then saves into repository")
-                fun requestsRepository() {
-                    verify(repository).save(game)
-                }
-
-                @Test
-                @DisplayName("Then saves publishers")
-                fun savesDevelopers() {
-                    verify(companyRepository).savePublishersForGame(game.id, game.publishers!!)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does not have publishers")
-            inner class WithoutPublishers {
-
-                var observer: TestObserver<Void>? = null
-
-                @BeforeEach
-                internal fun setUp() {
-                    game.publishers = null
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then does not save publishers")
-                fun doesNotRequestsRepository() {
-                    verify(companyRepository, never()).savePublishersForGame(anyInt(), any())
                 }
 
                 @Test

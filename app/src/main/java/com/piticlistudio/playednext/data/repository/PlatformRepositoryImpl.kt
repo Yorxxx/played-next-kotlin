@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.repository
 
-import com.piticlistudio.playednext.data.repository.datasource.dao.platform.PlatformDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.platform.PlatformDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.platform.PlatformDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.Platform
 import com.piticlistudio.playednext.domain.repository.PlatformRepository

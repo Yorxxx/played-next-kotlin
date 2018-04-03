@@ -83,7 +83,10 @@ jobs:
     <<: *android_config
     steps:
       - checkout
-      - *restore_cache
+      - run:
+          name: Clean
+          command: ./gradlew clean
+      # - *restore_cache // Commented because of refactor
       - run:
           name: Download dependencies
           command: ./gradlew androidDependencies
@@ -106,7 +109,7 @@ jobs:
     <<: *android_config
     steps:
       - checkout
-      - *restore_cache
+      # - *restore_cache // TODO uncomment
       - run:
           name: Download dependencies
           command: ./gradlew androidDependencies

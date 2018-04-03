@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
-import com.piticlistudio.playednext.data.entity.net.GenreDTO
+import com.piticlistudio.playednext.data.entity.igdb.GenreDTO
 import com.piticlistudio.playednext.domain.model.Genre
 import javax.inject.Inject
 

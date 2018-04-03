@@ -34,7 +34,6 @@ class LoadGameUseCaseTest {
     inner class LoadGameUseCaseInstance {
 
         @Mock lateinit var repository: GameRepository
-        @Mock lateinit var companyrepository: CompanyRepository
         @Mock lateinit var genrerepository: GenreRepository
         @Mock lateinit var collectionrepository: CollectionRepository
         @Mock lateinit var platformRepository: LoadPlatformsForGameUseCase
@@ -46,7 +45,7 @@ class LoadGameUseCaseTest {
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            useCase = LoadGameUseCase(repository, companyrepository, genrerepository, collectionrepository, platformRepository, imagesRepository)
+            useCase = LoadGameUseCase(repository, genrerepository, collectionrepository, platformRepository, imagesRepository)
         }
 
         @Nested
@@ -65,8 +64,6 @@ class LoadGameUseCaseTest {
             internal fun setup() {
                 val flowable = Flowable.create<Game>({ it.onNext(result) }, BackpressureStrategy.MISSING)
                 whenever(repository.load(gameId)).thenReturn(flowable)
-                whenever(companyrepository.loadDevelopersForGameId(result.id)).thenReturn(Single.just(companyList))
-                whenever(companyrepository.loadPublishersForGame(result.id)).thenReturn(Single.just(companyList))
                 whenever(genrerepository.loadForGame(result.id)).thenReturn(Single.just(genreList))
                 whenever(collectionrepository.loadForGame(result.id)).thenReturn(Single.just(collection))
                 whenever(platformRepository.execute(result)).thenReturn(Single.just(platforms))
@@ -98,18 +95,6 @@ class LoadGameUseCaseTest {
             }
 
             @Test
-            @DisplayName("Then should not request developers")
-            fun noDevsRequest() {
-                verifyZeroInteractions(companyrepository)
-            }
-
-            @Test
-            @DisplayName("Then should not request publishers")
-            fun noPublishersRequest() {
-                verify(companyrepository, never()).loadPublishersForGame(gameId)
-            }
-
-            @Test
             @DisplayName("Then should not request genres")
             fun noGenresRequest() {
                 verify(genrerepository, never()).loadForGame(gameId)
@@ -125,170 +110,6 @@ class LoadGameUseCaseTest {
             @DisplayName("Then should not request images")
             fun noImagesRequested() {
                 verify(imagesRepository, never()).loadForGame(gameId)
-            }
-
-            @Nested
-            @DisplayName("And has empty developers")
-            inner class WithoutDevelopers {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.developers = listOf()
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then does not requests company repository")
-                fun requestsRepository() {
-                    verify(companyrepository, never()).loadDevelopersForGameId(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.developers != null && it.developers!!.isEmpty() }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And does not have developers assigned")
-            inner class WithNullDevelopers {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.developers = null
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then requests company repository")
-                fun requestsRepository() {
-                    verify(companyrepository).loadDevelopersForGameId(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.developers == companyList }
-                    }
-                }
-
-                @Nested
-                @DisplayName("And request fails")
-                inner class RequestFails {
-
-                    @BeforeEach
-                    internal fun setUp() {
-                        result.developers = null
-                        whenever(companyrepository.loadDevelopersForGameId(anyInt())).thenReturn(Single.error(Throwable("foo")))
-                        testObserver = useCase?.execute(gameId)!!.test()
-                    }
-
-                    @Test
-                    @DisplayName("Then emits ignores errors")
-                    fun withoutErrors() {
-                        assertNotNull(testObserver)
-                        testObserver?.apply {
-                            assertNoErrors()
-                            assertNotComplete()
-                            assertValueCount(1)
-                            assertValue { it.developers != null && it.developers!!.isEmpty() }
-                        }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And has empty publishers")
-            inner class EmptyPublishers {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.publishers = listOf()
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then does not requests company repository")
-                fun requestsRepository() {
-                    verify(companyrepository, never()).loadPublishersForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.publishers != null && it.publishers!!.isEmpty() }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And does not have publishers assigned")
-            inner class WithoutPublishers {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.publishers = null
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then requests company repository")
-                fun requestsRepository() {
-                    verify(companyrepository).loadPublishersForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.publishers == companyList }
-                    }
-                }
-
-                @Nested
-                @DisplayName("And request fails")
-                inner class RequestFails {
-
-                    @BeforeEach
-                    internal fun setUp() {
-                        result.publishers = null
-                        whenever(companyrepository.loadPublishersForGame(anyInt())).thenReturn(Single.error(Throwable("foo")))
-                        testObserver = useCase?.execute(gameId)!!.test()
-                    }
-
-                    @Test
-                    @DisplayName("Then emits ignores errors")
-                    fun withoutErrors() {
-                        assertNotNull(testObserver)
-                        testObserver?.apply {
-                            assertNoErrors()
-                            assertValueCount(1)
-                            assertNotComplete()
-                            assertValue { it.publishers != null && it.publishers!!.isEmpty() }
-                        }
-                    }
-                }
             }
 
             @Nested

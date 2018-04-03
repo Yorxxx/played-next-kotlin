@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.repository.datasource.dao.CollectionDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.CollectionDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.CollectionDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection

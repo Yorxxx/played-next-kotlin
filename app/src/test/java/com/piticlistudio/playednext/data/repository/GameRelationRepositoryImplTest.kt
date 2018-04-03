@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.repository.datasource.dao.relation.RelationDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoRepositoryImpl
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation

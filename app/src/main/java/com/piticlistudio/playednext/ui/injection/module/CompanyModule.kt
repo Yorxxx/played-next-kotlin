@@ -1,9 +1,7 @@
 package com.piticlistudio.playednext.ui.injection.module
 
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.repository.CompanyRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.CompanyDaoService
-import com.piticlistudio.playednext.domain.repository.CompanyRepository
+import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -13,13 +11,7 @@ class CompanyModule {
 
     @Provides
     @Singleton
-    fun provideDao(db: AppDatabase): CompanyDaoService {
-        return db.companyDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideCompanyRepository(repository: CompanyRepositoryImpl): CompanyRepository {
-        return repository
+    fun provideDao(db: AppDatabase): RoomCompanyService {
+        return db.companyRoom()
     }
 }

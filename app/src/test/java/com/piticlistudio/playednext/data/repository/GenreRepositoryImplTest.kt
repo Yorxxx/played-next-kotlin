@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository
 
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.GenreDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.GenreRemoteImpl
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf

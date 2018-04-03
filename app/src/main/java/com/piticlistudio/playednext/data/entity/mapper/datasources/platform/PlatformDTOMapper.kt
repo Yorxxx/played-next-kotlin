@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.platform
 
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
-import com.piticlistudio.playednext.data.entity.net.PlatformDTO
+import com.piticlistudio.playednext.data.entity.igdb.PlatformDTO
 import com.piticlistudio.playednext.domain.model.Platform
 import javax.inject.Inject
 

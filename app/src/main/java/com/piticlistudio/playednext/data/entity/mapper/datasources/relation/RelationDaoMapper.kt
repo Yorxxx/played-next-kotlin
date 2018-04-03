@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.relation
 
-import com.piticlistudio.playednext.data.entity.dao.GameRelationDao
+import com.piticlistudio.playednext.data.entity.room.GameRelationDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus

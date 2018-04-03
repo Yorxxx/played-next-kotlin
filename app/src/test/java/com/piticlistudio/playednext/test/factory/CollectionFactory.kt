@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.CollectionDao
-import com.piticlistudio.playednext.data.entity.net.CollectionDTO
+import com.piticlistudio.playednext.data.entity.room.CollectionDao
+import com.piticlistudio.playednext.data.entity.igdb.CollectionDTO
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
@@ -19,7 +19,7 @@ class CollectionFactory {
         }
 
         fun makeCollectionDTO(): CollectionDTO {
-            return CollectionDTO(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
+            return CollectionDTO(randomInt(), randomString(), randomString(), randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
     }

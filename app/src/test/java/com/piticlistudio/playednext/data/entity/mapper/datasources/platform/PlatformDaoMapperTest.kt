@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.platform
 
-import com.piticlistudio.playednext.data.entity.dao.PlatformDao
+import com.piticlistudio.playednext.data.entity.room.PlatformDao
 import com.piticlistudio.playednext.domain.model.Platform
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform

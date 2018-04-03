@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
 import com.piticlistudio.playednext.data.entity.mapper.DataLayerMapper
-import com.piticlistudio.playednext.data.entity.net.GiantbombGameImage
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGameImage
 import com.piticlistudio.playednext.domain.model.GameImage
 import javax.inject.Inject
 

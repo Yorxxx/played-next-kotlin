@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
-import com.piticlistudio.playednext.data.entity.dao.GenreDao
+import com.piticlistudio.playednext.data.entity.room.GenreDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.domain.model.Genre
 import javax.inject.Inject

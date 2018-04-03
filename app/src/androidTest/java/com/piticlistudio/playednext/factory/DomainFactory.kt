@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.factory
 
-import com.piticlistudio.playednext.data.entity.dao.*
+import com.piticlistudio.playednext.data.entity.room.*
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
@@ -44,8 +44,8 @@ class DomainFactory {
                     randomLong(), makeTimeToBeatCache(), makeCoverCache(), randomLong())
         }
 
-        fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
-            return CompanyDao(id, randomString(), randomString())
+        fun makeCompanyDao(id: Int = randomInt()): RoomCompany {
+            return RoomCompany(id, randomString(), randomString())
         }
 
         fun makeCollectionDao(id: Int = randomInt()): CollectionDao {
