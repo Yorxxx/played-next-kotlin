@@ -27,6 +27,7 @@ import org.mockito.Mockito.mock
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * Test cases for [GiantbombGameMapper]
@@ -73,6 +74,20 @@ internal class GiantbombGameMapperTest {
         }
 
         @Test
+        fun `then should set empty devs when no developers available`() {
+
+            game = makeGiantbombGame(developers = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            with(result.developers) {
+                assertNotNull(this)
+                assertTrue(this!!.isEmpty())
+            }
+        }
+
+        @Test
         fun `then should request GiantbombCompanyMapper to map the publishers`() {
 
             doAnswer {
@@ -89,6 +104,20 @@ internal class GiantbombGameMapperTest {
                 assertEquals(giantbombCompany.name, result.publishers?.get(index)?.name)
             }
             assertEquals(game.publishers?.size, result.publishers?.size)
+        }
+
+        @Test
+        fun `then should set empty publishers when no publishers available`() {
+
+            game = makeGiantbombGame(publishers = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            with(result.publishers) {
+                assertNotNull(this)
+                assertTrue(this!!.isEmpty())
+            }
         }
 
         @Test
@@ -111,6 +140,21 @@ internal class GiantbombGameMapperTest {
         }
 
         @Test
+        fun `then should set empty genres when no genres available`() {
+
+            game = makeGiantbombGame(genres = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            with(result.genres) {
+                assertNotNull(this)
+                assertTrue(this!!.isEmpty())
+            }
+            verifyZeroInteractions(genreMapper)
+        }
+
+        @Test
         fun `then should request GiantbombCollectionMapper to map the collections`() {
 
             var answer: Collection? = null
@@ -125,6 +169,18 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             verify(collectionMapper).mapFromDataLayer(game.franchises?.first()!!)
             assertEquals(answer?.id, result.collection?.id)
+        }
+
+        @Test
+        fun `then should set null collection when no franchises available`() {
+
+            game = makeGiantbombGame(franchises = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            assertNull(result.collection)
+            verifyZeroInteractions(collectionMapper)
         }
 
         @Test
@@ -147,6 +203,21 @@ internal class GiantbombGameMapperTest {
         }
 
         @Test
+        fun `then should set empty platforms when no platforms available`() {
+
+            game = makeGiantbombGame(platforms = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            with(result.platforms) {
+                assertNotNull(this)
+                assertTrue(this!!.isEmpty())
+            }
+            verifyZeroInteractions(platformMapper)
+        }
+
+        @Test
         fun `then should request to map the screenshots`() {
 
             doAnswer {
@@ -159,6 +230,20 @@ internal class GiantbombGameMapperTest {
             assertEquals(game.images?.size, result.images?.size)
             game.images?.forEachIndexed { index, image ->
                 verify(imagesMapper).mapFromDataLayer(image)
+            }
+        }
+
+        @Test
+        fun `then should set empty images when no images available`() {
+
+            game = makeGiantbombGame(images = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            with(result.images) {
+                assertNotNull(this)
+                assertTrue(this!!.isEmpty())
             }
         }
 
@@ -180,6 +265,17 @@ internal class GiantbombGameMapperTest {
 
             }
             assertEquals(result.cover?.url, answer?.url)
+        }
+
+        @Test
+        fun `then should set null cover when no cover available`() {
+
+            game = makeGiantbombGame(cover = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            assertNull(result.cover)
         }
 
         @Test
@@ -252,6 +348,17 @@ internal class GiantbombGameMapperTest {
 
             assertNotNull(result)
             assertEquals(game.original_release_date?.time, result.releasedAt)
+        }
+
+        @Test
+        fun `then should null releasedAt value if no original_release_date value`() {
+
+            game = makeGiantbombGame(original_release_date = null)
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            assertNull(result.releasedAt)
         }
 
         @Test

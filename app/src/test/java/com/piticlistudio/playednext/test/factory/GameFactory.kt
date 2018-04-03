@@ -4,6 +4,7 @@ import com.piticlistudio.playednext.data.entity.dao.CoverDao
 import com.piticlistudio.playednext.data.entity.dao.GameDao
 import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.net.*
+import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
@@ -27,6 +28,7 @@ import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantb
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
+import java.util.*
 
 /**
  * Factory class for Game instances
@@ -48,7 +50,14 @@ class GameFactory {
                     randomListOf { makeGameImage() })
         }
 
-        fun makeGiantbombGame(): GiantbombGame {
+        fun makeGiantbombGame(developers: List<GiantbombCompany>?  = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
+                              publishers: List<GiantbombCompany>?  = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
+                              genres: List<GiantbombGenre>? = randomListOf(10) { makeGiantbombGenre() },
+                              franchises: List<GiantbombFranchise>? = randomListOf(10) { makeGiantbombFranchise() },
+                              platforms: List<GiantbombPlatform>? = randomListOf(10) { makeGiantbombPlatform() },
+                              images: List<GiantbombGameImage>? = randomListOf(10) { makeGiantbombGameImage() },
+                              cover: GiantbombGameImage? = makeGiantbombGameImage(),
+                              original_release_date: Date? = randomDate()): GiantbombGame {
             return GiantbombGame(
                     date_added = randomDate(),
                     date_last_updated = randomDate(),
@@ -59,15 +68,15 @@ class GameFactory {
                     expected_release_month = randomInt(),
                     expected_release_quarter = randomInt(),
                     expected_release_year = randomInt(),
-                    image = makeGiantbombGameImage(),
+                    image = cover,
                     name = randomString(),
-                    original_release_date = randomDate(),
-                    platforms = randomListOf(10) { makeGiantbombPlatform() },
-                    images = randomListOf(10) { makeGiantbombGameImage() },
-                    publishers = randomListOf(10) { makeGiantbombCompany() },
-                    developers = randomListOf(10) { makeGiantbombCompany() },
-                    franchises = randomListOf(10) { makeGiantbombFranchise() },
-                    genres = randomListOf(10) { makeGiantbombGenre() },
+                    original_release_date = original_release_date,
+                    platforms = platforms,
+                    images = images,
+                    publishers = publishers,
+                    developers = developers,
+                    franchises = franchises,
+                    genres = genres,
                     site_detail_url = randomString())
         }
 
