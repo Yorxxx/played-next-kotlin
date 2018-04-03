@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.repository.datasource.dao.image.GameImageDaoRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.image.GameImageDaoRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.net.image.GameImageDTORepositoryImpl
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf

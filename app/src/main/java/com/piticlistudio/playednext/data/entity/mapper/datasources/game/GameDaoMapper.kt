@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
-import com.piticlistudio.playednext.data.entity.dao.CoverDao
-import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
+import com.piticlistudio.playednext.data.entity.room.CoverDao
+import com.piticlistudio.playednext.data.entity.room.GameDao
+import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game

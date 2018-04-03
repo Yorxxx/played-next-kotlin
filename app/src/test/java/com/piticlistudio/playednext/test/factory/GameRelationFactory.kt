@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.GameRelationDao
+import com.piticlistudio.playednext.data.entity.room.GameRelationDao
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt

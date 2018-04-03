@@ -2,7 +2,7 @@ package com.piticlistudio.playednext.ui.injection.module
 
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.repository.PlatformRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.platform.PlatformDaoService
+import com.piticlistudio.playednext.data.repository.datasource.room.platform.PlatformDaoService
 import com.piticlistudio.playednext.domain.repository.PlatformRepository
 import dagger.Module
 import dagger.Provides

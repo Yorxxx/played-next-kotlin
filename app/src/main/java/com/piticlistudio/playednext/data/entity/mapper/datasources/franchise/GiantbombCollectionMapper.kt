@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
 import com.piticlistudio.playednext.data.entity.mapper.DataLayerMapper
-import com.piticlistudio.playednext.data.entity.net.GiantbombFranchise
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombFranchise
 import com.piticlistudio.playednext.domain.model.Collection
 import javax.inject.Inject
 

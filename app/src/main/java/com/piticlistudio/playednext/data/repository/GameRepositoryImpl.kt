@@ -2,8 +2,6 @@ package com.piticlistudio.playednext.data.repository
 
 import android.arch.persistence.room.EmptyResultSetException
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
-import com.piticlistudio.playednext.data.repository.datasource.dao.game.GameLocalImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import io.reactivex.Completable

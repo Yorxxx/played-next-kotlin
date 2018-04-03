@@ -10,7 +10,6 @@ import javax.inject.Inject
 
 class LoadGameUseCase @Inject constructor(
         private val grepository: GameRepository,
-        private val comprepository: CompanyRepository,
         private val genre_repository: GenreRepository,
         private val collection_repository: CollectionRepository,
         private val platformsForGameUseCase: LoadPlatformsForGameUseCase,
@@ -18,31 +17,12 @@ class LoadGameUseCase @Inject constructor(
 
     override fun execute(parameter: Int): Flowable<Game> {
         return grepository.load(parameter)
-                .flatMap { loadDevelopers(it) }
-                .flatMap { loadPublishers(it) }
                 .flatMap { loadGenres(it) }
                 .flatMap { loadCollection(it) }
                 .flatMap { loadPlatforms(it) }
                 .flatMap { loadImages(it) }
     }
 
-    private fun loadDevelopers(game: Game): Flowable<Game> {
-        return game.developers?.let { Flowable.just(game) }
-                ?: comprepository.loadDevelopersForGameId(game.id)
-                .onErrorReturn { listOf() }
-                .map {
-                    game.apply { developers = it }
-                }.toFlowable()
-    }
-
-    private fun loadPublishers(game: Game): Flowable<Game> {
-        return game.publishers?.let { Flowable.just(game) }
-                ?: comprepository.loadPublishersForGame(game.id)
-                .onErrorReturn { listOf() }
-                .map {
-                    game.apply { publishers = it }
-                }.toFlowable()
-    }
 
     private fun loadGenres(game: Game): Flowable<Game> {
         return game.genres?.let { Flowable.just(game) }

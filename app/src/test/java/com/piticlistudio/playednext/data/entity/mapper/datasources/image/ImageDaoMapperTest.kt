@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
-import com.piticlistudio.playednext.data.entity.dao.ScreenshotDao
+import com.piticlistudio.playednext.data.entity.room.ScreenshotDao
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImageDao

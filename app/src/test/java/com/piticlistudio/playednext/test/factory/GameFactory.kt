@@ -1,17 +1,17 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.CoverDao
-import com.piticlistudio.playednext.data.entity.dao.GameDao
-import com.piticlistudio.playednext.data.entity.dao.TimeToBeatDao
-import com.piticlistudio.playednext.data.entity.net.*
-import com.piticlistudio.playednext.domain.model.Company
+import com.piticlistudio.playednext.data.entity.giantbomb.*
+import com.piticlistudio.playednext.data.entity.igdb.*
+import com.piticlistudio.playednext.data.entity.room.CoverDao
+import com.piticlistudio.playednext.data.entity.room.GameDao
+import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
 import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDTO
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyDTO
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeIGDBCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeGiantbombCompany
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDate
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
@@ -111,8 +111,8 @@ class GameFactory {
                     randomLong(), randomString(), randomString(), makeCollectionDTO(), randomInt(),
                     randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(),
-                    randomListOf(factory = ::makeCompanyDTO),
-                    randomListOf(factory = ::makeCompanyDTO),
+                    randomListOf(factory = ::makeIGDBCompany),
+                    randomListOf(factory = ::makeIGDBCompany),
                     randomIntList(), makeTimeToBeatRemote(),
                     randomListOf(factory = ::makeGenreDTO), randomLong(),
                     randomListOf(factory = this::makeReleaseDateRemote),

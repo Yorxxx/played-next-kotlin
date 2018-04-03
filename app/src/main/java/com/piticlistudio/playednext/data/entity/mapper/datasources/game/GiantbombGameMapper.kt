@@ -6,7 +6,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.Gia
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GiantbombGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.GiantbombImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.GiantbombPlatformMapper
-import com.piticlistudio.playednext.data.entity.net.GiantbombGame
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGame
 import com.piticlistudio.playednext.domain.model.*
 import com.piticlistudio.playednext.domain.model.Collection
 import javax.inject.Inject

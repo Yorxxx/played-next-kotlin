@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
-import com.piticlistudio.playednext.data.entity.net.GiantbombGameImage
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGameImage
 import com.piticlistudio.playednext.test.factory.DataFactory
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
 import org.junit.jupiter.api.Assertions.*

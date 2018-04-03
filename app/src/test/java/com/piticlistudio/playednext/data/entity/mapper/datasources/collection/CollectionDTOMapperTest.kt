@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.collection
 
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
-import com.piticlistudio.playednext.data.entity.net.CollectionDTO
+import com.piticlistudio.playednext.data.entity.igdb.CollectionDTO
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDTO

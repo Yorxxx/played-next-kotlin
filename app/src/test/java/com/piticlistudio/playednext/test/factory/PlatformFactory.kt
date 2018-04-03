@@ -1,8 +1,8 @@
 package com.piticlistudio.playednext.test.factory
 
-import com.piticlistudio.playednext.data.entity.dao.PlatformDao
-import com.piticlistudio.playednext.data.entity.net.GiantbombPlatform
-import com.piticlistudio.playednext.data.entity.net.PlatformDTO
+import com.piticlistudio.playednext.data.entity.room.PlatformDao
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombPlatform
+import com.piticlistudio.playednext.data.entity.igdb.PlatformDTO
 import com.piticlistudio.playednext.domain.model.Platform
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
@@ -22,10 +22,10 @@ class PlatformFactory {
         }
 
         fun makePlatformDTO(): PlatformDTO {
-            return PlatformDTO(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomLong(),
+            return PlatformDTO(randomInt(), randomString(), randomString(), randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
 
-        fun makeGiantbombPlatform(): GiantbombPlatform = GiantbombPlatform(DataFactory.randomInt(), DataFactory.randomString(), DataFactory.randomString(), DataFactory.randomString())
+        fun makeGiantbombPlatform(): GiantbombPlatform = GiantbombPlatform(randomInt(), randomString(), randomString(), randomString())
     }
 }

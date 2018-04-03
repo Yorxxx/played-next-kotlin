@@ -2,11 +2,11 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.verify
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.company.CompanyDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
-import com.piticlistudio.playednext.data.entity.net.GameDTO
+import com.piticlistudio.playednext.data.entity.igdb.GameDTO
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
@@ -33,7 +33,7 @@ internal class GameDTOMapperTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock
-        lateinit var companymapper: CompanyDTOMapper
+        lateinit var companymapper: IGDBCompanyMapper
         @Mock lateinit var genremapper: GenreDTOMapper
         @Mock lateinit var collectionmapper: CollectionDTOMapper
         @Mock lateinit var platformmapper: PlatformDTOMapper
@@ -85,8 +85,12 @@ internal class GameDTOMapperTest {
             @DisplayName("Then requests mapping for inner classes")
             fun childMaps() {
                 verify(collectionmapper).mapFromModel(model.collection)
-                verify(companymapper).mapFromModel(model.publishers)
-                verify(companymapper).mapFromModel(model.developers)
+                model.publishers?.forEach {
+                    verify(companymapper).mapFromDataLayer(it)
+                }
+                model.developers?.forEach {
+                    verify(companymapper).mapFromDataLayer(it)
+                }
                 verify(genremapper).mapFromModel(model.genres)
                 verify(platformmapper).mapFromModel(model.platforms)
                 model.screenshots?.forEach {

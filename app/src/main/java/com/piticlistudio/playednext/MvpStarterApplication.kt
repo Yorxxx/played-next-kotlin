@@ -12,8 +12,8 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.game.Giantbom
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GiantbombGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.GiantbombImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.GiantbombPlatformMapper
-import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombGameDatasourceRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombServiceFactory
+import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombGameDatasourceRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombServiceFactory
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
