@@ -11,7 +11,7 @@ data class GameDTO(val id: Int,
                    val updated_at: Long,
                    val summary: String? = null,
                    val storyline: String? = null,
-                   var collection: CollectionDTO? = null,
+                   var collection: IGDBCollection? = null,
                    val franchise: Int? = null,
                    val hypes: Int? = 0,
                    val popularity: Double? = null,
@@ -41,7 +41,7 @@ class IGDBCompany(id: Int, name: String, slug: String, url: String, created_at: 
 
 class IGDBGenre(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
-class CollectionDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
+class IGDBCollection(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
 class PlatformDTO(id: Int, name: String, slug: String, url: String?, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 

@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.repository.datasource.room
+package com.piticlistudio.playednext.data.repository.datasource.room.franchise
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.EmptyResultSetException
@@ -6,7 +6,7 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.room.GameCollectionDao
+import com.piticlistudio.playednext.data.entity.room.RoomGameCollection
 import com.piticlistudio.playednext.factory.DomainFactory
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeCollectionDao
 import junit.framework.Assert
@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class CollectionDaoServiceTest {
+class RoomCollectionServiceTest {
 
     @JvmField
     @Rule
@@ -37,7 +37,7 @@ class CollectionDaoServiceTest {
 
         val data = DomainFactory.makeCollectionDao()
 
-        val result = database?.collectionDao()?.insert(data)
+        val result = database?.collectionRoom()?.insert(data)
 
         Assert.assertNotNull(result)
         Assert.assertEquals(data.id, result!!.toInt())
@@ -47,8 +47,8 @@ class CollectionDaoServiceTest {
 
         val data = DomainFactory.makeCollectionDao()
 
-        val id = database?.collectionDao()?.insert(data)
-        val id2 = database?.collectionDao()?.insert(data)
+        val id = database?.collectionRoom()?.insert(data)
+        val id2 = database?.collectionRoom()?.insert(data)
 
         Assert.assertTrue(id!! > 0L)
         Assert.assertEquals(0L, id2)
@@ -58,11 +58,11 @@ class CollectionDaoServiceTest {
     fun insertGameCollectionShouldStoreRelation() {
         val data = makeCollectionDao()
         val game = DomainFactory.makeGameCache()
-        val relation = GameCollectionDao(game.id, data.id)
+        val relation = RoomGameCollection(game.id, data.id)
 
         database?.gamesDao()?.insert(game)
-        database?.collectionDao()?.insert(data)
-        val result = database?.collectionDao()?.insertGameCollection(relation)
+        database?.collectionRoom()?.insert(data)
+        val result = database?.collectionRoom()?.insertGameCollection(relation)
 
         Assert.assertNotNull(result)
         Assert.assertTrue(result!! > 0)
@@ -73,14 +73,14 @@ class CollectionDaoServiceTest {
         val data = makeCollectionDao()
         val data2 = makeCollectionDao()
         val game = DomainFactory.makeGameCache()
-        val relation = GameCollectionDao(game.id, data.id)
-        val updatedrelation = GameCollectionDao(game.id, data2.id)
+        val relation = RoomGameCollection(game.id, data.id)
+        val updatedrelation = RoomGameCollection(game.id, data2.id)
 
         database?.gamesDao()?.insert(game)
-        database?.collectionDao()?.insert(data)
-        database?.collectionDao()?.insert(data2)
-        database?.collectionDao()?.insertGameCollection(relation)
-        val result = database?.collectionDao()?.insertGameCollection(updatedrelation)
+        database?.collectionRoom()?.insert(data)
+        database?.collectionRoom()?.insert(data2)
+        database?.collectionRoom()?.insertGameCollection(relation)
+        val result = database?.collectionRoom()?.insertGameCollection(updatedrelation)
 
 
         Assert.assertNotNull(result)
@@ -88,46 +88,17 @@ class CollectionDaoServiceTest {
     }
 
     @Test
-    fun findShouldThrowErrorIfNotFound() {
-        val observer = database?.collectionDao()?.find(2)?.test()
-
-        Assert.assertNotNull(observer)
-        observer?.apply {
-            assertNoValues()
-            assertNotComplete()
-            assertError { it is EmptyResultSetException }
-        }
-    }
-
-    @Test
-    fun findShouldReturnStoredData() {
-        val data = makeCollectionDao()
-
-        database?.collectionDao()?.insert(data)
-
-        val observer = database?.collectionDao()?.find(data.id.toLong())?.test()
-
-        Assert.assertNotNull(observer)
-        observer?.apply {
-            assertNoErrors()
-            assertValueCount(1)
-            assertComplete()
-            assertValue(data)
-        }
-    }
-
-    @Test
     fun findForGameShouldReturnRelationData() {
         val game = DomainFactory.makeGameCache()
         val data1 = makeCollectionDao()
-        val relation = GameCollectionDao(game.id, data1.id)
+        val relation = RoomGameCollection(game.id, data1.id)
 
         database?.gamesDao()?.insert(game)
-        database?.collectionDao()?.insert(data1)
-        database?.collectionDao()?.insertGameCollection(relation)
+        database?.collectionRoom()?.insert(data1)
+        database?.collectionRoom()?.insertGameCollection(relation)
 
         // Act
-        val observer = database?.collectionDao()?.findForGame(game.id)?.test()
+        val observer = database?.collectionRoom()?.findForGame(game.id)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {
@@ -148,7 +119,7 @@ class CollectionDaoServiceTest {
 
         // Act
         // Act
-        val observer = database?.collectionDao()?.findForGame(game.id)?.test()
+        val observer = database?.collectionRoom()?.findForGame(game.id)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {

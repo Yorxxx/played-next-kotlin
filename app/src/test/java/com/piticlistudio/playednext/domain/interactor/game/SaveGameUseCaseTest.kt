@@ -23,8 +23,6 @@ internal class SaveGameUseCaseTest {
         @Mock
         private lateinit var repository: GameRepository
         @Mock
-        private lateinit var collectionRepository: CollectionRepository
-        @Mock
         private lateinit var platformRepository: PlatformRepository
         @Mock
         private lateinit var imagesRepository: GameImagesRepository
@@ -38,7 +36,7 @@ internal class SaveGameUseCaseTest {
             whenever(repository.save(game)).thenReturn(Completable.complete())
             whenever(platformRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
             whenever(imagesRepository.save(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, collectionRepository, platformRepository, imagesRepository)
+            usecase = SaveGameUseCase(repository, platformRepository, imagesRepository)
         }
 
         @Nested
@@ -68,69 +66,6 @@ internal class SaveGameUseCaseTest {
                     assertNotNull(observer)
                     with(observer) {
                         this!!.assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does have collection")
-            inner class WithCollection {
-
-                @BeforeEach
-                internal fun setUp() {
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then saves into repository")
-                fun requestsRepository() {
-                    verify(repository).save(game)
-                }
-
-                @Test
-                @DisplayName("Then saves collection")
-                fun savesDevelopers() {
-                    verify(collectionRepository).saveForGame(game.id, game.collection!!)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    observer?.apply {
-                        assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does not collection")
-            inner class WithoutCollection {
-
-                var observer: TestObserver<Void>? = null
-
-                @BeforeEach
-                internal fun setUp() {
-                    game.collection = null
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then does not save collection")
-                fun doesNotRequestsRepository() {
-                    verifyZeroInteractions(collectionRepository)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    observer?.apply {
-                        assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }

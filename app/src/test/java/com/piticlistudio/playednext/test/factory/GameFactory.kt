@@ -9,7 +9,7 @@ import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
-import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollectionDTO
+import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeIGDBCollection
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeIGDBCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeGiantbombCompany
@@ -108,7 +108,7 @@ class GameFactory {
 
         fun makeGameRemote(): GameDTO {
             return GameDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
-                    randomLong(), randomString(), randomString(), makeCollectionDTO(), randomInt(),
+                    randomLong(), randomString(), randomString(), makeIGDBCollection(), randomInt(),
                     randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
                     randomInt(), randomDouble(), randomInt(),
                     randomListOf(factory = ::makeIGDBCompany),

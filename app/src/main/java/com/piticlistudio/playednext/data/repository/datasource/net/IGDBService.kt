@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.net
 
 import com.piticlistudio.playednext.BuildConfig
-import com.piticlistudio.playednext.data.entity.igdb.CollectionDTO
+import com.piticlistudio.playednext.data.entity.igdb.IGDBCollection
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
 import com.piticlistudio.playednext.data.entity.igdb.PlatformDTO
 import io.reactivex.Single
@@ -31,7 +31,7 @@ interface IGDBService {
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/collections/{id}/")
-    fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<CollectionDTO>>
+    fun loadCollection(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<IGDBCollection>>
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/platforms/{id}/")
