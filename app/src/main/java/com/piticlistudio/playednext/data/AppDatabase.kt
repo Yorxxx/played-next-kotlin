@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import com.piticlistudio.playednext.data.entity.room.*
-import com.piticlistudio.playednext.data.repository.datasource.room.CollectionDaoService
+import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionService
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyService
 import com.piticlistudio.playednext.data.repository.datasource.room.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
@@ -12,8 +12,8 @@ import com.piticlistudio.playednext.data.repository.datasource.room.platform.Pla
 import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoService
 
 @Database(entities = arrayOf(GameDao::class, RoomCompany::class, RoomGameDeveloper::class,
-        RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, CollectionDao::class,
-        GameCollectionDao::class, PlatformDao::class, GamePlatformDao::class, GameRelationDao::class,
+        RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
+        RoomGameCollection::class, PlatformDao::class, GamePlatformDao::class, GameRelationDao::class,
         ScreenshotDao::class),
         version = 9, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun genreRoom(): RoomGenreService
 
-    abstract fun collectionDao(): CollectionDaoService
+    abstract fun collectionRoom(): RoomCollectionService
 
     abstract fun platformDao(): PlatformDaoService
 

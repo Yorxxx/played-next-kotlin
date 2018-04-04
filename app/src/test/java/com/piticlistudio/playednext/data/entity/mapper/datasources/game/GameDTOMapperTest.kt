@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
@@ -35,7 +35,7 @@ internal class GameDTOMapperTest {
         @Mock
         lateinit var companymapper: IGDBCompanyMapper
         @Mock lateinit var genremapper: IGDBGenreMapper
-        @Mock lateinit var collectionmapper: CollectionDTOMapper
+        @Mock lateinit var collectionmapper: IGDBCollectionMapper
         @Mock lateinit var platformmapper: PlatformDTOMapper
         @Mock lateinit var imagesMapper: ImageDTOMapper
         lateinit var mapper: GameDTOMapper
@@ -84,7 +84,9 @@ internal class GameDTOMapperTest {
             @Test
             @DisplayName("Then requests mapping for inner classes")
             fun childMaps() {
-                verify(collectionmapper).mapFromModel(model.collection)
+                model.collection?.let {
+                    verify(collectionmapper).mapFromDataLayer(it)
+                }
                 model.publishers?.forEach {
                     verify(companymapper).mapFromDataLayer(it)
                 }

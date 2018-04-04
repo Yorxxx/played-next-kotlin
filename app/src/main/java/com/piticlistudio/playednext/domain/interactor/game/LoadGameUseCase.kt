@@ -10,25 +10,13 @@ import javax.inject.Inject
 
 class LoadGameUseCase @Inject constructor(
         private val grepository: GameRepository,
-        private val collection_repository: CollectionRepository,
         private val platformsForGameUseCase: LoadPlatformsForGameUseCase,
         private val imagesRepository: GameImagesRepository) : FlowableUseCaseWithParameter<Int, Game> {
 
     override fun execute(parameter: Int): Flowable<Game> {
         return grepository.load(parameter)
-                .flatMap { loadCollection(it) }
                 .flatMap { loadPlatforms(it) }
                 .flatMap { loadImages(it) }
-    }
-
-    private fun loadCollection(game: Game): Flowable<Game> {
-        return game.collection?.let { Flowable.just(game) }
-                ?: collection_repository.loadForGame(game.id)
-                .map {
-                    game.apply { collection = it }
-                }
-                .onErrorResumeNext { Single.just(game) }
-                .toFlowable()
     }
 
     private fun loadPlatforms(game: Game): Flowable<Game> {
