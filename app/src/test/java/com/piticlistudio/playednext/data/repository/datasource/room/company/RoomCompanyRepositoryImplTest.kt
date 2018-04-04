@@ -6,7 +6,6 @@ import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
-import net.bytebuddy.implementation.bytecode.Throw
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

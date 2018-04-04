@@ -107,7 +107,7 @@ internal class PlatformDTORepositoryImplTest {
         }
 
         @Nested
-        @DisplayName("When we call insertGameGenre")
+        @DisplayName("When we call saveGenreForGame")
         inner class InsertGameGenreCalled {
 
             private val entity1 = makePlatform()

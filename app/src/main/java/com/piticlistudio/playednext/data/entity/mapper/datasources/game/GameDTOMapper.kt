@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
@@ -12,8 +12,8 @@ import com.piticlistudio.playednext.data.entity.igdb.TimeToBeatDTO
 import com.piticlistudio.playednext.domain.model.*
 import javax.inject.Inject
 
-class GameDTOMapper @Inject constructor(private val IGDBCompanyMapper: IGDBCompanyMapper,
-                                        private val genreDTOMapper: GenreDTOMapper,
+class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompanyMapper,
+                                        private val igdbGenreMapper: IGDBGenreMapper,
                                         private val collectionDTOMapper: CollectionDTOMapper,
                                         private val platformDTOMapper: PlatformDTOMapper,
                                         private val imagesDTOMapper: ImageDTOMapper) : LayerDataMapper<GameDTO, Game> {
@@ -26,18 +26,22 @@ class GameDTOMapper @Inject constructor(private val IGDBCompanyMapper: IGDBCompa
             }
             val devs = mutableListOf<Company>()
             developers?.forEach {
-                devs.add(IGDBCompanyMapper.mapFromDataLayer(it))
+                devs.add(igdbCompanyMapper.mapFromDataLayer(it))
             }
             val pubs = mutableListOf<Company>()
             publishers?.forEach {
-                pubs.add(IGDBCompanyMapper.mapFromDataLayer(it))
+                pubs.add(igdbCompanyMapper.mapFromDataLayer(it))
+            }
+            val gens = mutableListOf<Genre>()
+            genres?.forEach {
+                gens.add(igdbGenreMapper.mapFromDataLayer(it))
             }
             return Game(id, name, created_at, updated_at, summary, storyline, url, rating,
                     rating_count, aggregated_rating, aggregated_rating_count, total_rating,
                     total_rating_count, first_release_date, mapCoverModel(cover),
                     mapTimeToBeatModel(time_to_beat), pubs,
                     devs,
-                    genreDTOMapper.mapFromModel(genres),
+                    gens,
                     collectionDTOMapper.mapFromModel(collection), System.currentTimeMillis(),
                     platformDTOMapper.mapFromModel(platforms),
                     images)

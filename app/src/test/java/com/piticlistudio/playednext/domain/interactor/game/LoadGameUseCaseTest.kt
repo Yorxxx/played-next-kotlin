@@ -2,11 +2,12 @@ package com.piticlistudio.playednext.domain.interactor.game
 
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.interactor.platform.LoadPlatformsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.repository.*
+import com.piticlistudio.playednext.domain.repository.CollectionRepository
+import com.piticlistudio.playednext.domain.repository.GameImagesRepository
+import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
@@ -33,11 +34,14 @@ class LoadGameUseCaseTest {
     @DisplayName("Given a LoadGameUseCase instance")
     inner class LoadGameUseCaseInstance {
 
-        @Mock lateinit var repository: GameRepository
-        @Mock lateinit var genrerepository: GenreRepository
-        @Mock lateinit var collectionrepository: CollectionRepository
-        @Mock lateinit var platformRepository: LoadPlatformsForGameUseCase
-        @Mock lateinit var imagesRepository: GameImagesRepository
+        @Mock
+        lateinit var repository: GameRepository
+        @Mock
+        lateinit var collectionrepository: CollectionRepository
+        @Mock
+        lateinit var platformRepository: LoadPlatformsForGameUseCase
+        @Mock
+        lateinit var imagesRepository: GameImagesRepository
 
         private val gameId = 10
         private var useCase: LoadGameUseCase? = null
@@ -45,7 +49,7 @@ class LoadGameUseCaseTest {
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            useCase = LoadGameUseCase(repository, genrerepository, collectionrepository, platformRepository, imagesRepository)
+            useCase = LoadGameUseCase(repository, collectionrepository, platformRepository, imagesRepository)
         }
 
         @Nested
@@ -64,7 +68,6 @@ class LoadGameUseCaseTest {
             internal fun setup() {
                 val flowable = Flowable.create<Game>({ it.onNext(result) }, BackpressureStrategy.MISSING)
                 whenever(repository.load(gameId)).thenReturn(flowable)
-                whenever(genrerepository.loadForGame(result.id)).thenReturn(Single.just(genreList))
                 whenever(collectionrepository.loadForGame(result.id)).thenReturn(Single.just(collection))
                 whenever(platformRepository.execute(result)).thenReturn(Single.just(platforms))
                 whenever(imagesRepository.loadForGame(result.id)).thenReturn(Flowable.just(images))
@@ -95,12 +98,6 @@ class LoadGameUseCaseTest {
             }
 
             @Test
-            @DisplayName("Then should not request genres")
-            fun noGenresRequest() {
-                verify(genrerepository, never()).loadForGame(gameId)
-            }
-
-            @Test
             @DisplayName("Then should not request collection")
             fun noCollectionRequest() {
                 verify(collectionrepository, never()).loadForGame(gameId)
@@ -110,88 +107,6 @@ class LoadGameUseCaseTest {
             @DisplayName("Then should not request images")
             fun noImagesRequested() {
                 verify(imagesRepository, never()).loadForGame(gameId)
-            }
-
-            @Nested
-            @DisplayName("And has empty genres")
-            inner class EmptyGenres {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.genres = listOf()
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then does not requests genre repository")
-                fun requestsRepository() {
-                    verify(genrerepository, never()).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.genres != null && it.genres!!.isEmpty() }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And does not have genres assigned")
-            inner class WithoutGenres {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.genres = null
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then requests repository")
-                fun requestsRepository() {
-                    verify(genrerepository).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.genres == genreList }
-                    }
-                }
-
-                @Nested
-                @DisplayName("And request fails")
-                inner class RequestFails {
-
-                    @BeforeEach
-                    internal fun setUp() {
-                        result.genres = null
-                        whenever(genrerepository.loadForGame(anyInt())).thenReturn(Single.error(Throwable("foo")))
-                        testObserver = useCase?.execute(gameId)!!.test()
-                    }
-
-                    @Test
-                    @DisplayName("Then emits ignores errors")
-                    fun withoutErrors() {
-                        assertNotNull(testObserver)
-                        testObserver?.apply {
-                            assertNoErrors()
-                            assertNotComplete()
-                            assertValueCount(1)
-                            assertValue { it.genres != null && it.genres!!.isEmpty() }
-                        }
-                    }
-                }
             }
 
             @Nested

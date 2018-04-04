@@ -1,9 +1,9 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
-import com.piticlistudio.playednext.data.entity.room.GenreDao
+import com.piticlistudio.playednext.data.entity.room.RoomGenre
 import com.piticlistudio.playednext.domain.model.Genre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDao
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeRoomGenre
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -11,29 +11,29 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class GenreDaoMapperTest {
+internal class RoomGenreMapperTest {
 
     @Nested
-    @DisplayName("Given a GenreDaoMapper instance")
+    @DisplayName("Given a RoomGenreMapper instance")
     inner class Instance {
 
-        private lateinit var mapper: GenreDaoMapper
+        private lateinit var mapper: RoomGenreMapper
 
         @BeforeEach
         internal fun setUp() {
-            mapper = GenreDaoMapper()
+            mapper = RoomGenreMapper()
         }
 
         @Nested
-        @DisplayName("When we call mapFromModel")
+        @DisplayName("When we call mapFromDataLayer")
         inner class MapFromModelCalled {
 
-            private val model = makeGenreDao()
+            private val model = makeRoomGenre()
             private var result: Genre? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromModel(model)
+                result = mapper.mapFromDataLayer(model)
             }
 
             @Test
@@ -49,15 +49,15 @@ internal class GenreDaoMapperTest {
         }
 
         @Nested
-        @DisplayName("When we call mapFromEntity")
+        @DisplayName("When we call mapIntoDataLayerModel")
         inner class MapFromEntityCalled {
 
             private val entity = makeGenre()
-            private var result: GenreDao? = null
+            private var result: RoomGenre? = null
 
             @BeforeEach
             internal fun setup() {
-                result = mapper.mapFromEntity(entity)
+                result = mapper.mapIntoDataLayerModel(entity)
             }
 
             @Test
@@ -72,6 +72,4 @@ internal class GenreDaoMapperTest {
             }
         }
     }
-
-
 }

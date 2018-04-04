@@ -25,7 +25,7 @@ data class GameDTO(val id: Int,
                    val publishers: List<IGDBCompany>? = listOf(),
                    val game_engines: List<Int>? = listOf(),
                    val time_to_beat: TimeToBeatDTO?,
-                   val genres: List<GenreDTO>? = listOf(),
+                   val genres: List<IGDBGenre>? = listOf(),
                    val first_release_date: Long? = null,
                    val release_dates: List<ReleaseDateDTO>? = listOf(),
                    val screenshots: List<ImageDTO>? = listOf(),
@@ -39,7 +39,7 @@ open class BaseEnumeratedEntity(val id: Int, val name: String, val slug: String,
 
 class IGDBCompany(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
-class GenreDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
+class IGDBGenre(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
 class CollectionDTO(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
