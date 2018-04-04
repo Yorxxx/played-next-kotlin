@@ -123,7 +123,7 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into CoverDao")
+            @DisplayName("Then should map into RoomImage")
             fun intoCoverCache() {
                 entity.cover?.apply {
                     assertNotNull(result!!.cover)

@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.repository.datasource.room
+package com.piticlistudio.playednext.data.repository.datasource.room.image
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
@@ -7,7 +7,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.factory.DomainFactory
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeImageDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomGameImage
 import junit.framework.Assert
 import junit.framework.Assert.*
 import org.junit.After
@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class GameImagesDaoServiceTest {
+class RoomGameImagesServiceTest {
 
     @JvmField
     @Rule
@@ -36,22 +36,36 @@ class GameImagesDaoServiceTest {
     fun insertShouldStoreData() {
 
         val game = DomainFactory.makeGameCache()
-        val data = makeImageDao(gameId = game.id)
+        val data = makeRoomGameImage(gameId = game.id)
 
         database?.gamesDao()?.insert(game)
-        val result = database?.imagesDao()?.insert(data)
+        val result = database?.imageRoom()?.insert(data)
 
         Assert.assertNotNull(result)
+        assertEquals(data.id, result?.toInt())
+    }
+
+    @Test
+    fun insertShouldAutoGenerateAPrimaryKey() {
+
+        val game = DomainFactory.makeGameCache()
+        val data = makeRoomGameImage(gameId = game.id, id = null)
+
+        database?.gamesDao()?.insert(game)
+        val result = database?.imageRoom()?.insert(data)
+
+        Assert.assertNotNull(result)
+        assertNotNull(result)
         assertEquals(1L, result)
     }
 
     @Test
     fun insertIsNotAllowedIfGameDoesNotExistOnDatabase() {
 
-        val data = makeImageDao()
+        val data = makeRoomGameImage()
 
         try {
-            database?.imagesDao()?.insert(data)
+            database?.imageRoom()?.insert(data)
         } catch (e: Throwable) {
             assertNotNull(e)
             assertTrue(e is SQLiteConstraintException)
@@ -60,7 +74,7 @@ class GameImagesDaoServiceTest {
 
     @Test
     fun findShouldReturnsEmptyIfNotFound() {
-        val observer = database?.imagesDao()?.findForGame(2)?.test()
+        val observer = database?.imageRoom()?.findForGame(2)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {
@@ -76,17 +90,17 @@ class GameImagesDaoServiceTest {
 
         // Arrange
         val game = DomainFactory.makeGameCache()
-        val data = makeImageDao(gameId = game.id)
-        val data2 = makeImageDao(gameId = game.id)
-        val data3 = makeImageDao(gameId = game.id)
+        val data = makeRoomGameImage(gameId = game.id)
+        val data2 = makeRoomGameImage(gameId = game.id)
+        val data3 = makeRoomGameImage(gameId = game.id)
 
         database?.gamesDao()?.insert(game)
 
-        database?.imagesDao()?.insert(data)
-        database?.imagesDao()?.insert(data2)
-        database?.imagesDao()?.insert(data3)
+        database?.imageRoom()?.insert(data)
+        database?.imageRoom()?.insert(data2)
+        database?.imageRoom()?.insert(data3)
 
-        val observer = database?.imagesDao()?.findForGame(game.id)?.test()
+        val observer = database?.imageRoom()?.findForGame(game.id)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {

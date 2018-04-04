@@ -7,14 +7,14 @@ import com.piticlistudio.playednext.data.repository.datasource.room.franchise.Ro
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyService
 import com.piticlistudio.playednext.data.repository.datasource.room.game.GameDaoService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
-import com.piticlistudio.playednext.data.repository.datasource.room.image.GameImagesDaoService
+import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImagesService
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.PlatformDaoService
 import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoService
 
 @Database(entities = arrayOf(GameDao::class, RoomCompany::class, RoomGameDeveloper::class,
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
         RoomGameCollection::class, PlatformDao::class, GamePlatformDao::class, GameRelationDao::class,
-        ScreenshotDao::class),
+        RoomGameImage::class),
         version = 9, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -30,5 +30,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun relationDao(): RelationDaoService
 
-    abstract fun imagesDao(): GameImagesDaoService
+    abstract fun imageRoom(): RoomGameImagesService
 }

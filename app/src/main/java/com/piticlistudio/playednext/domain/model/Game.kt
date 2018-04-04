@@ -20,7 +20,7 @@ data class Game(val id: Int,
                 val totalRating: Double?,
                 val totalRatingCount: Int?,
                 val releasedAt: Long?,
-                val cover: Cover?,
+                val cover: Image?,
                 val timeToBeat: TimeToBeat?,
                 var developers: List<Company>?,
                 var publishers: List<Company>?,
@@ -39,12 +39,6 @@ data class Game(val id: Int,
 
 
     fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15
-}
-
-data class Cover(val url: String, val width: Int?, val height: Int?): BaseImage() {
-
-    val smallUrl: String = "https:${clearHTTPPrefix(url)}".replace("t_thumb", "t_cover_small")
-    val bigUrl: String = "https:${clearHTTPPrefix(url)}".replace("t_thumb", "t_cover_big")
 }
 
 data class TimeToBeat(val hastly: Int?, val normally: Int?, val completely: Int?)

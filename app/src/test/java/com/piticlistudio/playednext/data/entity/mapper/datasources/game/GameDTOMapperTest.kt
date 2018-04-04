@@ -1,15 +1,18 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
-import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
+import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
+import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.image.IGDBImageMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
+import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeImage
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import org.junit.Rule
 import org.junit.jupiter.api.Assertions.*
@@ -34,16 +37,21 @@ internal class GameDTOMapperTest {
 
         @Mock
         lateinit var companymapper: IGDBCompanyMapper
-        @Mock lateinit var genremapper: IGDBGenreMapper
-        @Mock lateinit var collectionmapper: IGDBCollectionMapper
-        @Mock lateinit var platformmapper: PlatformDTOMapper
-        @Mock lateinit var imagesMapper: ImageDTOMapper
+        @Mock
+        lateinit var genremapper: IGDBGenreMapper
+        @Mock
+        lateinit var collectionmapper: IGDBCollectionMapper
+        @Mock
+        lateinit var platformmapper: PlatformDTOMapper
+        @Mock
+        lateinit var imagesMapper: IGDBImageMapper
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
             mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper, imagesMapper)
+            whenever(imagesMapper.mapFromDataLayer(any())).thenReturn(makeImage())
         }
 
         @Nested
@@ -98,7 +106,10 @@ internal class GameDTOMapperTest {
                 }
                 verify(platformmapper).mapFromModel(model.platforms)
                 model.screenshots?.forEach {
-                    verify(imagesMapper).mapFromModel(it)
+                    verify(imagesMapper).mapFromDataLayer(it)
+                }
+                model.cover?.let {
+                    verify(imagesMapper).mapFromDataLayer(it)
                 }
             }
 
@@ -110,17 +121,6 @@ internal class GameDTOMapperTest {
                     assertEquals(hastly, result!!.timeToBeat?.hastly)
                     assertEquals(normally, result!!.timeToBeat?.normally)
                     assertEquals(completely, result!!.timeToBeat?.completely)
-                }
-            }
-
-            @Test
-            @DisplayName("Then maps into Cover")
-            fun intoCoverEntity() {
-                model.cover?.apply {
-                    assertNotNull(result!!.cover)
-                    assertEquals(url, result!!.cover?.url)
-                    assertEquals(width, result!!.cover?.width)
-                    assertEquals(height, result!!.cover?.height)
                 }
             }
         }

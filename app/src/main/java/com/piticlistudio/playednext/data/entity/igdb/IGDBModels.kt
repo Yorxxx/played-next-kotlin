@@ -28,9 +28,9 @@ data class GameDTO(val id: Int,
                    val genres: List<IGDBGenre>? = listOf(),
                    val first_release_date: Long? = null,
                    val release_dates: List<ReleaseDateDTO>? = listOf(),
-                   val screenshots: List<ImageDTO>? = listOf(),
+                   val screenshots: List<IGDBImage>? = listOf(),
                    val videos: List<VideoDTO>? = listOf(),
-                   val cover: ImageDTO? = null,
+                   val cover: IGDBImage? = null,
                    val games: List<Int>? = listOf(),
                    val platforms: List<PlatformDTO>? = listOf())
 
@@ -49,6 +49,12 @@ data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: I
 
 data class ReleaseDateDTO(val game: Int, val category: Int, val platform: Int?, val human: String)
 
-data class ImageDTO(val url: String, val cloudinary_id: String?, val width: Int?, val height: Int?)
+data class IGDBImage(val url: String, val cloudinary_id: String?, val width: Int?, val height: Int?) {
+    val mediumSizeUrl: String = "https:${clearHTTPPrefix(url)}".replace("t_thumb", "t_screenshot_med")
+
+    protected fun clearHTTPPrefix(input: String): String {
+        return input.removePrefix("http:").removePrefix("https:")
+    }
+}
 
 data class VideoDTO(val name: String, val video_id: String)

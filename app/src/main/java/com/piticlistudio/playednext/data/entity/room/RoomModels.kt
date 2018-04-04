@@ -22,16 +22,16 @@ data class GameDao(@PrimaryKey val id: Int,
                    @ColumnInfo(name = "total_rating_count") val totalRatingCount: Int?,
                    @ColumnInfo(name = "first_release_date") val firstReleaseAt: Long?,
                    @Embedded val timeToBeat: TimeToBeatDao?,
-                   @Embedded val cover: CoverDao?,
+                   @Embedded val cover: RoomImage?,
                    @ColumnInfo(name = "synced_at") val syncedAt: Long)
 
 data class TimeToBeatDao(@ColumnInfo(name = "beat_hastly") val hastly: Int?,
                          @ColumnInfo(name = "beat_normally") val normally: Int?,
                          @ColumnInfo(name = "beat_completely") val completely: Int?)
 
-data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
-                    @ColumnInfo(name = "cover_width") val width: Int?,
-                    @ColumnInfo(name = "cover_height") val height: Int?)
+data class RoomImage(@ColumnInfo(name = "cover_url") val url: String,
+                     @ColumnInfo(name = "cover_width") val width: Int?,
+                     @ColumnInfo(name = "cover_height") val height: Int?)
 
 @Entity(tableName = "company")
 data class RoomCompany(@PrimaryKey val id: Int, val name: String, val url: String?)
@@ -89,8 +89,7 @@ data class GamePlatformDao(val gameId: Int, val platformId: Int)
 data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
 
 @Entity(tableName = "game_screenshots",
-        primaryKeys = arrayOf("id"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE))
         ))
-data class ScreenshotDao(val id: String, var gameId: Int?, val url: String, val width: Int?, val height: Int?)
+data class RoomGameImage(@Embedded val image: RoomImage, @PrimaryKey(autoGenerate = true) var id: Int? = null, val gameId: Int)

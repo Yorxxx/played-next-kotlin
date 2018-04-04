@@ -1,5 +1,6 @@
 package com.piticlistudio.playednext.test.factory
 
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombFranchise
 import com.piticlistudio.playednext.data.entity.room.RoomCollection
 import com.piticlistudio.playednext.data.entity.igdb.IGDBCollection
 import com.piticlistudio.playednext.domain.model.Collection
@@ -22,5 +23,7 @@ class CollectionFactory {
             return IGDBCollection(randomInt(), randomString(), randomString(), randomString(), DataFactory.randomLong(),
                     DataFactory.randomLong())
         }
+
+        fun makeGiantbombCollection(): GiantbombFranchise = GiantbombFranchise(randomInt(), randomString())
     }
 }
