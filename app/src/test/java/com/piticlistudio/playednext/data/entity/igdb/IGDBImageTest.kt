@@ -1,23 +1,26 @@
-package com.piticlistudio.playednext.domain.model
+package com.piticlistudio.playednext.data.entity.igdb
 
+import com.piticlistudio.playednext.domain.model.GameImage
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-internal class GameImageTest {
+internal class IGDBImageTest {
 
-    @DisplayName("Given a GameImage instance")
+    @DisplayName("Given a IGDBImage instance")
     @Nested
-    inner class GameImageInstance {
+    inner class IGDBImageInstance {
 
-        private lateinit var image: GameImage
+        private lateinit var image: IGDBImage
         private val url = "//images.igdb.com/igdb/image/upload/t_thumb/kh5qruqeea8zeiq9phiw.jpg"
 
         @BeforeEach
         internal fun setUp() {
-            image = GameImage("id", url, 100, 200)
+            image = IGDBImage(url, randomString(), randomInt(), randomInt())
         }
 
         @DisplayName("it should return correct mediumUrl")
@@ -27,16 +30,16 @@ internal class GameImageTest {
         }
     }
 
-    @DisplayName("Given a GameImage instance with http preffix")
+    @DisplayName("Given a IGDBImage instance with http preffix")
     @Nested
-    inner class GameImageInstanceWithHTTP {
+    inner class IGDBImageInstanceWithHTTP {
 
-        private lateinit var image: GameImage
+        private lateinit var image: IGDBImage
         private val url = "http://images.igdb.com/igdb/image/upload/t_thumb/kh5qruqeea8zeiq9phiw.jpg"
 
         @BeforeEach
         internal fun setUp() {
-            image = GameImage("id", url, 100, 200)
+            image = IGDBImage(url, randomString(), randomInt(), randomInt())
         }
 
         @DisplayName("it should return correct mediumUrl")
@@ -46,16 +49,16 @@ internal class GameImageTest {
         }
     }
 
-    @DisplayName("Given a GameImage instance with https preffix")
+    @DisplayName("Given a IGDBImage instance with https preffix")
     @Nested
-    inner class GameImageInstanceWithHTTPS {
+    inner class IGDBImageInstanceWithHTTPS {
 
-        private lateinit var image: GameImage
+        private lateinit var image: IGDBImage
         private val url = "https://images.igdb.com/igdb/image/upload/t_thumb/kh5qruqeea8zeiq9phiw.jpg"
 
         @BeforeEach
         internal fun setUp() {
-            image = GameImage("id", url, 100, 200)
+            image = IGDBImage(url, randomString(), randomInt(), randomInt())
         }
 
         @DisplayName("it should return correct mediumUrl")

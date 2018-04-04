@@ -17,12 +17,8 @@ class GameSearchPagedListAdapter @Inject constructor(private val connectivity: B
 
     override fun onBindViewHolder(holder: GameSearchViewHolder?, position: Int) {
         val game = getItem(position)
-        var coverToLoad: String? = game?.cover?.smallUrl
-        if (connectivity.value.type == ConnectivityManager.TYPE_WIFI) {
-            coverToLoad = game?.cover?.bigUrl
-        }
         onClickListener?.let {
-            holder?.bindTo(game, coverToLoad, it)
+            holder?.bindTo(game, game?.cover?.url, it)
         }
     }
 

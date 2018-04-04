@@ -1,11 +1,11 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
-import com.piticlistudio.playednext.data.entity.room.CoverDao
-import com.piticlistudio.playednext.data.entity.room.GameDao
-import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
-import com.piticlistudio.playednext.domain.model.Cover
+import com.piticlistudio.playednext.data.entity.room.GameDao
+import com.piticlistudio.playednext.data.entity.room.RoomImage
+import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
 import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.Image
 import com.piticlistudio.playednext.domain.model.TimeToBeat
 import javax.inject.Inject
 
@@ -32,9 +32,9 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         }
     }
 
-    private fun mapFromCoverModel(type: CoverDao?): Cover? {
+    private fun mapFromCoverModel(type: RoomImage?): Image? {
         type?.apply {
-            return Cover(url, width, height)
+            return Image(url, width, height)
         }
         return null
     }
@@ -46,9 +46,9 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         return null
     }
 
-    private fun mapFromCoverEntity(type: Cover?): CoverDao? {
+    private fun mapFromCoverEntity(type: Image?): RoomImage? {
         type?.apply {
-            return CoverDao(url, width, height)
+            return RoomImage(url, width, height)
         }
         return null
     }

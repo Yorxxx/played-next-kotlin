@@ -8,25 +8,17 @@ import javax.inject.Inject
 
 class SaveGameUseCase @Inject constructor(
         private val repository: GameRepository,
-        private val platformRepository: PlatformRepository,
-        private val imagesRepository: GameImagesRepository) : CompletableUseCaseWithParameter<Game> {
+        private val platformRepository: PlatformRepository) : CompletableUseCaseWithParameter<Game> {
 
     override fun execute(parameter: Game): Completable {
         return repository.save(parameter)
                 .andThen(Completable.concat(listOf(
-                        savePlatforms(parameter),
-                        saveImages(parameter))))
+                        savePlatforms(parameter))))
     }
 
     private fun savePlatforms(game: Game): Completable {
         return game.platforms?.let {
             platformRepository.saveForGame(game.id, it)
-        } ?: Completable.complete()
-    }
-
-    private fun saveImages(game: Game): Completable {
-        return game.images?.let {
-            imagesRepository.save(game.id, it)
         } ?: Completable.complete()
     }
 }

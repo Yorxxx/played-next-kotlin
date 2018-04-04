@@ -54,8 +54,8 @@ class DomainFactory {
             return RoomCollection(id, randomString(), randomString())
         }
 
-        fun makeCoverCache(): CoverDao {
-            return CoverDao(randomString(), randomInt(), randomInt())
+        fun makeCoverCache(): RoomImage {
+            return RoomImage(randomString(), randomInt(), randomInt())
         }
 
         fun makeTimeToBeatCache(): TimeToBeatDao {
@@ -74,8 +74,8 @@ class DomainFactory {
             return GameRelationStatus.values().get(randomInt() % GameRelationStatus.values().size)
         }
 
-        fun makeImageDao(id: String = randomString(), gameId: Int = randomInt()): ScreenshotDao {
-            return ScreenshotDao(id, gameId, randomString(), randomInt(), randomInt())
-        }
+        fun makeRoomImage(): RoomImage = RoomImage(randomString(), randomInt(), randomInt())
+
+        fun makeRoomGameImage(gameId: Int = randomInt(), id: Int? = randomInt()): RoomGameImage = RoomGameImage(makeRoomImage(), id, gameId)
     }
 }

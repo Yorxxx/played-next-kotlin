@@ -1,11 +1,9 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.interactor.platform.LoadPlatformsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.repository.GameImagesRepository
 import com.piticlistudio.playednext.domain.repository.GameRepository
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
@@ -21,7 +19,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
@@ -35,8 +32,6 @@ class LoadGameUseCaseTest {
         lateinit var repository: GameRepository
         @Mock
         lateinit var platformRepository: LoadPlatformsForGameUseCase
-        @Mock
-        lateinit var imagesRepository: GameImagesRepository
 
         private val gameId = 10
         private var useCase: LoadGameUseCase? = null
@@ -44,7 +39,7 @@ class LoadGameUseCaseTest {
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            useCase = LoadGameUseCase(repository, platformRepository, imagesRepository)
+            useCase = LoadGameUseCase(repository, platformRepository)
         }
 
         @Nested
@@ -62,7 +57,6 @@ class LoadGameUseCaseTest {
                 val flowable = Flowable.create<Game>({ it.onNext(result) }, BackpressureStrategy.MISSING)
                 whenever(repository.load(gameId)).thenReturn(flowable)
                 whenever(platformRepository.execute(result)).thenReturn(Single.just(platforms))
-                whenever(imagesRepository.loadForGame(result.id)).thenReturn(Flowable.just(images))
                 testObserver = useCase?.execute(gameId)!!.test()
             }
 
@@ -86,94 +80,6 @@ class LoadGameUseCaseTest {
                     assertNoErrors()
                     assertNotComplete()
                     assertValue(result)
-                }
-            }
-
-            @Test
-            @DisplayName("Then should not request images")
-            fun noImagesRequested() {
-                verify(imagesRepository, never()).loadForGame(gameId)
-            }
-
-            @Nested
-            @DisplayName("And has empty images")
-            inner class EmptyImages {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.images = listOf()
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then does not requests images repository")
-                fun requestsRepository() {
-                    verify(imagesRepository, never()).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.images != null && it.images!!.isEmpty() }
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("And does not have images assigned")
-            inner class WithoutImages {
-
-                @BeforeEach
-                internal fun setUp() {
-                    result.images = null
-                    testObserver = useCase?.execute(gameId)!!.test()
-                }
-
-                @Test
-                @DisplayName("Then requests repository")
-                fun requestsRepository() {
-                    verify(imagesRepository).loadForGame(result.id)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun withoutErrors() {
-                    assertNotNull(testObserver)
-                    testObserver?.apply {
-                        assertNoErrors()
-                        assertNotComplete()
-                        assertValueCount(1)
-                        assertValue { it.images == images }
-                    }
-                }
-
-                @Nested
-                @DisplayName("And request fails")
-                inner class RequestFails {
-
-                    @BeforeEach
-                    internal fun setUp() {
-                        result.images = null
-                        whenever(imagesRepository.loadForGame(anyInt())).thenReturn(Flowable.error(Throwable("foo")))
-                        testObserver = useCase?.execute(gameId)!!.test()
-                    }
-
-                    @Test
-                    @DisplayName("Then emits ignores errors")
-                    fun withoutErrors() {
-                        assertNotNull(testObserver)
-                        testObserver?.apply {
-                            assertNoErrors()
-                            assertNotComplete()
-                            assertValueCount(1)
-                            assertValue { it.images != null && it.images!!.isEmpty() }
-                        }
-                    }
                 }
             }
         }

@@ -59,7 +59,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
     private fun loadImageToShow(data: Game) {
         data.images?.let {
             if (it.isNotEmpty()) {
-                viewState.value = currentViewState().copy(showImage = it[0].mediumSizeUrl)
+                viewState.value = currentViewState().copy(showImage = it[0].url)
                 disposable = Flowable.interval(10, TimeUnit.SECONDS)
                         .take(it.size.toLong())
                         .map { data.images!!.get(it.toInt()) }
@@ -68,7 +68,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                         .toObservable()
                         .subscribeBy(
                                 onNext = {
-                                    viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl)
+                                    viewState.value = currentViewState().copy(showImage = it.url)
                                 },
                                 onError = {
                                     viewState.value = currentViewState().copy()

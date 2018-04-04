@@ -1,7 +1,11 @@
 package com.piticlistudio.playednext.domain.interactor.game
 
-import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.domain.repository.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import com.piticlistudio.playednext.domain.repository.GameRepository
+import com.piticlistudio.playednext.domain.repository.PlatformRepository
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.Completable
 import io.reactivex.observers.TestObserver
@@ -24,8 +28,7 @@ internal class SaveGameUseCaseTest {
         private lateinit var repository: GameRepository
         @Mock
         private lateinit var platformRepository: PlatformRepository
-        @Mock
-        private lateinit var imagesRepository: GameImagesRepository
+
         private var usecase: SaveGameUseCase? = null
 
         val game = makeGame()
@@ -35,8 +38,7 @@ internal class SaveGameUseCaseTest {
             MockitoAnnotations.initMocks(this)
             whenever(repository.save(game)).thenReturn(Completable.complete())
             whenever(platformRepository.saveForGame(any(), any())).thenReturn(Completable.complete())
-            whenever(imagesRepository.save(any(), any())).thenReturn(Completable.complete())
-            usecase = SaveGameUseCase(repository, platformRepository, imagesRepository)
+            usecase = SaveGameUseCase(repository, platformRepository)
         }
 
         @Nested
@@ -129,39 +131,6 @@ internal class SaveGameUseCaseTest {
                     assertNotNull(observer)
                     observer?.apply {
                         assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-            }
-
-            @Nested
-            @DisplayName("and does have images")
-            inner class WithImages {
-
-                @BeforeEach
-                internal fun setUp() {
-                    observer = usecase?.execute(game)?.test()
-                }
-
-                @Test
-                @DisplayName("Then saves into repository")
-                fun requestsRepository() {
-                    verify(repository).save(game)
-                }
-
-                @Test
-                @DisplayName("Then saves developers")
-                fun savesDevelopers() {
-                    verify(imagesRepository).save(game.id, game.images!!)
-                }
-
-                @Test
-                @DisplayName("Then emits without errors")
-                fun emits() {
-                    assertNotNull(observer)
-                    with(observer) {
-                        this!!.assertNoValues()
                         assertNoErrors()
                         assertComplete()
                     }

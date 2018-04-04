@@ -4,10 +4,10 @@ import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.image.IGDBImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
-import com.piticlistudio.playednext.data.entity.igdb.ImageDTO
+import com.piticlistudio.playednext.data.entity.igdb.IGDBImage
 import com.piticlistudio.playednext.data.entity.igdb.TimeToBeatDTO
 import com.piticlistudio.playednext.domain.model.*
 import com.piticlistudio.playednext.domain.model.Collection
@@ -17,13 +17,15 @@ class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompa
                                         private val igdbGenreMapper: IGDBGenreMapper,
                                         private val igdbCollectionMapper: IGDBCollectionMapper,
                                         private val platformDTOMapper: PlatformDTOMapper,
-                                        private val imagesDTOMapper: ImageDTOMapper) : LayerDataMapper<GameDTO, Game> {
+                                        private val imagesMapperIGDB: IGDBImageMapper) : LayerDataMapper<GameDTO, Game> {
 
     override fun mapFromModel(type: GameDTO): Game {
         with(type) {
             val images = mutableListOf<GameImage>()
             screenshots?.forEach {
-                images.add(imagesDTOMapper.mapFromModel(it))
+                imagesMapperIGDB.mapFromDataLayer(it).apply {
+                    images.add(GameImage(url, width, height, type.id))
+                }
             }
             val devs = mutableListOf<Company>()
             developers?.forEach {
@@ -43,7 +45,8 @@ class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompa
             }
             return Game(id, name, created_at, updated_at, summary, storyline, url, rating,
                     rating_count, aggregated_rating, aggregated_rating_count, total_rating,
-                    total_rating_count, first_release_date, mapCoverModel(cover),
+                    total_rating_count, first_release_date,
+                    type.cover?.let { imagesMapperIGDB.mapFromDataLayer(it) },
                     mapTimeToBeatModel(time_to_beat), pubs,
                     devs,
                     gens,
@@ -60,13 +63,6 @@ class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompa
     private fun mapTimeToBeatModel(type: TimeToBeatDTO?): TimeToBeat? {
         type?.apply {
             return TimeToBeat(hastly, normally, completely)
-        }
-        return null
-    }
-
-    private fun mapCoverModel(type: ImageDTO?): Cover? {
-        type?.apply {
-            return Cover(url, width, height)
         }
         return null
     }

@@ -1,18 +1,21 @@
 package com.piticlistudio.playednext.test.factory
 
 import com.piticlistudio.playednext.data.entity.giantbomb.*
-import com.piticlistudio.playednext.data.entity.igdb.*
-import com.piticlistudio.playednext.data.entity.room.CoverDao
+import com.piticlistudio.playednext.data.entity.igdb.GameDTO
+import com.piticlistudio.playednext.data.entity.igdb.ReleaseDateDTO
+import com.piticlistudio.playednext.data.entity.igdb.TimeToBeatDTO
+import com.piticlistudio.playednext.data.entity.igdb.VideoDTO
 import com.piticlistudio.playednext.data.entity.room.GameDao
+import com.piticlistudio.playednext.data.entity.room.RoomImage
 import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
-import com.piticlistudio.playednext.domain.model.Cover
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
+import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeGiantbombCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeIGDBCollection
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeIGDBCompany
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeGiantbombCompany
+import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeIGDBCompany
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDate
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomDouble
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
@@ -22,9 +25,11 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
+import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeIGDBImage
+import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
@@ -38,22 +43,35 @@ class GameFactory {
     companion object Factory {
 
         fun makeGame(id: Int = randomInt()): Game {
-            return Game(id, randomString(), randomLong(), randomLong(), randomString(),
-                    randomString(), randomString(), randomDouble(), randomInt(), randomDouble(),
-                    randomInt(), randomDouble(), randomInt(), randomLong(), makeCover(),
-                    makeTimeToBeat(),
-                    randomListOf { makeCompany() },
-                    randomListOf { makeCompany() },
-                    randomListOf { makeGenre() },
-                    makeCollection(), randomLong(),
-                    randomListOf(5) { makePlatform() },
-                    randomListOf { makeGameImage() })
+            return Game(id = id,
+                    name = randomString(),
+                    releasedAt = randomLong(),
+                    updatedAt = randomLong(),
+                    url = randomString(),
+                    summary = randomString(),
+                    storyline = randomString(),
+                    rating = randomDouble(),
+                    totalRatingCount = randomInt(),
+                    aggregatedRating = randomDouble(),
+                    ratingCount = randomInt(),
+                    totalRating = randomDouble(),
+                    aggregatedRatingCount = randomInt(),
+                    createdAt = randomLong(),
+                    cover = makeImage(),
+                    timeToBeat = makeTimeToBeat(),
+                    publishers = randomListOf { makeCompany() },
+                    developers = randomListOf { makeCompany() },
+                    genres = randomListOf { makeGenre() },
+                    collection = makeCollection(),
+                    syncedAt = randomLong(),
+                    platforms = randomListOf(5) { makePlatform() },
+                    images = randomListOf { makeGameImage() })
         }
 
-        fun makeGiantbombGame(developers: List<GiantbombCompany>?  = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
-                              publishers: List<GiantbombCompany>?  = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
+        fun makeGiantbombGame(developers: List<GiantbombCompany>? = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
+                              publishers: List<GiantbombCompany>? = DataFactory.Factory.randomListOf(10) { makeGiantbombCompany() },
                               genres: List<GiantbombGenre>? = randomListOf(10) { makeGiantbombGenre() },
-                              franchises: List<GiantbombFranchise>? = randomListOf(10) { makeGiantbombFranchise() },
+                              franchises: List<GiantbombFranchise>? = randomListOf(10) { makeGiantbombCollection() },
                               platforms: List<GiantbombPlatform>? = randomListOf(10) { makeGiantbombPlatform() },
                               images: List<GiantbombGameImage>? = randomListOf(10) { makeGiantbombGameImage() },
                               cover: GiantbombGameImage? = makeGiantbombGameImage(),
@@ -80,12 +98,6 @@ class GameFactory {
                     site_detail_url = randomString())
         }
 
-        fun makeGiantbombFranchise(): GiantbombFranchise = GiantbombFranchise(randomInt(), randomString())
-
-        fun makeCover(): Cover {
-            return Cover(randomString(), randomInt(), randomInt())
-        }
-
         fun makeTimeToBeat(): TimeToBeat {
             return TimeToBeat(randomInt(), randomInt(), randomInt())
         }
@@ -98,8 +110,8 @@ class GameFactory {
                     randomLong())
         }
 
-        fun makeCoverCache(): CoverDao {
-            return CoverDao(randomString(), randomInt(), randomInt())
+        fun makeCoverCache(): RoomImage {
+            return RoomImage(randomString(), randomInt(), randomInt())
         }
 
         fun makeTimeToBeatCache(): TimeToBeatDao {
@@ -107,19 +119,36 @@ class GameFactory {
         }
 
         fun makeGameRemote(): GameDTO {
-            return GameDTO(randomInt(), randomString(), randomString(), randomString(), randomLong(),
-                    randomLong(), randomString(), randomString(), makeIGDBCollection(), randomInt(),
-                    randomInt(), randomDouble(), randomDouble(), randomInt(), randomDouble(),
-                    randomInt(), randomDouble(), randomInt(),
-                    randomListOf(factory = ::makeIGDBCompany),
-                    randomListOf(factory = ::makeIGDBCompany),
-                    randomIntList(), makeTimeToBeatRemote(),
-                    randomListOf(factory = ::makeIGDBGenre), randomLong(),
-                    randomListOf(factory = this::makeReleaseDateRemote),
-                    randomListOf(factory = this::makeImageRemote),
-                    randomListOf(factory = this::makeVideoRemote),
-                    makeImageRemote(), randomIntList(),
-                    randomListOf(factory = ::makePlatformDTO))
+            return GameDTO(id = randomInt(),
+                    storyline = randomString(),
+                    summary = randomString(),
+                    url = randomString(),
+                    created_at = randomLong(),
+                    first_release_date = randomLong(),
+                    name = randomString(),
+                    slug = randomString(),
+                    collection = makeIGDBCollection(),
+                    aggregated_rating_count = randomInt(),
+                    franchise = randomInt(),
+                    rating = randomDouble(),
+                    aggregated_rating = randomDouble(),
+                    hypes = randomInt(),
+                    popularity = randomDouble(),
+                    rating_count = randomInt(),
+                    total_rating = randomDouble(),
+                    total_rating_count = randomInt(),
+                    developers = randomListOf(10) { makeIGDBCompany() },
+                    publishers = randomListOf(10) { makeIGDBCompany() },
+                    game_engines = randomIntList(),
+                    time_to_beat = makeTimeToBeatRemote(),
+                    genres = randomListOf(5) { makeIGDBGenre() },
+                    updated_at = randomLong(),
+                    release_dates = randomListOf(3) { makeReleaseDateRemote() },
+                    screenshots = randomListOf(12) { makeIGDBImage() },
+                    videos = randomListOf(2) { makeVideoRemote() },
+                    cover = makeIGDBImage(),
+                    games = randomIntList(),
+                    platforms = randomListOf(4) { makePlatformDTO() })
         }
 
         fun makeTimeToBeatRemote(): TimeToBeatDTO {
@@ -128,10 +157,6 @@ class GameFactory {
 
         fun makeReleaseDateRemote(): ReleaseDateDTO {
             return ReleaseDateDTO(randomInt(), randomInt(), randomInt(), randomString())
-        }
-
-        fun makeImageRemote(): ImageDTO {
-            return ImageDTO(randomString(), randomString(), randomInt(), randomInt())
         }
 
         fun makeVideoRemote(): VideoDTO {
