@@ -6,7 +6,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makePlatformDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomPlatform
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRelationDao
 import junit.framework.Assert
 import junit.framework.Assert.fail
@@ -36,9 +36,9 @@ class RelationDaoServiceTest {
     fun insert_shouldStore() {
 
         val game = makeGameCache()
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
-        database?.platformDao()?.insert(platform)
+        database?.platformRoom()?.insert(platform)
 
         val data = makeRelationDao(game.id, platform.id)
 
@@ -51,8 +51,8 @@ class RelationDaoServiceTest {
     fun insert_failsIfGameIsNotStored() {
 
         val game = makeGameCache()
-        val platform = makePlatformDao()
-        database?.platformDao()?.insert(platform)
+        val platform = makeRoomPlatform()
+        database?.platformRoom()?.insert(platform)
 
         try {
             val data = makeRelationDao(game.id, platform.id)
@@ -66,7 +66,7 @@ class RelationDaoServiceTest {
     fun insert_failsIfPlatformIsNotStored() {
 
         val game = makeGameCache()
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
 
         try {
@@ -80,9 +80,9 @@ class RelationDaoServiceTest {
     @Test
     fun findForGameAndPlatform_shouldReturnRelation() {
         val game = makeGameCache()
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
-        database?.platformDao()?.insert(platform)
+        database?.platformRoom()?.insert(platform)
         val relation = makeRelationDao(game.id, platform.id)
         database?.relationDao()?.insert(relation)
 
@@ -100,9 +100,9 @@ class RelationDaoServiceTest {
     @Test
     fun findForGameAndPlatform_returnsEmptyListIfNoMatch() {
         val game = makeGameCache()
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
-        database?.platformDao()?.insert(platform)
+        database?.platformRoom()?.insert(platform)
         val relation = makeRelationDao(game.id, platform.id)
         database?.relationDao()?.insert(relation)
 

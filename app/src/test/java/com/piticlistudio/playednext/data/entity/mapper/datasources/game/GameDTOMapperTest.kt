@@ -8,7 +8,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBC
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.IGDBImageMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.IGDBPlatformMapper
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
@@ -42,7 +42,7 @@ internal class GameDTOMapperTest {
         @Mock
         lateinit var collectionmapper: IGDBCollectionMapper
         @Mock
-        lateinit var platformmapper: PlatformDTOMapper
+        lateinit var platformmapper: IGDBPlatformMapper
         @Mock
         lateinit var imagesMapper: IGDBImageMapper
         lateinit var mapper: GameDTOMapper
@@ -104,7 +104,9 @@ internal class GameDTOMapperTest {
                 model.genres?.forEach {
                     verify(genremapper).mapFromDataLayer(it)
                 }
-                verify(platformmapper).mapFromModel(model.platforms)
+                model.platforms?.forEach {
+                    verify(platformmapper).mapFromDataLayer(it)
+                }
                 model.screenshots?.forEach {
                     verify(imagesMapper).mapFromDataLayer(it)
                 }

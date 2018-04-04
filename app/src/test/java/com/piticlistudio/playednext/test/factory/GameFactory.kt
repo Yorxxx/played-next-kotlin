@@ -32,7 +32,7 @@ import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantb
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatformDTO
+import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeIGDBPlatform
 import java.util.*
 
 /**
@@ -148,7 +148,7 @@ class GameFactory {
                     videos = randomListOf(2) { makeVideoRemote() },
                     cover = makeIGDBImage(),
                     games = randomIntList(),
-                    platforms = randomListOf(4) { makePlatformDTO() })
+                    platforms = randomListOf(4) { makeIGDBPlatform() })
         }
 
         fun makeTimeToBeatRemote(): TimeToBeatDTO {

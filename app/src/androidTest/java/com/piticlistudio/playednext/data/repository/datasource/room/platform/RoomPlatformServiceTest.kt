@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.repository.datasource.room
+package com.piticlistudio.playednext.data.repository.datasource.room.platform
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.EmptyResultSetException
@@ -6,9 +6,9 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.entity.room.GamePlatformDao
+import com.piticlistudio.playednext.data.entity.room.RoomGamePlatform
 import com.piticlistudio.playednext.factory.DomainFactory
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makePlatformDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomPlatform
 import junit.framework.Assert
 import org.junit.After
 import org.junit.Before
@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class PlatformDaoServiceTest {
+class RoomPlatformServiceTest {
 
     @JvmField
     @Rule
@@ -35,9 +35,9 @@ class PlatformDaoServiceTest {
     @Test
     fun insertShouldStoreData() {
 
-        val data = makePlatformDao()
+        val data = makeRoomPlatform()
 
-        val result = database?.platformDao()?.insert(data)
+        val result = database?.platformRoom()?.insert(data)
 
         Assert.assertNotNull(result)
         Assert.assertEquals(data.id, result!!.toInt())
@@ -45,10 +45,10 @@ class PlatformDaoServiceTest {
 
     fun insertShouldIgnoreIfAlreadyStored() {
 
-        val data = makePlatformDao()
+        val data = makeRoomPlatform()
 
-        val id = database?.platformDao()?.insert(data)
-        val id2 = database?.platformDao()?.insert(data)
+        val id = database?.platformRoom()?.insert(data)
+        val id2 = database?.platformRoom()?.insert(data)
 
         Assert.assertTrue(id!! > 0L)
         Assert.assertEquals(0L, id2)
@@ -56,13 +56,13 @@ class PlatformDaoServiceTest {
 
     @Test
     fun insertGamePlatformShouldStoreData() {
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         val game = DomainFactory.makeGameCache()
-        val data = GamePlatformDao(game.id, platform.id)
+        val data = RoomGamePlatform(game.id, platform.id)
 
         database?.gamesDao()?.insert(game)
-        database?.platformDao()?.insert(platform)
-        val result = database?.platformDao()?.insertGamePlatform(data)
+        database?.platformRoom()?.insert(platform)
+        val result = database?.platformRoom()?.insertGamePlatform(data)
 
         Assert.assertNotNull(result)
         Assert.assertTrue(result!! > 0)
@@ -70,68 +70,39 @@ class PlatformDaoServiceTest {
 
     @Test
     fun insertGamePlatformShouldReplaceDataOnConflict() {
-        val platform = makePlatformDao()
+        val platform = makeRoomPlatform()
         val game = DomainFactory.makeGameCache()
-        val data = GamePlatformDao(game.id, platform.id)
+        val data = RoomGamePlatform(game.id, platform.id)
 
         database?.gamesDao()?.insert(game)
-        database?.platformDao()?.insert(platform)
-        database?.platformDao()?.insertGamePlatform(data)
-        val result = database?.platformDao()?.insertGamePlatform(data)
+        database?.platformRoom()?.insert(platform)
+        database?.platformRoom()?.insertGamePlatform(data)
+        val result = database?.platformRoom()?.insertGamePlatform(data)
 
         Assert.assertNotNull(result)
         Assert.assertTrue(result!! > 0)
     }
 
     @Test
-    fun findShouldThrowsErrorIfNotFound() {
-        val observer = database?.platformDao()?.find(2)?.test()
-
-        Assert.assertNotNull(observer)
-        observer?.apply {
-            assertNoValues()
-            assertNotComplete()
-            assertError { it is EmptyResultSetException }
-        }
-    }
-
-    @Test
-    fun findShouldReturnData() {
-        val data = makePlatformDao()
-
-        database?.platformDao()?.insert(data)
-
-        val observer = database?.platformDao()?.find(data.id.toLong())?.test()
-
-        Assert.assertNotNull(observer)
-        observer?.apply {
-            assertNoErrors()
-            assertValueCount(1)
-            assertComplete()
-            assertValue(data)
-        }
-    }
-
-    @Test
     fun findForGameShouldReturnData() {
         val game = DomainFactory.makeGameCache()
         val game2 = DomainFactory.makeGameCache()
-        val platform1 = makePlatformDao()
-        val platform2 = makePlatformDao()
-        val data = GamePlatformDao(game.id, platform1.id)
-        val data2 = GamePlatformDao(game.id, platform2.id)
-        val data3 = GamePlatformDao(game2.id, platform1.id)
+        val platform1 = makeRoomPlatform()
+        val platform2 = makeRoomPlatform()
+        val data = RoomGamePlatform(game.id, platform1.id)
+        val data2 = RoomGamePlatform(game.id, platform2.id)
+        val data3 = RoomGamePlatform(game2.id, platform1.id)
 
         database?.gamesDao()?.insert(game)
         database?.gamesDao()?.insert(game2)
-        database?.platformDao()?.insert(platform1)
-        database?.platformDao()?.insert(platform2)
-        database?.platformDao()?.insertGamePlatform(data)
-        database?.platformDao()?.insertGamePlatform(data2)
-        database?.platformDao()?.insertGamePlatform(data3)
+        database?.platformRoom()?.insert(platform1)
+        database?.platformRoom()?.insert(platform2)
+        database?.platformRoom()?.insertGamePlatform(data)
+        database?.platformRoom()?.insertGamePlatform(data2)
+        database?.platformRoom()?.insertGamePlatform(data3)
 
         // Act
-        val observer = database?.platformDao()?.findForGame(game.id)?.test()
+        val observer = database?.platformRoom()?.findForGame(game.id)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {
@@ -152,7 +123,7 @@ class PlatformDaoServiceTest {
 
         // Act
         // Act
-        val observer = database?.platformDao()?.findForGame(game.id)?.test()
+        val observer = database?.platformRoom()?.findForGame(game.id)?.test()
 
         Assert.assertNotNull(observer)
         observer?.apply {

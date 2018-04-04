@@ -32,7 +32,7 @@ data class GameDTO(val id: Int,
                    val videos: List<VideoDTO>? = listOf(),
                    val cover: IGDBImage? = null,
                    val games: List<Int>? = listOf(),
-                   val platforms: List<PlatformDTO>? = listOf())
+                   val platforms: List<IGDBPlatform>? = listOf())
 
 open class BaseEnumeratedEntity(val id: Int, val name: String, val slug: String, val url: String?,
                                 val created_at: Long, val updated_at: Long)
@@ -43,7 +43,7 @@ class IGDBGenre(id: Int, name: String, slug: String, url: String, created_at: Lo
 
 class IGDBCollection(id: Int, name: String, slug: String, url: String, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
-class PlatformDTO(id: Int, name: String, slug: String, url: String?, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
+class IGDBPlatform(id: Int, name: String, slug: String, url: String?, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
 data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: Int?)
 
