@@ -23,7 +23,7 @@ import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomStrin
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
-import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenreDTO
+import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
@@ -114,7 +114,7 @@ class GameFactory {
                     randomListOf(factory = ::makeIGDBCompany),
                     randomListOf(factory = ::makeIGDBCompany),
                     randomIntList(), makeTimeToBeatRemote(),
-                    randomListOf(factory = ::makeGenreDTO), randomLong(),
+                    randomListOf(factory = ::makeIGDBGenre), randomLong(),
                     randomListOf(factory = this::makeReleaseDateRemote),
                     randomListOf(factory = this::makeImageRemote),
                     randomListOf(factory = this::makeVideoRemote),

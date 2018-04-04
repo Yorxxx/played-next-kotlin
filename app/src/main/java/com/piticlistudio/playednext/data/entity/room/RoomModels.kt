@@ -37,7 +37,7 @@ data class CoverDao(@ColumnInfo(name = "cover_url") val url: String,
 data class RoomCompany(@PrimaryKey val id: Int, val name: String, val url: String?)
 
 @Entity(tableName = "genre")
-data class GenreDao(@PrimaryKey val id: Int, val name: String, val url: String?)
+data class RoomGenre(@PrimaryKey val id: Int, val name: String, val url: String?)
 
 @Entity(tableName = "collection")
 data class CollectionDao(@PrimaryKey val id: Int, val name: String, val url: String?)
@@ -63,8 +63,8 @@ data class RoomGamePublisher(val gameId: Int, val companyId: Int)
         primaryKeys = arrayOf("gameId", "genreId"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
-                (ForeignKey(entity = GenreDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("genreId"), onDelete = ForeignKey.CASCADE))))
-data class GameGenreDao(val gameId: Int, val genreId: Int)
+                (ForeignKey(entity = RoomGenre::class, parentColumns = arrayOf("id"), childColumns = arrayOf("genreId"), onDelete = ForeignKey.CASCADE))))
+data class RoomGameGenre(val gameId: Int, val genreId: Int)
 
 @Entity(tableName = "game_collection",
         primaryKeys = arrayOf("gameId", "collectionId"),

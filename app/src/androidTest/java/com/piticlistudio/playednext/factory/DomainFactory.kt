@@ -48,6 +48,8 @@ class DomainFactory {
             return RoomCompany(id, randomString(), randomString())
         }
 
+        fun makeRoomGenre(id: Int = randomInt()): RoomGenre = RoomGenre(id, randomString(), randomString())
+
         fun makeCollectionDao(id: Int = randomInt()): CollectionDao {
             return CollectionDao(id, randomString(), randomString())
         }

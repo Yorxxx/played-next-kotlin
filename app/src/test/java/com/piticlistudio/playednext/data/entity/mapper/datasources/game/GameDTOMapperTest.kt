@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 import com.nhaarman.mockito_kotlin.verify
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.CollectionDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
-import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GenreDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.ImageDTOMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.PlatformDTOMapper
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
@@ -34,7 +34,7 @@ internal class GameDTOMapperTest {
 
         @Mock
         lateinit var companymapper: IGDBCompanyMapper
-        @Mock lateinit var genremapper: GenreDTOMapper
+        @Mock lateinit var genremapper: IGDBGenreMapper
         @Mock lateinit var collectionmapper: CollectionDTOMapper
         @Mock lateinit var platformmapper: PlatformDTOMapper
         @Mock lateinit var imagesMapper: ImageDTOMapper
@@ -91,7 +91,9 @@ internal class GameDTOMapperTest {
                 model.developers?.forEach {
                     verify(companymapper).mapFromDataLayer(it)
                 }
-                verify(genremapper).mapFromModel(model.genres)
+                model.genres?.forEach {
+                    verify(genremapper).mapFromDataLayer(it)
+                }
                 verify(platformmapper).mapFromModel(model.platforms)
                 model.screenshots?.forEach {
                     verify(imagesMapper).mapFromModel(it)

@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class SaveGameUseCase @Inject constructor(
         private val repository: GameRepository,
-        private val genrerepository: GenreRepository,
         private val collectionRepository: CollectionRepository,
         private val platformRepository: PlatformRepository,
         private val imagesRepository: GameImagesRepository) : CompletableUseCaseWithParameter<Game> {
@@ -16,16 +15,9 @@ class SaveGameUseCase @Inject constructor(
     override fun execute(parameter: Game): Completable {
         return repository.save(parameter)
                 .andThen(Completable.concat(listOf(
-                        saveGenres(parameter),
                         saveCollection(parameter),
                         savePlatforms(parameter),
                         saveImages(parameter))))
-    }
-
-    private fun saveGenres(game: Game): Completable {
-        return game.genres?.let {
-            genrerepository.saveForGame(game.id, it)
-        } ?: Completable.complete()
     }
 
     private fun saveCollection(game: Game): Completable {
