@@ -62,9 +62,7 @@ class DomainFactory {
             return TimeToBeatDao(randomInt(), randomInt(), randomInt())
         }
 
-        fun makePlatformDao(id: Int = randomInt()): PlatformDao {
-            return PlatformDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
-        }
+        fun makeRoomPlatform(id: Int = randomInt()): RoomPlatform = RoomPlatform(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
 
         fun makeRelationDao(gameId: Int = randomInt(), platformId: Int = randomInt()): GameRelationDao {
             return GameRelationDao(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())

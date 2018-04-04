@@ -43,7 +43,7 @@ data class RoomGenre(@PrimaryKey val id: Int, val name: String, val url: String?
 data class RoomCollection(@PrimaryKey val id: Int, val name: String, val url: String?)
 
 @Entity(tableName = "platform")
-data class PlatformDao(@PrimaryKey val id: Int, val name: String, val slug: String, val url: String?, val created_at: Long, val updated_at: Long)
+data class RoomPlatform(@PrimaryKey val id: Int, val name: String, val abbreviation: String?, val url: String?, val created_at: Long, val updated_at: Long)
 
 @Entity(tableName = "game_developer",
         primaryKeys = arrayOf("gameId", "companyId"),
@@ -77,14 +77,14 @@ data class RoomGameCollection(val gameId: Int, val collectionId: Int)
         primaryKeys = arrayOf("gameId", "platformId"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
-                (ForeignKey(entity = PlatformDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))))
-data class GamePlatformDao(val gameId: Int, val platformId: Int)
+                (ForeignKey(entity = RoomPlatform::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))))
+data class RoomGamePlatform(val gameId: Int, val platformId: Int)
 
 @Entity(tableName = "game_relation",
         primaryKeys = arrayOf("gameId", "platformId"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = GameDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
-                (ForeignKey(entity = PlatformDao::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))
+                (ForeignKey(entity = RoomPlatform::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))
         ))
 data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
 

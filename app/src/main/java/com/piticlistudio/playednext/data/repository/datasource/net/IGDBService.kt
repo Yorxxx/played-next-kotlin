@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 import com.piticlistudio.playednext.BuildConfig
 import com.piticlistudio.playednext.data.entity.igdb.IGDBCollection
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
-import com.piticlistudio.playednext.data.entity.igdb.PlatformDTO
+import com.piticlistudio.playednext.data.entity.igdb.IGDBPlatform
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -35,5 +35,5 @@ interface IGDBService {
 
     @Headers("Accept: application/json", "user-key: " + BuildConfig.IGDB_API_KEY)
     @GET("/platforms/{id}/")
-    fun loadPlatform(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<PlatformDTO>>
+    fun loadPlatform(@Path("id") id: Int, @Query("fields") fields: String = "id,name,logo,slug,created_at,updated_at"): Single<List<IGDBPlatform>>
 }
