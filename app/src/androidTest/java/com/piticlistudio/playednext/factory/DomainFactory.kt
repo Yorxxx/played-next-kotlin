@@ -58,8 +58,8 @@ class DomainFactory {
             return RoomImage(randomString(), randomInt(), randomInt())
         }
 
-        fun makeTimeToBeatCache(): TimeToBeatDao {
-            return TimeToBeatDao(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatCache(): RoomTimeToBeat {
+            return RoomTimeToBeat(randomInt(), randomInt(), randomInt())
         }
 
         fun makeRoomPlatform(id: Int = randomInt()): RoomPlatform = RoomPlatform(id, randomString(), randomString(), randomString(), randomLong(), randomLong())

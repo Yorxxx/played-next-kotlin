@@ -3,13 +3,11 @@ package com.piticlistudio.playednext.test.factory
 import com.piticlistudio.playednext.data.entity.giantbomb.*
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
 import com.piticlistudio.playednext.data.entity.igdb.ReleaseDateDTO
-import com.piticlistudio.playednext.data.entity.igdb.TimeToBeatDTO
 import com.piticlistudio.playednext.data.entity.igdb.VideoDTO
 import com.piticlistudio.playednext.data.entity.room.GameDao
 import com.piticlistudio.playednext.data.entity.room.RoomImage
-import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
+import com.piticlistudio.playednext.data.entity.room.RoomTimeToBeat
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.model.TimeToBeat
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeGiantbombCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeIGDBCollection
@@ -33,6 +31,9 @@ import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGe
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeIGDBPlatform
+import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeIGDBTimeToBeat
+import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeRoomTimeToBeat
+import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeTimeToBeat
 import java.util.*
 
 /**
@@ -98,24 +99,16 @@ class GameFactory {
                     site_detail_url = randomString())
         }
 
-        fun makeTimeToBeat(): TimeToBeat {
-            return TimeToBeat(randomInt(), randomInt(), randomInt())
-        }
-
         fun makeGameCache(id: Int = randomInt()): GameDao {
             return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
-                    randomLong(), makeTimeToBeatCache(), makeCoverCache(),
+                    randomLong(), makeRoomTimeToBeat(), makeCoverCache(),
                     randomLong())
         }
 
         fun makeCoverCache(): RoomImage {
             return RoomImage(randomString(), randomInt(), randomInt())
-        }
-
-        fun makeTimeToBeatCache(): TimeToBeatDao {
-            return TimeToBeatDao(randomInt(), randomInt(), randomInt())
         }
 
         fun makeGameRemote(): GameDTO {
@@ -140,7 +133,7 @@ class GameFactory {
                     developers = randomListOf(10) { makeIGDBCompany() },
                     publishers = randomListOf(10) { makeIGDBCompany() },
                     game_engines = randomIntList(),
-                    time_to_beat = makeTimeToBeatRemote(),
+                    time_to_beat = makeIGDBTimeToBeat(),
                     genres = randomListOf(5) { makeIGDBGenre() },
                     updated_at = randomLong(),
                     release_dates = randomListOf(3) { makeReleaseDateRemote() },
@@ -149,10 +142,6 @@ class GameFactory {
                     cover = makeIGDBImage(),
                     games = randomIntList(),
                     platforms = randomListOf(4) { makeIGDBPlatform() })
-        }
-
-        fun makeTimeToBeatRemote(): TimeToBeatDTO {
-            return TimeToBeatDTO(randomInt(), randomInt(), randomInt())
         }
 
         fun makeReleaseDateRemote(): ReleaseDateDTO {
