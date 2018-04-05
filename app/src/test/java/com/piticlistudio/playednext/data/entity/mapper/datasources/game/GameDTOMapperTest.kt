@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.igdb.GameDTO
@@ -9,6 +10,7 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGD
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.IGDBImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.IGDBPlatformMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.timetobeat.IGDBTimeToBeatMapper
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
@@ -35,22 +37,18 @@ internal class GameDTOMapperTest {
         @JvmField
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
-        @Mock
-        lateinit var companymapper: IGDBCompanyMapper
-        @Mock
-        lateinit var genremapper: IGDBGenreMapper
-        @Mock
-        lateinit var collectionmapper: IGDBCollectionMapper
-        @Mock
-        lateinit var platformmapper: IGDBPlatformMapper
-        @Mock
-        lateinit var imagesMapper: IGDBImageMapper
+        val companymapper: IGDBCompanyMapper = mock()
+        val genremapper: IGDBGenreMapper = mock()
+        val collectionmapper: IGDBCollectionMapper = mock()
+        val platformmapper: IGDBPlatformMapper = mock()
+        val imagesMapper: IGDBImageMapper = mock()
+        val timeToBeatMapper: IGDBTimeToBeatMapper = mock()
         lateinit var mapper: GameDTOMapper
 
         @BeforeEach
         internal fun setUp() {
             MockitoAnnotations.initMocks(this)
-            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper, imagesMapper)
+            mapper = GameDTOMapper(companymapper, genremapper, collectionmapper, platformmapper, imagesMapper, timeToBeatMapper)
             whenever(imagesMapper.mapFromDataLayer(any())).thenReturn(makeImage())
         }
 
@@ -113,16 +111,8 @@ internal class GameDTOMapperTest {
                 model.cover?.let {
                     verify(imagesMapper).mapFromDataLayer(it)
                 }
-            }
-
-            @Test
-            @DisplayName("Then maps into TimeToBeat")
-            fun intoTimeToBeatEntity() {
-                model.time_to_beat?.apply {
-                    assertNotNull(result!!.timeToBeat)
-                    assertEquals(hastly, result!!.timeToBeat?.hastly)
-                    assertEquals(normally, result!!.timeToBeat?.normally)
-                    assertEquals(completely, result!!.timeToBeat?.completely)
+                model.time_to_beat?.let {
+                    verify(timeToBeatMapper).mapFromDataLayer(it)
                 }
             }
         }

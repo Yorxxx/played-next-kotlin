@@ -79,7 +79,7 @@ internal class GameDaoMapperTest {
             fun intoTimeToBeatEntity() {
                 model.timeToBeat?.apply {
                     assertNotNull(result!!.timeToBeat)
-                    assertEquals(hastly, result!!.timeToBeat?.hastly)
+                    assertEquals(hastly, result!!.timeToBeat?.quick)
                     assertEquals(completely, result!!.timeToBeat?.completely)
                     assertEquals(normally, result!!.timeToBeat?.normally)
                 }
@@ -134,11 +134,11 @@ internal class GameDaoMapperTest {
             }
 
             @Test
-            @DisplayName("Then should map into TimeToBeatDao")
+            @DisplayName("Then should map into RoomTimeToBeat")
             fun intoTimeToBeatEntity() {
                 entity.timeToBeat?.apply {
                     assertNotNull(result!!.timeToBeat)
-                    assertEquals(hastly, result!!.timeToBeat?.hastly)
+                    assertEquals(quick, result!!.timeToBeat?.hastly)
                     assertEquals(completely, result!!.timeToBeat?.completely)
                     assertEquals(normally, result!!.timeToBeat?.normally)
                 }

@@ -3,7 +3,7 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
 import com.piticlistudio.playednext.data.entity.room.GameDao
 import com.piticlistudio.playednext.data.entity.room.RoomImage
-import com.piticlistudio.playednext.data.entity.room.TimeToBeatDao
+import com.piticlistudio.playednext.data.entity.room.RoomTimeToBeat
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.Image
 import com.piticlistudio.playednext.domain.model.TimeToBeat
@@ -39,7 +39,7 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         return null
     }
 
-    private fun mapFromTimeToBeatModel(type: TimeToBeatDao?): TimeToBeat? {
+    private fun mapFromTimeToBeatModel(type: RoomTimeToBeat?): TimeToBeat? {
         type?.apply {
             return TimeToBeat(hastly, normally, completely)
         }
@@ -53,9 +53,9 @@ class GameDaoMapper @Inject constructor() : LayerDataMapper<Game, GameDao> {
         return null
     }
 
-    private fun mapFromTimeToBeatEntity(type: TimeToBeat?): TimeToBeatDao? {
+    private fun mapFromTimeToBeatEntity(type: TimeToBeat?): RoomTimeToBeat? {
         type?.apply {
-            return TimeToBeatDao(hastly, normally, completely)
+            return RoomTimeToBeat(quick, normally, completely)
         }
         return null
     }

@@ -24,7 +24,7 @@ data class GameDTO(val id: Int,
                    val developers: List<IGDBCompany>? = listOf(),
                    val publishers: List<IGDBCompany>? = listOf(),
                    val game_engines: List<Int>? = listOf(),
-                   val time_to_beat: TimeToBeatDTO?,
+                   val time_to_beat: IGDBTimeToBeat?,
                    val genres: List<IGDBGenre>? = listOf(),
                    val first_release_date: Long? = null,
                    val release_dates: List<ReleaseDateDTO>? = listOf(),
@@ -45,7 +45,7 @@ class IGDBCollection(id: Int, name: String, slug: String, url: String, created_a
 
 class IGDBPlatform(id: Int, name: String, slug: String, url: String?, created_at: Long, updated_at: Long) : BaseEnumeratedEntity(id, name, slug, url, created_at, updated_at)
 
-data class TimeToBeatDTO(val hastly: Int?, val normally: Int?, val completely: Int?)
+data class IGDBTimeToBeat(val hastly: Int?, val normally: Int?, val completely: Int?)
 
 data class ReleaseDateDTO(val game: Int, val category: Int, val platform: Int?, val human: String)
 

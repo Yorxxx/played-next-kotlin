@@ -21,13 +21,13 @@ data class GameDao(@PrimaryKey val id: Int,
                    @ColumnInfo(name = "total_rating") val totalRating: Double?,
                    @ColumnInfo(name = "total_rating_count") val totalRatingCount: Int?,
                    @ColumnInfo(name = "first_release_date") val firstReleaseAt: Long?,
-                   @Embedded val timeToBeat: TimeToBeatDao?,
+                   @Embedded val timeToBeat: RoomTimeToBeat?,
                    @Embedded val cover: RoomImage?,
                    @ColumnInfo(name = "synced_at") val syncedAt: Long)
 
-data class TimeToBeatDao(@ColumnInfo(name = "beat_hastly") val hastly: Int?,
-                         @ColumnInfo(name = "beat_normally") val normally: Int?,
-                         @ColumnInfo(name = "beat_completely") val completely: Int?)
+data class RoomTimeToBeat(@ColumnInfo(name = "beat_hastly") val hastly: Int?,
+                          @ColumnInfo(name = "beat_normally") val normally: Int?,
+                          @ColumnInfo(name = "beat_completely") val completely: Int?)
 
 data class RoomImage(@ColumnInfo(name = "cover_url") val url: String,
                      @ColumnInfo(name = "cover_width") val width: Int?,

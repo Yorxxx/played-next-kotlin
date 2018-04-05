@@ -41,4 +41,3 @@ data class Game(val id: Int,
     fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15
 }
 
-data class TimeToBeat(val hastly: Int?, val normally: Int?, val completely: Int?)
