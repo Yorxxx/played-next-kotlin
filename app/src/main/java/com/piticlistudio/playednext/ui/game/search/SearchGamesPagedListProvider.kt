@@ -22,8 +22,9 @@ class SearchGamesPagedListProvider @Inject constructor(private val searchGamesUs
         results.clear()
         query?.takeIf { !query.isNullOrEmpty() }?.let {
             try {
-                results.addAll(searchGamesUseCase.execute(SearchQuery(it, startPosition, count)).blockingLast())
-                listener?.onSearchCompleted(it, startPosition, count)
+                val response = searchGamesUseCase.execute(SearchQuery(it, startPosition, count)).blockingLast()
+                results.addAll(response)
+                listener?.onSearchCompleted(it, startPosition, response.size)
             } catch (e: Exception) {
                 listener?.onSearchFailed(e)
             }

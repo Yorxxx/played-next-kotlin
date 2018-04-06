@@ -4,13 +4,14 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.RoomGen
 import com.piticlistudio.playednext.data.entity.room.RoomGameGenre
 import com.piticlistudio.playednext.domain.model.Genre
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
 class RoomGenreRepositoryImpl @Inject constructor(private val dao: RoomGenreService,
                                                   private val mapper: RoomGenreMapper) {
 
-    fun loadForGame(id: Int): Single<List<Genre>> {
+    fun loadForGame(id: Int): Flowable<List<Genre>> {
         return dao.findForGame(id)
                 .map {
                     mutableListOf<Genre>().apply {

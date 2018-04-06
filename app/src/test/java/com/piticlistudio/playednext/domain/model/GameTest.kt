@@ -17,18 +17,18 @@ internal class GameTest {
     inner class GameInstance {
 
         lateinit var game: Game
+        val companies = listOf<Company>(makeCompany("Nintendo"), makeCompany("Microsoft"), makeCompany("Sega"))
+        val companies2 = listOf<Company>(makeCompany("Sony"), makeCompany("Electronic Arts"), makeCompany("Ubisoft"))
+        val genres = listOf<Genre>(makeGenre("Adventure"), makeGenre("Action"), makeGenre("RPG"))
 
         @BeforeEach
         internal fun setUp() {
-            game = makeGame();
+            game = makeGame(developers = companies, publishers = companies2, genres = genres);
         }
 
         @Test
         @DisplayName("Then should return developers name")
         fun developersName() {
-            val companies = listOf<Company>(makeCompany("Nintendo"), makeCompany("Microsoft"), makeCompany("Sega"))
-            game.developers = companies
-
             assertNotNull(game.developersName)
             assertEquals("Nintendo, Microsoft, Sega", game.developersName)
         }
@@ -36,9 +36,6 @@ internal class GameTest {
         @Test
         @DisplayName("Then should return publishers name")
         fun publishersName() {
-            val companies = listOf<Company>(makeCompany("Sony"), makeCompany("Electronic Arts"), makeCompany("Ubisoft"))
-            game.publishers = companies
-
             assertNotNull(game.publishersName)
             assertEquals("Sony, Electronic Arts, Ubisoft", game.publishersName)
         }
@@ -46,9 +43,6 @@ internal class GameTest {
         @Test
         @DisplayName("Then should return genres name")
         fun genresName() {
-            val genres = listOf<Genre>(makeGenre("Adventure"), makeGenre("Action"), makeGenre("RPG"))
-            game.genres = genres
-
             assertNotNull(game.genresName)
             assertEquals("Adventure, Action, RPG", game.genresName)
         }

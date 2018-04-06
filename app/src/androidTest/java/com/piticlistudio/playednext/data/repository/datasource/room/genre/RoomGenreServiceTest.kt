@@ -106,7 +106,7 @@ internal class RoomGenreServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue {
                 it.size == 2 && it.contains(genre1) && it.contains(genre2)
             }
@@ -127,7 +127,7 @@ internal class RoomGenreServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue { it.isEmpty() }
         }
     }

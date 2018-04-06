@@ -7,8 +7,8 @@ import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.piticlistudio.playednext.MvpStarterApplication
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.repository.datasource.net.GameServiceFactory
-import com.piticlistudio.playednext.data.repository.datasource.net.IGDBService
+import com.piticlistudio.playednext.data.repository.datasource.igdb.GameServiceFactory
+import com.piticlistudio.playednext.data.repository.datasource.igdb.IGDBService
 import com.piticlistudio.playednext.ui.PlatformUIUtils
 import com.squareup.picasso.Picasso
 import dagger.Module

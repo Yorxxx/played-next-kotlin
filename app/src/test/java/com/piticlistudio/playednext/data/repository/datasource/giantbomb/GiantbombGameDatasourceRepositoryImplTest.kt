@@ -22,6 +22,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
+import kotlin.test.assertTrue
 
 /**
  * Created by e-jegi on 4/3/2018.
@@ -30,7 +31,7 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
 
     @Nested
     @DisplayName("Given a GiantbombGameDatasourceRepositoryImpl instance")
-    inner class GameRemoteImplInstance {
+    inner class IGDBGameRepositoryImplInstance {
 
         @Rule
         @JvmField
@@ -53,7 +54,7 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
 
             var result: TestSubscriber<Game>? = null
             val model = GameFactory.makeGiantbombGame()
-            val entity = GameFactory.makeGame()
+            val entity = GameFactory.makeGame().apply { syncedAt = 111L }
 
             @BeforeEach
             fun setup() {
@@ -84,6 +85,15 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
                 result = repositoryImpl?.load(10)?.test()
 
                 verify(mapper).mapFromDataLayer(model)
+            }
+
+            @Test
+            @DisplayName("Then should have set syncedAt value in the retrieved game")
+            fun shouldSetSyncedAtValue() {
+                result = repositoryImpl?.load(10)?.test()
+
+                assertTrue(entity.syncedAt > 0L)
+                assertTrue(entity.syncedAt != 111L)
             }
 
             @Test
@@ -200,9 +210,10 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
 
             private val model = GameFactory.makeGiantbombGame()
             private val model2 = GameFactory.makeGiantbombGame()
-            private val entity1 = GameFactory.makeGame()
-            private val entity2 = GameFactory.makeGame()
+            private val entity1 = GameFactory.makeGame().apply { syncedAt = 1L }
+            private val entity2 = GameFactory.makeGame().apply { syncedAt = 2L }
             private var result: TestSubscriber<List<Game>>? = null
+            private val currentTime = System.currentTimeMillis()
 
             @BeforeEach
             fun setup() {
@@ -222,9 +233,9 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
             }
 
             @Test
-            @DisplayName("Then should request service with correct params")
+            @DisplayName("Then should request service with correct params when offset is zero")
             fun serviceIsCalled() {
-                result = repositoryImpl?.search("zelda", 5, 15)?.test()
+                result = repositoryImpl?.search("zelda", 0, 15)?.test()
 
                 verify(service).searchGames(
                         resources = "game",
@@ -232,8 +243,37 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
                         fields = "id,image,name,platforms,date_added,date_last_updated",
                         query = "zelda",
                         limit = 15,
-                        offset = 5)
+                        page = 1)
             }
+
+            @Test
+            @DisplayName("Then should request service with correct params when offset is the same as the limit")
+            fun serviceIsCalledWithPage2() {
+                result = repositoryImpl?.search("zelda", 15, 15)?.test()
+
+                verify(service).searchGames(
+                        resources = "game",
+                        format = "json",
+                        fields = "id,image,name,platforms,date_added,date_last_updated",
+                        query = "zelda",
+                        limit = 15,
+                        page = 2)
+            }
+
+            @Test
+            @DisplayName("Then should request service with correct params when offset is greater than limit")
+            fun serviceIsCalledWithPage3() {
+                result = repositoryImpl?.search("zelda", 30, 15)?.test()
+
+                verify(service).searchGames(
+                        resources = "game",
+                        format = "json",
+                        fields = "id,image,name,platforms,date_added,date_last_updated",
+                        query = "zelda",
+                        limit = 15,
+                        page = 3)
+            }
+
 
             @Test
             @DisplayName("Then maps result into data model")
@@ -242,6 +282,20 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
 
                 verify(mapper).mapFromDataLayer(model)
                 verify(mapper).mapFromDataLayer(model2)
+            }
+
+            @Test
+            @DisplayName("Then should set syncedAt values for each item")
+            fun shouldSetSyncedAt() {
+                result = repositoryImpl?.search("zelda", 5, 15)?.test()
+
+                result?.apply {
+                    values().forEach {
+                        it.forEach {
+                            assertTrue { it.syncedAt >= currentTime }
+                        }
+                    }
+                }
             }
 
             @Test
@@ -339,14 +393,14 @@ internal class GiantbombGameDatasourceRepositoryImplTest {
                 }
 
                 @Test
-                @DisplayName("Then should emit EmptyResultSetException")
+                @DisplayName("Then should emit empty list")
                 fun emitsError() {
                     result = repositoryImpl?.search("zelda", 5, 15)?.test()
 
                     result?.apply {
-                        assertNotComplete()
-                        assertNoValues()
-                        assertError { it is EmptyResultSetException }
+                        assertComplete()
+                        assertValue { it.isEmpty() }
+                        assertNoErrors()
                     }
                 }
             }

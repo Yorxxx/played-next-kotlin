@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
-import com.piticlistudio.playednext.data.entity.igdb.GameDTO
-import com.piticlistudio.playednext.data.entity.mapper.LayerDataMapper
+import com.piticlistudio.playednext.data.entity.igdb.IGDBGame
+import com.piticlistudio.playednext.data.entity.mapper.DataLayerMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
@@ -12,19 +12,19 @@ import com.piticlistudio.playednext.domain.model.*
 import com.piticlistudio.playednext.domain.model.Collection
 import javax.inject.Inject
 
-class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompanyMapper,
-                                        private val igdbGenreMapper: IGDBGenreMapper,
-                                        private val igdbCollectionMapper: IGDBCollectionMapper,
-                                        private val igdbPlatformMapper: IGDBPlatformMapper,
-                                        private val imagesMapperIGDB: IGDBImageMapper,
-                                        private val igdbTimeToBeatMapper: IGDBTimeToBeatMapper) : LayerDataMapper<GameDTO, Game> {
+class IGDBGameMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompanyMapper,
+                                         private val igdbGenreMapper: IGDBGenreMapper,
+                                         private val igdbCollectionMapper: IGDBCollectionMapper,
+                                         private val igdbPlatformMapper: IGDBPlatformMapper,
+                                         private val imagesMapperIGDB: IGDBImageMapper,
+                                         private val igdbTimeToBeatMapper: IGDBTimeToBeatMapper) : DataLayerMapper<IGDBGame, Game> {
 
-    override fun mapFromModel(type: GameDTO): Game {
-        with(type) {
+    override fun mapFromDataLayer(model: IGDBGame): Game {
+        with(model) {
             val images = mutableListOf<GameImage>()
             screenshots?.forEach {
-                imagesMapperIGDB.mapFromDataLayer(it).apply {
-                    images.add(GameImage(url, width, height, type.id))
+                imagesMapperIGDB.mapFromDataLayer(it)?.apply {
+                    images.add(GameImage(url, width, height, model.id))
                 }
             }
             val devs = mutableListOf<Company>()
@@ -62,7 +62,7 @@ class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompa
                     totalRating = total_rating,
                     totalRatingCount = total_rating_count,
                     releasedAt = first_release_date,
-                    cover = type.cover?.let { imagesMapperIGDB.mapFromDataLayer(it) },
+                    cover = model.cover?.let { imagesMapperIGDB.mapFromDataLayer(it) },
                     timeToBeat = time_to_beat?.let { igdbTimeToBeatMapper.mapFromDataLayer(time_to_beat) },
                     publishers = pubs,
                     developers = devs,
@@ -72,9 +72,5 @@ class GameDTOMapper @Inject constructor(private val igdbCompanyMapper: IGDBCompa
                     platforms = plats,
                     images = images)
         }
-    }
-
-    override fun mapFromEntity(type: Game): GameDTO {
-        throw Throwable("Forbidden")
     }
 }

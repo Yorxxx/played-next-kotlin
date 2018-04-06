@@ -104,15 +104,15 @@ class RoomCollectionServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue {
-                it == data1
+                !it.isEmpty() && it.first() == data1
             }
         }
     }
 
     @Test
-    fun findForGameShouldThrowErrorIfNotFound() {
+    fun findForGameShouldEmitEmptyListIfNothingStored() {
 
         val game = DomainFactory.makeGameCache()
         database?.gamesDao()?.insert(game)
@@ -123,9 +123,9 @@ class RoomCollectionServiceTest {
 
         Assert.assertNotNull(observer)
         observer?.apply {
-            assertError(EmptyResultSetException::class.java)
+            assertNoErrors()
             assertNotComplete()
-            assertNoValues()
+            assertValue { it.isEmpty() }
         }
     }
 

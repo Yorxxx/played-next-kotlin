@@ -5,7 +5,7 @@ import com.piticlistudio.playednext.data.entity.room.RoomGameDeveloper
 import com.piticlistudio.playednext.data.entity.room.RoomGamePublisher
 import com.piticlistudio.playednext.domain.model.Company
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import javax.inject.Inject
 
 /**
@@ -14,11 +14,6 @@ import javax.inject.Inject
 class RoomCompanyRepositoryImpl @Inject constructor(private val dao: RoomCompanyService,
                                                     private val companyMapper: RoomCompanyMapper) {
 
-    fun load(id: Int): Single<Company> {
-        return dao.find(id.toLong())
-                .map { companyMapper.mapFromDataLayer(it) }
-    }
-
     fun save(data: Company): Completable {
         return Completable.defer {
             val id = dao.insert(companyMapper.mapIntoDataLayerModel(data))
@@ -26,7 +21,7 @@ class RoomCompanyRepositoryImpl @Inject constructor(private val dao: RoomCompany
         }
     }
 
-    fun loadDevelopersForGame(id: Int): Single<List<Company>> {
+    fun loadDevelopersForGame(id: Int): Flowable<List<Company>> {
         return dao.findDeveloperForGame(id)
                 .map {
                     mutableListOf<Company>().apply {
@@ -48,7 +43,7 @@ class RoomCompanyRepositoryImpl @Inject constructor(private val dao: RoomCompany
                 })
     }
 
-    fun loadPublishersForGame(id: Int): Single<List<Company>> {
+    fun loadPublishersForGame(id: Int): Flowable<List<Company>> {
         return dao.findPublishersForGame(id)
                 .map {
                     mutableListOf<Company>().apply {

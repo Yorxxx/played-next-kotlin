@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.data.entity.room.RoomGamePlatform
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.GameGenreSaveException
 import com.piticlistudio.playednext.domain.model.Platform
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class RoomGamePlatformRepositoryImpl @Inject constructor(private val dao: RoomGa
         }
     }
 
-    fun loadForGame(id: Int): Single<List<Platform>> {
+    fun loadForGame(id: Int): Flowable<List<Platform>> {
         return dao.findForGame(id)
                 .map {
                     mutableListOf<Platform>().apply {

@@ -49,7 +49,7 @@ class GiantbombGameMapper @Inject constructor(private val companyMapper: Giantbo
                     result?.let { add(GameImage(it.url, it.width, it.height, model.id)) }
                 }
             }
-            val collection: Collection? = model.franchises?.first()?.let { collectionMapper.mapFromDataLayer(it) }
+            val collection: Collection? = model.franchises?.firstOrNull()?.let { collectionMapper.mapFromDataLayer(it) }
             val cover: Image? = model.image?.let { imagesMapper.mapFromDataLayer(it) }
 
             return Game(id = model.id,
@@ -70,7 +70,7 @@ class GiantbombGameMapper @Inject constructor(private val companyMapper: Giantbo
                     releasedAt = model.original_release_date?.time,
                     storyline = model.description,
                     summary = model.deck,
-                    syncedAt = model.date_last_updated.time,
+                    syncedAt = 0L,
                     timeToBeat = null,
                     totalRating = null,
                     totalRatingCount = null,
