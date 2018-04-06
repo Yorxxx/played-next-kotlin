@@ -166,7 +166,7 @@ internal class RoomCompanyServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue {
                 it.size == 2 && it.contains(company1) && it.contains(company2)
             }
@@ -198,7 +198,7 @@ internal class RoomCompanyServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue {
                 it.size == 2 && it.contains(company1) && it.contains(company2)
             }
@@ -219,7 +219,7 @@ internal class RoomCompanyServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue { it.isEmpty() }
         }
     }
@@ -238,7 +238,7 @@ internal class RoomCompanyServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue { it.isEmpty() }
         }
     }

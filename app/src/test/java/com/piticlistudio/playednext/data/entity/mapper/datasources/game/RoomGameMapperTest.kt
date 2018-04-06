@@ -1,6 +1,10 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
-import com.piticlistudio.playednext.data.entity.room.GameDao
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.reset
+import com.nhaarman.mockito_kotlin.verify
+import com.piticlistudio.playednext.data.entity.mapper.datasources.timetobeat.RoomTimeToBeatMapper
+import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -11,29 +15,31 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import kotlin.test.assertNull
 
-internal class GameDaoMapperTest {
+internal class RoomGameMapperTest {
 
     @Nested
-    @DisplayName("Given a GameDaoMapper instance")
-    inner class GameDaoServiceMapperInstance {
+    @DisplayName("Given a RoomGameMapper instance")
+    inner class RoomGameServiceMapperInstance {
 
-        private lateinit var mapper: GameDaoMapper
+        private lateinit var mapper: RoomGameMapper
+        private val timeToBeatMapper: RoomTimeToBeatMapper = mock()
 
         @BeforeEach
         internal fun setUp() {
-            mapper = GameDaoMapper()
+            reset(timeToBeatMapper)
+            mapper = RoomGameMapper(timeToBeatMapper)
         }
 
         @Nested
         @DisplayName("When mapFromEntity is called")
         inner class MapFromEntityCalled {
 
-            val model = GameFactory.makeGameCache()
+            val model = GameFactory.makeRoomGame()
             var result: Game? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromEntity(model)
+                result = mapper.mapFromDataLayer(RoomGameProxy(model))
             }
 
             @Test
@@ -54,11 +60,11 @@ internal class GameDaoMapperTest {
                     assertEquals(model.ratingCount, ratingCount)
                     assertEquals(model.totalRatingCount, totalRatingCount)
                     assertEquals(model.totalRating, totalRating)
-                    assertNull(developers)
-                    assertNull(publishers)
-                    assertNull(genres)
-                    assertNull(platforms)
-                    assertNull(images)
+                    assertNotNull(developers)
+                    assertNotNull(publishers)
+                    assertNotNull(genres)
+                    assertNotNull(platforms)
+                    assertNotNull(images)
                     assertNull(collection)
                 }
             }
@@ -77,25 +83,22 @@ internal class GameDaoMapperTest {
             @Test
             @DisplayName("Then should map into TimeToBeat")
             fun intoTimeToBeatEntity() {
-                model.timeToBeat?.apply {
-                    assertNotNull(result!!.timeToBeat)
-                    assertEquals(hastly, result!!.timeToBeat?.quick)
-                    assertEquals(completely, result!!.timeToBeat?.completely)
-                    assertEquals(normally, result!!.timeToBeat?.normally)
+                model.timeToBeat?.let {
+                    verify(timeToBeatMapper).mapFromDataLayer(it)
                 }
             }
         }
 
         @Nested
-        @DisplayName("When mapFromModel is called")
-        inner class MapFromModelCalled {
+        @DisplayName("When mapIntoDataLayerModel is called")
+        inner class MapIntoDataLayerModelCalled {
 
             val entity = GameFactory.makeGame()
-            var result: GameDao? = null
+            var result: RoomGameProxy? = null
 
             @BeforeEach
             internal fun setUp() {
-                result = mapper.mapFromModel(entity)
+                result = mapper.mapIntoDataLayerModel(entity)
             }
 
             @Test
@@ -103,33 +106,25 @@ internal class GameDaoMapperTest {
             fun shouldMap() {
                 assertNotNull(result)
                 result?.apply {
-                    assertEquals(entity.id, id)
-                    assertEquals(entity.name, name)
-                    assertEquals(entity.summary, summary)
-                    assertEquals(entity.storyline, storyline)
-                    assertNull(collection)
-                    assertNull(franchise)
-                    assertEquals(entity.rating, rating)
-                    assertEquals(entity.aggregatedRatingCount, aggregatedRatingCount)
-                    assertEquals(entity.aggregatedRating, agregatedRating)
-                    assertEquals(entity.createdAt, createdAt)
-                    assertNull(firstReleaseAt)
-                    assertNull(hypes)
-                    assertNull(popularity)
-                    assertEquals(entity.ratingCount, ratingCount)
-                    assertEquals(entity.totalRating, totalRating)
-                    assertEquals(entity.syncedAt, syncedAt)
-                }
-            }
-
-            @Test
-            @DisplayName("Then should map into RoomImage")
-            fun intoCoverCache() {
-                entity.cover?.apply {
-                    assertNotNull(result!!.cover)
-                    assertEquals(url, result!!.cover?.url)
-                    assertEquals(width, result!!.cover?.width)
-                    assertEquals(height, result!!.cover?.height)
+                    assertNotNull(game)
+                    game.apply {
+                        assertEquals(entity.id, id)
+                        assertEquals(entity.name, name)
+                        assertEquals(entity.summary, summary)
+                        assertEquals(entity.storyline, storyline)
+                        assertEquals(entity.collection, collection)
+                        assertNull(franchise)
+                        assertEquals(entity.rating, rating)
+                        assertEquals(entity.aggregatedRatingCount, aggregatedRatingCount)
+                        assertEquals(entity.aggregatedRating, agregatedRating)
+                        assertEquals(entity.createdAt, createdAt)
+                        assertNull(firstReleaseAt)
+                        assertNull(hypes)
+                        assertNull(popularity)
+                        assertEquals(entity.ratingCount, ratingCount)
+                        assertEquals(entity.totalRating, totalRating)
+                        assertEquals(entity.syncedAt, syncedAt)
+                    }
                 }
             }
 
@@ -137,10 +132,7 @@ internal class GameDaoMapperTest {
             @DisplayName("Then should map into RoomTimeToBeat")
             fun intoTimeToBeatEntity() {
                 entity.timeToBeat?.apply {
-                    assertNotNull(result!!.timeToBeat)
-                    assertEquals(quick, result!!.timeToBeat?.hastly)
-                    assertEquals(completely, result!!.timeToBeat?.completely)
-                    assertEquals(normally, result!!.timeToBeat?.normally)
+                    verify(timeToBeatMapper).mapIntoDataLayerModel(this)
                 }
             }
         }

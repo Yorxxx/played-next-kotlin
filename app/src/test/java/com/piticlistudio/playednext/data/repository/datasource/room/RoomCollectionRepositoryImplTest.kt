@@ -9,8 +9,9 @@ import com.piticlistudio.playednext.data.repository.datasource.room.franchise.Ro
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeRoomCollection
-import io.reactivex.Single
+import io.reactivex.Flowable
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertNotNull
 
@@ -34,14 +35,14 @@ internal class RoomCollectionRepositoryImplTest {
         @DisplayName("When we call loadForGame")
         inner class LoadCalled {
 
-            private var observer: TestObserver<Collection>? = null
-            private val source = makeRoomCollection()
+            private var observer: TestSubscriber<List<Collection>>? = null
+            private val source = listOf(makeRoomCollection())
             private val result = makeCollection()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findForGame(10)).thenReturn(Single.just(source))
-                whenever(mapper.mapFromDataLayer(source)).thenReturn(result)
+                whenever(dao.findForGame(10)).thenReturn(Flowable.just(source))
+                whenever(mapper.mapFromDataLayer(source.first())).thenReturn(result)
                 observer = repository.loadForGame(10).test()
             }
 
@@ -54,7 +55,7 @@ internal class RoomCollectionRepositoryImplTest {
             @Test
             @DisplayName("Then should map response")
             fun shouldMap() {
-                verify(mapper).mapFromDataLayer(source)
+                verify(mapper).mapFromDataLayer(source.first())
             }
 
             @Test
@@ -65,7 +66,9 @@ internal class RoomCollectionRepositoryImplTest {
                     assertNoErrors()
                     assertComplete()
                     assertValueCount(1)
-                    assertValue(result)
+                    assertValue {
+                        !it.isEmpty() && it.contains(result)
+                    }
                 }
             }
         }

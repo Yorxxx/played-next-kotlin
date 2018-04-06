@@ -5,8 +5,8 @@ import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.repository.datasource.room.game.GameLocalImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.GameRemoteImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.igdb.IGDBGameRepositoryImpl
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
@@ -37,9 +37,9 @@ internal class GameRepositoryImplTest {
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock
-        private lateinit var remoteImpl: GameRemoteImpl
+        private lateinit var remoteImpl: IGDBGameRepositoryImpl
         @Mock
-        private lateinit var localImpl: GameLocalImpl
+        private lateinit var localImpl: RoomGameRepositoryImpl
 
         private var repository: GameRepositoryImpl? = null
 

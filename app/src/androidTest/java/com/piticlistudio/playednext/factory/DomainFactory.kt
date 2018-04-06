@@ -37,8 +37,8 @@ class DomainFactory {
             return items
         }
 
-        fun makeGameCache(id: Int = randomInt()): GameDao {
-            return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGameCache(id: Int = randomInt()): RoomGame {
+            return RoomGame(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache(), randomLong())

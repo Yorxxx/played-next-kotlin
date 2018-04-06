@@ -4,9 +4,12 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.Roo
 import com.piticlistudio.playednext.data.entity.room.RoomGameCollection
 import com.piticlistudio.playednext.domain.model.Collection
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import javax.inject.Inject
 
+/**
+ * Repository for retrieving [Collection] entities from Room database
+ */
 class RoomCollectionRepositoryImpl @Inject constructor(private val dao: RoomCollectionService,
                                                        private val mapper: RoomCollectionMapper) {
 
@@ -17,9 +20,14 @@ class RoomCollectionRepositoryImpl @Inject constructor(private val dao: RoomColl
         }
     }
 
-    fun loadForGame(id: Int): Single<Collection> {
+    fun loadForGame(id: Int): Flowable<List<Collection>> {
         return dao.findForGame(id)
-                .map { mapper.mapFromDataLayer(it) }
+                .distinctUntilChanged()
+                .map {
+                    mutableListOf<Collection>().apply {
+                        it.forEach { add(mapper.mapFromDataLayer(it)) }
+                    }
+                }
     }
 
     fun saveForGame(id: Int, data: Collection): Completable {

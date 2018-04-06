@@ -22,20 +22,20 @@ data class Game(val id: Int,
                 val releasedAt: Long?,
                 val cover: Image?,
                 val timeToBeat: TimeToBeat?,
-                var developers: List<Company>?,
-                var publishers: List<Company>?,
-                var genres: List<Genre>?,
+                val developers: List<Company>,
+                val publishers: List<Company>,
+                val genres: List<Genre>,
                 var collection: Collection?,
                 var syncedAt: Long,
-                var platforms: List<Platform>?,
-                var images: List<GameImage>?) {
+                var platforms: List<Platform>,
+                var images: List<GameImage>) {
 
     val developersName: String?
-        get() { return developers?.joinToString{ it.name } }
+        get() { return developers.joinToString{ it.name } }
     val genresName: String?
-        get() { return genres?.joinToString { it.name }}
+        get() { return genres.joinToString { it.name }}
     val publishersName: String?
-        get() { return publishers?.joinToString { it.name }}
+        get() { return publishers.joinToString { it.name }}
 
 
     fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15

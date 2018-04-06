@@ -5,8 +5,10 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.Room
 import com.piticlistudio.playednext.domain.model.Platform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -34,13 +36,13 @@ internal class RoomGamePlatformRepositoryImplTest {
         @DisplayName("When we call loadForGame")
         inner class LoadCalled {
 
-            private var observer: TestObserver<List<Platform>>? = null
+            private var observer: TestSubscriber<List<Platform>>? = null
             private val source = makeRoomPlatform()
             private val result = makePlatform()
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.findForGame(10)).thenReturn(Single.just(listOf(source)))
+                whenever(dao.findForGame(10)).thenReturn(Flowable.just(listOf(source)))
                 whenever(mapper.mapFromDataLayer(source)).thenReturn(result)
                 observer = repository.loadForGame(10).test()
             }

@@ -25,22 +25,26 @@ class GiantbombGameDatasourceRepositoryImpl @Inject constructor(private val serv
                     }
                     if (it.results == null) throw EmptyResultSetException("No results found") else it.results
                 }
-                .map { mapper.mapFromDataLayer(it) }
+                .map { mapper.mapFromDataLayer(it).apply { syncedAt = System.currentTimeMillis() } }
                 .toFlowable()
     }
 
     override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
-        return service.searchGames(query = query, offset = offset, limit = limit)
+        var page = 1
+        if (offset >= limit) {
+            page = offset / limit + 1
+        }
+        return service.searchGames(query = query, page = page, limit = limit)
                 .map {
                     if (!it.error.equals("OK") || it.status_code != 1) {
                         throw GiantbombServiceException(it.status_code, it.error)
                     }
-                    if (it.results.isEmpty()) throw EmptyResultSetException("No results found") else it.results
+                    it.results
                 }
                 .map {
                     mutableListOf<Game>().apply {
                         it.forEach {
-                            add(mapper.mapFromDataLayer(it))
+                            add(mapper.mapFromDataLayer(it).apply { syncedAt = System.currentTimeMillis() })
                         }
                     }.toList()
                 }.toFlowable()
@@ -52,4 +56,4 @@ class GiantbombGameDatasourceRepositoryImpl @Inject constructor(private val serv
 /**
  * Thrown by this repository when an error message and or status code is returned with an error
  */
-class GiantbombServiceException(val code: Int, message: String): RuntimeException(message)
+class GiantbombServiceException(val code: Int, message: String) : RuntimeException(message)

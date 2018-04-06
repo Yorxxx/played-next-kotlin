@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.repository.datasource.net
+package com.piticlistudio.playednext.data.repository.datasource.igdb
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.FieldNamingPolicy

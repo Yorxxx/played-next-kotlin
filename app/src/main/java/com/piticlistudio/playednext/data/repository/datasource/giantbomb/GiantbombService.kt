@@ -22,7 +22,7 @@ interface GiantbombService {
                     @Query("resources") resources: String = "game",
                     @Query("format") format: String = "json",
                     @Query("field_list") fields: String = SEARCH_FIELD_LIST,
-                    @Query("offset") offset: Int = 0,
+                    @Query("page") page: Int = 1,
                     @Query("limit") limit: Int = 10): Single<GiantbombListResponse<GiantbombGame>>
 
     @Headers("Accept: application/json")

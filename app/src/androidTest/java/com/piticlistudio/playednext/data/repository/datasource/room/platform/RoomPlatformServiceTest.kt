@@ -108,7 +108,7 @@ class RoomPlatformServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue {
                 it.size == 2 && it.contains(platform1) && it.contains(platform2)
             }
@@ -129,7 +129,7 @@ class RoomPlatformServiceTest {
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
-            assertComplete()
+            assertNotComplete()
             assertValue { it.size == 0 }
         }
     }

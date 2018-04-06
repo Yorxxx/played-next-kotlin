@@ -96,6 +96,9 @@ class GameSearchViewModel @Inject constructor(private val searchGamesUseCase: Se
         loadingLiveData.postValue(false)
         this.startPosition = startPosition
         this.count = count
+        if (count == 0) {
+            provider?.invalidate()
+        }
     }
 
     override fun onSearchFailed(error: Exception) {

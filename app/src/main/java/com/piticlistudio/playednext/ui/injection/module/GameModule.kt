@@ -3,8 +3,8 @@ package com.piticlistudio.playednext.ui.injection.module
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
-import com.piticlistudio.playednext.data.repository.datasource.room.game.GameDaoService
-import com.piticlistudio.playednext.data.repository.datasource.room.game.GameLocalImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameService
+import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombGameDatasourceRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombService
 import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombServiceFactory
@@ -25,7 +25,7 @@ class GameModule {
 
     @Provides
     @Singleton
-    fun provideDao(db: AppDatabase): GameDaoService {
+    fun provideDao(db: AppDatabase): RoomGameService {
         return db.gamesDao()
     }
 
@@ -41,5 +41,5 @@ class GameModule {
     @Provides
     @Singleton
     @Named("room")
-    fun provideRoomRepository(repository: GameLocalImpl): GameDatasourceRepository = repository
+    fun provideRoomRepository(repository: RoomGameRepositoryImpl): GameDatasourceRepository = repository
 }

@@ -5,20 +5,20 @@ import android.arch.persistence.room.RoomDatabase
 import com.piticlistudio.playednext.data.entity.room.*
 import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionService
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyService
-import com.piticlistudio.playednext.data.repository.datasource.room.game.GameDaoService
+import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
 import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImagesService
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.RoomGamePlatformService
 import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoService
 
-@Database(entities = arrayOf(GameDao::class, RoomCompany::class, RoomGameDeveloper::class,
+@Database(entities = arrayOf(RoomGame::class, RoomCompany::class, RoomGameDeveloper::class,
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
         RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, GameRelationDao::class,
         RoomGameImage::class),
         version = 9, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun gamesDao(): GameDaoService
+    abstract fun gamesDao(): RoomGameService
 
     abstract fun companyRoom(): RoomCompanyService
 

@@ -1,7 +1,7 @@
-package com.piticlistudio.playednext.data.repository.datasource.net
+package com.piticlistudio.playednext.data.repository.datasource.igdb
 
 import android.arch.persistence.room.EmptyResultSetException
-import com.piticlistudio.playednext.data.entity.mapper.datasources.game.GameDTOMapper
+import com.piticlistudio.playednext.data.entity.mapper.datasources.game.IGDBGameMapper
 import com.piticlistudio.playednext.data.repository.datasource.GameDatasourceRepository
 import com.piticlistudio.playednext.domain.model.Game
 import io.reactivex.Completable
@@ -14,19 +14,19 @@ import javax.inject.Inject
  * the data layers as it is the layers responsibility for defining the operations in which data
  * store implementation can carry out.
  */
-class GameRemoteImpl @Inject constructor(private val service: IGDBService,
-                                         private val mapper: GameDTOMapper) : GameDatasourceRepository {
+class IGDBGameRepositoryImpl @Inject constructor(private val service: IGDBService,
+                                                 private val mapper: IGDBGameMapper) : GameDatasourceRepository {
 
     override fun load(id: Int): Flowable<Game> {
         return service.loadGame(id)
                 .map { if (it.isEmpty()) throw EmptyResultSetException("No results found") else it.get(0) }
-                .map { mapper.mapFromModel(it) }
+                .map { mapper.mapFromDataLayer(it) }
                 .toFlowable()
     }
 
     override fun search(query: String, offset: Int, limit: Int): Flowable<List<Game>> {
         return service.searchGames(offset, query, "id,name,slug,url,summary,franchise,rating,storyline,popularity,total_rating,total_rating_count,rating_count,screenshots,cover,updated_at,created_at", limit)
-                .flatMap { Observable.fromIterable(it).map { mapper.mapFromModel(it) }.toList() }
+                .flatMap { Observable.fromIterable(it).map { mapper.mapFromDataLayer(it) }.toList() }
                 .toFlowable()
     }
 

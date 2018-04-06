@@ -4,8 +4,10 @@ import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.RoomCompanyMapper
 import com.piticlistudio.playednext.domain.model.Company
 import com.piticlistudio.playednext.test.factory.CompanyFactory
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
+import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -27,46 +29,6 @@ internal class RoomCompanyRepositoryImplTest {
         internal fun setUp() {
             reset(dao, companyMapper)
             repository = RoomCompanyRepositoryImpl(dao, companyMapper)
-        }
-
-        @Nested
-        @DisplayName("When we call load")
-        inner class LoadCalled {
-
-            private var observer: TestObserver<Company>? = null
-            private val source = CompanyFactory.makeCompanyRoom()
-            private val result = CompanyFactory.makeCompany()
-
-            @BeforeEach
-            internal fun setUp() {
-                whenever(dao.find(10)).thenReturn(Single.just(source))
-                whenever(companyMapper.mapFromDataLayer(source)).thenReturn(result)
-                observer = repository.load(10).test()
-            }
-
-            @Test
-            @DisplayName("Then should request dao service")
-            fun shouldRequestRepository() {
-                verify(dao).find(10)
-            }
-
-            @Test
-            @DisplayName("Then should map response")
-            fun shouldMap() {
-                verify(companyMapper).mapFromDataLayer(source)
-            }
-
-            @Test
-            @DisplayName("Then should emit without errors")
-            fun withoutErrors() {
-                assertNotNull(observer)
-                observer?.apply {
-                    assertNoErrors()
-                    assertComplete()
-                    assertValueCount(1)
-                    assertValue(result)
-                }
-            }
         }
 
         @Nested
@@ -136,7 +98,7 @@ internal class RoomCompanyRepositoryImplTest {
         @DisplayName("When we call loadDevelopersForGame")
         inner class LoadDevelopersForGameCalled {
 
-            private var observer: TestObserver<List<Company>>? = null
+            private var observer: TestSubscriber<List<Company>>? = null
             private val daoModel = CompanyFactory.makeCompanyRoom()
             private val domainModel = CompanyFactory.makeCompany()
             private val source = listOf(daoModel)
@@ -144,7 +106,7 @@ internal class RoomCompanyRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(companyMapper.mapFromDataLayer(daoModel)).thenReturn(domainModel)
-                whenever(dao.findDeveloperForGame(10)).thenReturn(Single.just(source))
+                whenever(dao.findDeveloperForGame(10)).thenReturn(Flowable.just(source))
                 observer = repository.loadDevelopersForGame(10).test()
             }
 
@@ -178,7 +140,7 @@ internal class RoomCompanyRepositoryImplTest {
         @DisplayName("When we call loadPublishersForGame")
         inner class LoadPublishersForGameCalled {
 
-            private var observer: TestObserver<List<Company>>? = null
+            private var observer: TestSubscriber<List<Company>>? = null
             private val daoModel = CompanyFactory.makeCompanyRoom()
             private val domainModel = CompanyFactory.makeCompany()
             private val source = listOf(daoModel)
@@ -186,7 +148,7 @@ internal class RoomCompanyRepositoryImplTest {
             @BeforeEach
             internal fun setUp() {
                 whenever(companyMapper.mapFromDataLayer(daoModel)).thenReturn(domainModel)
-                whenever(dao.findPublishersForGame(10)).thenReturn(Single.just(source))
+                whenever(dao.findPublishersForGame(10)).thenReturn(Flowable.just(source))
                 observer = repository.loadPublishersForGame(10).test()
             }
 
@@ -311,6 +273,7 @@ internal class RoomCompanyRepositoryImplTest {
                         assertNotComplete()
                     }
                 }
+
                 @Test
                 @DisplayName("Then should have saved company")
                 fun shouldHaveSavedCompany() {
@@ -383,6 +346,7 @@ internal class RoomCompanyRepositoryImplTest {
                         assertNotComplete()
                     }
                 }
+
                 @Test
                 @DisplayName("Then should not save RoomGamePublisher")
                 fun shouldNotSaveGameDeveloper() {
@@ -413,6 +377,7 @@ internal class RoomCompanyRepositoryImplTest {
                         assertNotComplete()
                     }
                 }
+
                 @Test
                 @DisplayName("Then should have saved company")
                 fun shouldHaveSavedCompany() {

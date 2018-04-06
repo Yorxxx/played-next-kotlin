@@ -3,11 +3,13 @@ package com.piticlistudio.playednext.data.repository.datasource.net
 import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import com.piticlistudio.playednext.data.entity.mapper.datasources.game.GameDTOMapper
-import com.piticlistudio.playednext.data.entity.igdb.GameDTO
+import com.piticlistudio.playednext.data.entity.mapper.datasources.game.IGDBGameMapper
+import com.piticlistudio.playednext.data.entity.igdb.IGDBGame
+import com.piticlistudio.playednext.data.repository.datasource.igdb.IGDBGameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.igdb.IGDBService
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGameRemote
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeIGDBGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.Single
 import io.reactivex.observers.TestObserver
@@ -23,25 +25,25 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-internal class GameRemoteImplTest {
+internal class IGDBGameRepositoryImplTest {
 
     @Nested
-    @DisplayName("Given a GameRemoteImpl instance")
-    inner class GameRemoteImplInstance {
+    @DisplayName("Given a IGDBGameRepositoryImpl instance")
+    inner class IGDBGameRepositoryImplInstance {
 
         @Rule
         @JvmField
         val mOverrideSchedulersRule = RxSchedulersOverrideRule()
 
         @Mock lateinit var service: IGDBService
-        @Mock lateinit var mapper: GameDTOMapper
+        @Mock lateinit var mapper: IGDBGameMapper
 
-        private var repositoryImpl: GameRemoteImpl? = null
+        private var repositoryImpl: IGDBGameRepositoryImpl? = null
 
         @BeforeEach
         fun setup() {
             MockitoAnnotations.initMocks(this)
-            repositoryImpl = GameRemoteImpl(service, mapper)
+            repositoryImpl = IGDBGameRepositoryImpl(service, mapper)
         }
 
         @Nested
@@ -49,14 +51,14 @@ internal class GameRemoteImplTest {
         inner class Load {
 
             var result: TestSubscriber<Game>? = null
-            val model = makeGameRemote()
+            val model = makeIGDBGame()
             val entity = makeGame()
 
             @BeforeEach
             fun setup() {
-                val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model))  }
+                val flowable = Single.create<List<IGDBGame>> { it.onSuccess(listOf(model))  }
                 whenever(service.loadGame(10)).thenReturn(flowable)
-                whenever(mapper.mapFromModel(model)).thenReturn(entity)
+                whenever(mapper.mapFromDataLayer(model)).thenReturn(entity)
                 result = repositoryImpl?.load(10)?.test()
             }
 
@@ -69,7 +71,7 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then should map service response")
             fun mapIsCalled() {
-                verify(mapper).mapFromModel(model)
+                verify(mapper).mapFromDataLayer(model)
             }
 
             @Test
@@ -90,7 +92,7 @@ internal class GameRemoteImplTest {
 
                 @BeforeEach
                 fun setup() {
-                    val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf())  }
+                    val flowable = Single.create<List<IGDBGame>> { it.onSuccess(listOf())  }
                     whenever(service.loadGame(10)).thenReturn(flowable)
                     result = repositoryImpl?.load(10)?.test()
                 }
@@ -111,18 +113,18 @@ internal class GameRemoteImplTest {
         @DisplayName("When we call search")
         inner class Search {
 
-            private val model = makeGameRemote()
-            private val model2 = makeGameRemote()
+            private val model = makeIGDBGame()
+            private val model2 = makeIGDBGame()
             private val entity1 = makeGame()
             private val entity2 = makeGame()
             private var result: TestSubscriber<List<Game>>? = null
 
             @BeforeEach
             fun setup() {
-                val flowable = Single.create<List<GameDTO>> { it.onSuccess(listOf(model, model2))  }
+                val flowable = Single.create<List<IGDBGame>> { it.onSuccess(listOf(model, model2))  }
                 whenever(service.searchGames(anyInt(), anyString(), anyString(), anyInt())).thenReturn(flowable)
-                whenever(mapper.mapFromModel(model)).thenReturn(entity1)
-                whenever(mapper.mapFromModel(model2)).thenReturn(entity2)
+                whenever(mapper.mapFromDataLayer(model)).thenReturn(entity1)
+                whenever(mapper.mapFromDataLayer(model2)).thenReturn(entity2)
                 result = repositoryImpl?.search("query", 5, 15)?.test()
             }
 
@@ -135,8 +137,8 @@ internal class GameRemoteImplTest {
             @Test
             @DisplayName("Then maps result into data model")
             fun mapIsCalled() {
-                verify(mapper).mapFromModel(model)
-                verify(mapper).mapFromModel(model2)
+                verify(mapper).mapFromDataLayer(model)
+                verify(mapper).mapFromDataLayer(model2)
             }
 
             @Test
