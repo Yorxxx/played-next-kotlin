@@ -7,13 +7,13 @@ import com.piticlistudio.playednext.data.entity.room.RoomGame
 import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.game.GameSaveException
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImageRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.RoomGamePlatformRepositoryImpl
-import com.piticlistudio.playednext.domain.model.*
-import com.piticlistudio.playednext.domain.model.Collection
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGame
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
@@ -458,6 +458,14 @@ internal class RoomGameRepositoryImplTest {
             }
 
             @Test
+            @DisplayName("Then requests to save collection")
+            fun savesCollection() {
+                source.collection?.let {
+                    verify(collectionRepositoryImpl).saveForGame(source.id, it)
+                }
+            }
+
+            @Test
             @DisplayName("Then emits completion")
             fun emitsComplete() {
                 assertNotNull(observer)
@@ -465,6 +473,109 @@ internal class RoomGameRepositoryImplTest {
                     assertComplete()
                     assertNoValues()
                     assertNoErrors()
+                }
+            }
+
+            @Nested
+            @DisplayName("And fails to save")
+            inner class SaveFailed {
+
+                @BeforeEach
+                internal fun setUp() {
+                    reset(daoService, companyRepositoryImpl, genreRepositoryImpl, platformRepositoryImpl, imagesRepositoryImpl, collectionRepositoryImpl)
+                    whenever(daoService.insert(anyOrNull())).thenReturn(0L)
+                    observer = repository.save(source).test()
+                }
+
+                @Test
+                @DisplayName("Then emits error")
+                fun emitsError() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertNoValues()
+                        assertError(GameSaveException::class.java)
+                        assertNotComplete()
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not save developers")
+                fun savesDevelopers() {
+                    source.developers.forEach {
+                        verify(companyRepositoryImpl, never()).saveDeveloperForGame(source.id, it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not saves publishers")
+                fun savesPublishers() {
+                    source.publishers.forEach {
+                        verify(companyRepositoryImpl, never()).savePublisherForGame(source.id, it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not saves genres")
+                fun savesGenres() {
+                    source.genres.forEach {
+                        verify(genreRepositoryImpl, never()).saveGenreForGame(source.id, it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not save platforms")
+                fun savesPlatforms() {
+                    source.platforms.forEach {
+                        verify(platformRepositoryImpl, never()).saveForGame(source.id, it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not save images")
+                fun savesImages() {
+                    source.images.forEach {
+                        verify(imagesRepositoryImpl, never()).saveForGame(it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then does not saves collection")
+                fun savesCollection() {
+                    source.collection?.let {
+                        verify(collectionRepositoryImpl, never()).saveForGame(source.id, it)
+                    }
+                }
+            }
+
+            @Nested
+            @DisplayName("And game does not have collection")
+            inner class WithoutCollection {
+
+                private val source = makeGame(collection = null)
+
+                @BeforeEach
+                internal fun setUp() {
+                    reset(collectionRepositoryImpl)
+                    whenever(mapper.mapIntoDataLayerModel(source)).thenReturn(data)
+                    observer = repository.save(source).test()
+                }
+
+                @Test
+                @DisplayName("Then emits completion")
+                fun emitsError() {
+
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertNoValues()
+                        assertNoErrors()
+                        assertComplete()
+                    }
+                }
+
+                @Test
+                @DisplayName("Then skips collection saving")
+                fun savesDevelopers() {
+                    verifyZeroInteractions(collectionRepositoryImpl)
                 }
             }
         }

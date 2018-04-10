@@ -7,6 +7,8 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.timetobeat.Ro
 import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.test.factory.GameFactory
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGame
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -34,7 +36,7 @@ internal class RoomGameMapperTest {
         @DisplayName("When mapFromEntity is called")
         inner class MapFromEntityCalled {
 
-            val model = GameFactory.makeRoomGame()
+            var model = GameFactory.makeRoomGame()
             var result: Game? = null
 
             @BeforeEach
@@ -81,10 +83,38 @@ internal class RoomGameMapperTest {
             }
 
             @Test
+            @DisplayName("Then should set null cover when source is missing")
+            fun nullCover() {
+                model = makeRoomGame(cover = null)
+
+                // Act
+                result = mapper.mapFromDataLayer(RoomGameProxy(model))
+
+                assertNotNull(result)
+                result?.apply {
+                    assertNull(cover)
+                }
+            }
+
+            @Test
             @DisplayName("Then should map into TimeToBeat")
             fun intoTimeToBeatEntity() {
                 model.timeToBeat?.let {
                     verify(timeToBeatMapper).mapFromDataLayer(it)
+                }
+            }
+
+            @Test
+            @DisplayName("Then should set null timetobeat when source is missing")
+            fun nullTimetoBeat() {
+                model = makeRoomGame(timeToBeat = null)
+
+                // Act
+                result = mapper.mapFromDataLayer(RoomGameProxy(model))
+
+                assertNotNull(result)
+                result?.apply {
+                    assertNull(timeToBeat)
                 }
             }
         }
@@ -93,7 +123,7 @@ internal class RoomGameMapperTest {
         @DisplayName("When mapIntoDataLayerModel is called")
         inner class MapIntoDataLayerModelCalled {
 
-            val entity = GameFactory.makeGame()
+            var entity = GameFactory.makeGame()
             var result: RoomGameProxy? = null
 
             @BeforeEach
@@ -124,15 +154,73 @@ internal class RoomGameMapperTest {
                         assertEquals(entity.ratingCount, ratingCount)
                         assertEquals(entity.totalRating, totalRating)
                         assertEquals(entity.syncedAt, syncedAt)
+                        entity.cover?.let {
+                            assertNotNull(this.cover)
+                            assertEquals(it.height, this.cover!!.height)
+                            assertEquals(it.width, this.cover!!.width)
+                            assertEquals(it.url, this.cover!!.url)
+                        }
                     }
                 }
             }
+
 
             @Test
             @DisplayName("Then should map into RoomTimeToBeat")
             fun intoTimeToBeatEntity() {
                 entity.timeToBeat?.apply {
                     verify(timeToBeatMapper).mapIntoDataLayerModel(this)
+                }
+            }
+
+            @Test
+            @DisplayName("Then should set null timetobeat when source is missing")
+            fun nullTimetoBeat() {
+                entity = makeGame(timetoBeat = null)
+
+                // Act
+                result = mapper.mapIntoDataLayerModel(entity)
+
+                assertNotNull(result)
+                result?.apply {
+                    assertNotNull(game)
+                    game.apply {
+                        assertNull(timeToBeat)
+                    }
+                }
+            }
+
+            @Test
+            @DisplayName("Then should set null cover when source is missing")
+            fun nullCover() {
+                entity = makeGame(cover = null)
+
+                // Act
+                result = mapper.mapIntoDataLayerModel(entity)
+
+                assertNotNull(result)
+                result?.apply {
+                    assertNotNull(game)
+                    game.apply {
+                        assertNull(cover)
+                    }
+                }
+            }
+
+            @Test
+            @DisplayName("Then should set null collection when source is missing")
+            fun nullCollection() {
+                entity = makeGame(collection = null)
+
+                // Act
+                result = mapper.mapIntoDataLayerModel(entity)
+
+                assertNotNull(result)
+                result?.apply {
+                    assertNotNull(game)
+                    game.apply {
+                        assertNull(collection)
+                    }
                 }
             }
         }
