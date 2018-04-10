@@ -4,9 +4,9 @@ import com.piticlistudio.playednext.data.entity.giantbomb.*
 import com.piticlistudio.playednext.data.entity.igdb.*
 import com.piticlistudio.playednext.data.entity.room.RoomGame
 import com.piticlistudio.playednext.data.entity.room.RoomImage
-import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.domain.model.Genre
+import com.piticlistudio.playednext.data.entity.room.RoomTimeToBeat
+import com.piticlistudio.playednext.domain.model.*
+import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeGiantbombCollection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeIGDBCollection
@@ -46,7 +46,10 @@ class GameFactory {
         fun makeGame(id: Int = randomInt(),
                      developers: List<Company> = randomListOf(8) { makeCompany() },
                      publishers: List<Company> = randomListOf(3) { makeCompany() },
-                     genres: List<Genre> = randomListOf(5) { makeGenre() }): Game {
+                     genres: List<Genre> = randomListOf(5) { makeGenre() },
+                     collection: Collection? = makeCollection(),
+                     cover: Image? = makeImage(),
+                     timetoBeat: TimeToBeat? = makeTimeToBeat()): Game {
             return Game(id = id,
                     name = randomString(),
                     releasedAt = randomLong(),
@@ -61,12 +64,12 @@ class GameFactory {
                     totalRating = randomDouble(),
                     aggregatedRatingCount = randomInt(),
                     createdAt = randomLong(),
-                    cover = makeImage(),
-                    timeToBeat = makeTimeToBeat(),
+                    cover = cover,
+                    timeToBeat = timetoBeat,
                     publishers = publishers,
                     developers = developers,
                     genres = genres,
-                    collection = makeCollection(),
+                    collection = collection,
                     syncedAt = randomLong(),
                     platforms = randomListOf(5) { makePlatform() },
                     images = randomListOf(10) { makeGameImage() })
@@ -102,7 +105,9 @@ class GameFactory {
                     site_detail_url = randomString())
         }
 
-        fun makeRoomGame(id: Int = randomInt()): RoomGame {
+        fun makeRoomGame(id: Int = randomInt(),
+                         cover: RoomImage? = makeRoomImage(),
+                         timeToBeat: RoomTimeToBeat? = makeRoomTimeToBeat()): RoomGame {
             return RoomGame(id = id,
                     name = randomString(),
                     summary = randomString(),
@@ -121,8 +126,8 @@ class GameFactory {
                     totalRating = randomDouble(),
                     totalRatingCount = randomInt(),
                     updatedAt = randomLong(),
-                    timeToBeat = makeRoomTimeToBeat(),
-                    cover = makeRoomImage(),
+                    timeToBeat = timeToBeat,
+                    cover = cover,
                     syncedAt = randomLong())
         }
 
