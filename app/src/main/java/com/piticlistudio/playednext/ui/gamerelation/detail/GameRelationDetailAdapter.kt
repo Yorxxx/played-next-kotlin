@@ -37,7 +37,7 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
             notifyDataSetChanged()
         }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is GameInfoHolder -> holder.bindTo(game)
             is GameDescriptionHolder -> holder.bindTo(game!!.summary)
@@ -57,8 +57,8 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent!!.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
         when (viewType) {
             ITEM_TYPE_INFO -> {
                 val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.game_detail_info_item_row, parent, false)

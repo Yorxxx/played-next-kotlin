@@ -41,7 +41,9 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
     }
 
     private val args by lazy {
-        GameRelationActivityArgs(arguments.getInt(ARG_GAMEID))
+        arguments?.let {
+            GameRelationActivityArgs(it.getInt(ARG_GAMEID))
+        }
     }
 
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
@@ -50,16 +52,16 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
 
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
-    private lateinit var binding: GamerelationDetailBinding
+    private var binding: GamerelationDetailBinding? = null
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = layoutInflater.inflate(R.layout.gamerelation_detail, container, false)
-        binding = DataBindingUtil.bind<GamerelationDetailBinding>(view)
+        binding = DataBindingUtil.bind(view)
         return view
     }
 
@@ -71,8 +73,8 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
 
         viewmodel.getCurrentState().observe(this, Observer { it?.let { this.render(it) }})
-        if (savedInstanceState == null)
-            viewmodel.loadRelationForGame(args.gameId)
+        if (savedInstanceState == null && args != null)
+            viewmodel.loadRelationForGame(args!!.gameId)
     }
 
     private fun initView() {
@@ -90,7 +92,7 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
         platformsList.layoutManager = gridLayoutManager
         platformsList.adapter = platformadapter
 
-        backdrop.layoutParams.height = activity.getScreenHeight()
+        backdrop.layoutParams.height = (activity as AppCompatActivity).getScreenHeight()
         appbar.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             backdrop.invalidate()
             isAppBarCollapsed = verticalOffset == -1 * appBarLayout.totalScrollRange
@@ -117,7 +119,7 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
             false -> gamerelation_detail_loading.hide()
         }
         viewState.game?.let {
-            binding.game = it
+            binding?.game = it
             adapter.game = it
             platformadapter.platforms = it.platforms ?: listOf()
         }

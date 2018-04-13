@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:padding="3dp"
             android:layout_marginBottom="2dp"
-            android:gravity="center"
+            android:gravity="center_horizontal|top"
             android:minLines="2"
             android:maxLines="2"
             tools:text="Halo 5"/>

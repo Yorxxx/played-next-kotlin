@@ -18,12 +18,12 @@ class GamePlatformsAdapter @Inject constructor() : RecyclerView.Adapter<Recycler
             notifyDataSetChanged()
         }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) = (holder as PlatformHolder).bindTo(platforms.get(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = (holder as PlatformHolder).bindTo(platforms.get(position))
 
     override fun getItemCount(): Int = platforms.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent!!.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.platform_label_row, parent, false)
         return PlatformHolder(binding)
     }

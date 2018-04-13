@@ -27,6 +27,33 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:listitem="@layout/gamesearch_item" />
 
+        <LinearLayout
+            android:id="@+id/emptylist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="4dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="no results found"
+                android:textAppearance="@android:style/TextAppearance.Material.SearchResult.Title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="No games found with that name. Please, try again with a different search term."
+                android:textAppearance="@android:style/TextAppearance.Material.SearchResult.Subtitle" />
+
+        </LinearLayout>
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarView"
             android:layout_width="match_parent"
@@ -66,7 +93,8 @@
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/searchInputView"

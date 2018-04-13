@@ -2,11 +2,11 @@ package com.piticlistudio.playednext.ui.game.search
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
+import android.arch.lifecycle.Transformations.switchMap
 import android.arch.lifecycle.ViewModel
-import android.arch.paging.DataSource
-import android.arch.paging.LivePagedListProvider
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.arch.paging.TiledDataSource
 import android.net.NetworkInfo
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
@@ -14,103 +14,88 @@ import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.util.NoNetworkAvailableException
 import rx.Subscription
 import rx.subjects.BehaviorSubject
-import java.net.UnknownHostException
+import java.util.concurrent.Executors
 import javax.inject.Inject
 
+
 class GameSearchViewModel @Inject constructor(private val searchGamesUseCase: SearchGamesUseCase,
-                                              connectivity: BehaviorSubject<Connectivity>) : ViewModel(), SearchGamesPagedListListener {
+                                              connectivity: BehaviorSubject<Connectivity>) : ViewModel() {
 
-    private val loadingLiveData = MutableLiveData<Boolean>()
-    fun getLoading(): LiveData<Boolean> = loadingLiveData
-
-    private val errorLiveData = MutableLiveData<Exception>()
-    fun getError(): LiveData<Exception> = errorLiveData
-
+    private val queryLiveData = MutableLiveData<String>()
+    private var factoryLiveData = MutableLiveData<GameSearchFactory>()
     private var searchResultsLiveData: LiveData<PagedList<Game>>? = null
-    val searchResults: LiveData<PagedList<Game>>
-        get() {
-            if (searchResultsLiveData == null) {
-                searchResultsLiveData = getData(null)
-            }
-            return searchResultsLiveData ?: throw AssertionError("Check your threads")
+    private val viewState = MutableLiveData<GameSearchViewState>()
+    private fun currentViewState(): GameSearchViewState {
+        if (viewState.value != null) {
+            return viewState.value!!
         }
+        return GameSearchViewState()
+    }
+
     private var disposable: Subscription? = null
-    var provider: TiledDataSource<Game>? = null
-    private var startPosition = 0
-    private var count = 0
-    private var shouldRestoreConnection = false
-    private var query: String? = null
 
     init {
         disposable = connectivity.subscribe {
             when (it.state) {
                 NetworkInfo.State.CONNECTED -> {
-                    errorLiveData.postValue(null)
-                    provider?.let {
-                        if (shouldRestoreConnection && query != null) {
-                            setQueryFilter(query!!)
-                        }
+                    if (currentViewState().error is NoNetworkAvailableException) {
+                        viewState.postValue(currentViewState().copy(error = null, searchEnabled = true))
                     }
                 }
                 else -> {
-                    errorLiveData.postValue(NoNetworkAvailableException())
-                    if (this.startPosition > 0 && this.count > 0) {
-                        shouldRestoreConnection = true
-                    }
+                    viewState.postValue(currentViewState().copy(error = NoNetworkAvailableException(), searchEnabled = false))
                 }
             }
         }
-        loadingLiveData.postValue(false)
-    }
-
-    override fun onCleared() {
-        disposable?.unsubscribe()
-        super.onCleared()
     }
 
     fun setQueryFilter(query: String) {
-        this.query = query
-        loadingLiveData.postValue(true)
-        provider?.invalidate()
-        searchResultsLiveData = getData(query)
+        viewState.postValue(currentViewState().copy(searchInput = query))
+        queryLiveData.postValue(query)
     }
 
-    private fun getData(query: String?): LiveData<PagedList<Game>> {
+    fun getData(): LiveData<PagedList<Game>> {
 
-        val p = object : LivePagedListProvider<Int, Game>() {
-            override fun createDataSource(): DataSource<Int, Game> {
-                return SearchGamesPagedListProvider(searchGamesUseCase, query).also {
-                    it.listener = this@GameSearchViewModel
-                    provider = it
-                }
+        return switchMap(queryLiveData, {
+            val factory = GameSearchFactory(searchGamesUseCase, it)
+            factoryLiveData.postValue(factory)
+
+            val config = PagedList.Config.Builder()
+                    .setInitialLoadSizeHint(24)
+                    .setPageSize(24)
+                    .build()
+
+            searchResultsLiveData = LivePagedListBuilder<Int, Game>(factory, config)
+                    .setInitialLoadKey(1)
+                    .setFetchExecutor(Executors.newSingleThreadExecutor())
+                    .build()
+            searchResultsLiveData!!
+        })
+    }
+
+    private fun getSearchStatus(): LiveData<SearchStatus> {
+        return switchMap(switchMap(factoryLiveData, { factory ->
+            factory.datasourceLiveData
+        }), { provider ->
+            provider.loadState
+        })
+    }
+
+    fun getCurrentState(): LiveData<GameSearchViewState> {
+        return switchMap(getSearchStatus(), {
+            when (it) {
+                is SearchStatus.Loading -> viewState.postValue(currentViewState().copy(isLoading = true, error = null, searchEnabled = true, showSearchIsEmpty = false))
+                is SearchStatus.LoadingMore -> viewState.postValue(currentViewState().copy(isLoading = true, error = null, searchEnabled = true, showSearchIsEmpty = false))
+                is SearchStatus.Failure -> viewState.postValue(currentViewState().copy(isLoading = false, error = it.error, searchEnabled = true, showSearchIsEmpty = false))
+                is SearchStatus.Success -> viewState.postValue(currentViewState().copy(isLoading = false, error = null, searchEnabled = true, showSearchIsEmpty = it.items.isEmpty()))
             }
-        }
-
-        return p.create(0, PagedList.Config.Builder()
-                .setPageSize(12) //number of items loaded at once
-                .setEnablePlaceholders(false)
-                .build())
-    }
-
-    override fun onSearchCompleted(query: String?, startPosition: Int, count: Int) {
-        loadingLiveData.postValue(false)
-        this.startPosition = startPosition
-        this.count = count
-        if (count == 0) {
-            provider?.invalidate()
-        }
-    }
-
-    override fun onSearchFailed(error: Exception) {
-        when (error) {
-            is UnknownHostException -> errorLiveData.postValue(NoNetworkAvailableException())
-            is RuntimeException -> {
-                when (error.cause) {
-                    is UnknownHostException -> errorLiveData.postValue(NoNetworkAvailableException())
-                    else -> errorLiveData.postValue(error)
-                }
-            }
-            else -> errorLiveData.postValue(error)
-        }
+            viewState
+        })
     }
 }
+
+data class GameSearchViewState(val isLoading: Boolean = false,
+                               val showSearchIsEmpty: Boolean = false,
+                               val error: Throwable? = null,
+                               val searchEnabled: Boolean? = true,
+                               val searchInput: String? = null)
