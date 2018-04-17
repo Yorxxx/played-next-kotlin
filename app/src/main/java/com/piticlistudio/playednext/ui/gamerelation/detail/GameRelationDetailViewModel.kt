@@ -32,8 +32,8 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
 
     private fun currentViewState(): ViewState = viewState.value!!
 
-    fun loadRelationForGame(gameId: Int) {
-        loadGameUseCase.execute(gameId)
+    fun loadRelationForGame(game: Game) {
+        loadGameUseCase.execute(game.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext {
                     viewState.value = currentViewState().copy(game = it)
@@ -41,7 +41,7 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
                 }
                 .observeOn(Schedulers.io())
                 .flatMap { loadRelationsForGameUseCase.execute(it) }
-                .doOnSubscribe { viewState.postValue(ViewState(true, listOf(), null, null, null)) }
+                .doOnSubscribe { viewState.postValue(ViewState(true, listOf(), null, game, null)) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .toObservable()

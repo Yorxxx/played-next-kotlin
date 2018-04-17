@@ -1,11 +1,14 @@
 package com.piticlistudio.playednext.domain.model
 
 import android.app.AlarmManager
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
 /**
  * Representation of a game.
  * Created by jorge on 14/09/17.
  */
+@Parcelize
 data class Game(val id: Int,
                 val name: String,
                 val createdAt: Long,
@@ -28,16 +31,22 @@ data class Game(val id: Int,
                 var collection: Collection?,
                 var syncedAt: Long,
                 var platforms: List<Platform>,
-                var images: List<GameImage>) {
+                var images: List<GameImage>) : Parcelable {
 
     val developersName: String?
-        get() { return developers.joinToString{ it.name } }
+        get() {
+            return developers.joinToString { it.name }
+        }
     val genresName: String?
-        get() { return genres.joinToString { it.name }}
+        get() {
+            return genres.joinToString { it.name }
+        }
     val publishersName: String?
-        get() { return publishers.joinToString { it.name }}
+        get() {
+            return publishers.joinToString { it.name }
+        }
 
 
-    fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY*15
+    fun isExpired() = System.currentTimeMillis() - syncedAt > AlarmManager.INTERVAL_DAY * 15
 }
 

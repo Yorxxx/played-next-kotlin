@@ -1,6 +1,10 @@
 package com.piticlistudio.playednext.domain.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * Representation of a Collection
  */
-data class Collection(val id: Int, val name: String, val url: String?)
+@Parcelize
+data class Collection(val id: Int, val name: String, val url: String?): Parcelable

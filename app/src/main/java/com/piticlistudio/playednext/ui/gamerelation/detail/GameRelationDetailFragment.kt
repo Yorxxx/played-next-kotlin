@@ -15,6 +15,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.piticlistudio.playednext.R
 import com.piticlistudio.playednext.databinding.GamerelationDetailBinding
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.ui.game.search.GameSearchViewModel
 import com.piticlistudio.playednext.util.ext.getScreenHeight
 import com.squareup.picasso.Picasso
 import dagger.android.support.AndroidSupportInjection
@@ -25,30 +27,29 @@ import org.jetbrains.anko.AnkoLogger
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 class GameRelationDetailFragment : Fragment(), AnkoLogger {
 
     companion object {
-        private const val ARG_GAMEID = "game_id"
+        private const val ARG_GAME = "game"
 
-        fun newInstance(id: Int): GameRelationDetailFragment {
+        fun newInstance(game: Game): GameRelationDetailFragment {
             val args = Bundle()
-            args.putSerializable(ARG_GAMEID, id)
-            val fragment = GameRelationDetailFragment()
-            fragment.arguments = args
-            return fragment
+            args.putParcelable(ARG_GAME, game)
+            return GameRelationDetailFragment().apply {
+                arguments = args
+            }
         }
     }
 
-    private val args by lazy {
-        arguments?.let {
-            GameRelationActivityArgs(it.getInt(ARG_GAMEID))
-        }
+    private val game: Game by lazy {
+        arguments?.getParcelable<Game>(ARG_GAME) as Game
     }
-
     @Inject lateinit var mViewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var adapter: GameRelationDetailAdapter
     @Inject lateinit var platformadapter: GamePlatformsAdapter
+    private val viewModel by lazy {
+        ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
+    }
 
     private var isAppBarCollapsed = false
     private val doubleClickSubject = PublishSubject.create<View>()
@@ -68,23 +69,18 @@ class GameRelationDetailFragment : Fragment(), AnkoLogger {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        requireNotNull(game, { "A game is required to launch GameRelationDetailFragment"})
         initView()
 
-        val viewmodel = ViewModelProviders.of(this, mViewModelFactory).get(GameRelationDetailViewModel::class.java)
-
-        viewmodel.getCurrentState().observe(this, Observer { it?.let { this.render(it) }})
-        if (savedInstanceState == null && args != null)
-            viewmodel.loadRelationForGame(args!!.gameId)
+        viewModel.getCurrentState().observe(this, Observer { it?.let { this.render(it) }})
+        if (savedInstanceState == null)
+            viewModel.loadRelationForGame(game)
     }
 
     private fun initView() {
 
         val parent: AppCompatActivity = activity as AppCompatActivity
         parent.setSupportActionBar(toolbar)
-        parent.supportActionBar?.run {
-            setDisplayHomeAsUpEnabled(true)
-            setTitle(null)
-        }
 
         detail_recyclerview.adapter = adapter
         val gridLayoutManager = GridLayoutManager(activity, 4)

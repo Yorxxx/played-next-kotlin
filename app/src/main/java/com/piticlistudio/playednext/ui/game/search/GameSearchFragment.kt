@@ -16,9 +16,10 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.piticlistudio.playednext.R
-import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationActivityArgs
+import com.piticlistudio.playednext.ui.gamerelation.detail.GameRelationDetailFragment
 import com.piticlistudio.playednext.util.NoNetworkAvailableException
 import com.piticlistudio.playednext.util.SpacesItemDecoration
+import com.piticlistudio.playednext.util.ext.setContentFragment
 import dagger.android.support.AndroidSupportInjection
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -71,7 +72,9 @@ class GameSearchFragment : Fragment(), AnkoLogger {
         recyclerview.adapter = adapter
         recyclerview.addItemDecoration(SpacesItemDecoration(8, 3))
         recyclerview.layoutManager = GridLayoutManager(activity, 3)
-        adapter.onClickListener = { GameRelationActivityArgs(it.id).launch(activity as Context) }
+        adapter.onClickListener = {
+            activity?.setContentFragment(android.R.id.content, { GameRelationDetailFragment.newInstance(it) })
+        }
     }
 
     private fun searchForResults(queryFilter: String) {
