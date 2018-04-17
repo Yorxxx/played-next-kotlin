@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.genre
 
 import com.piticlistudio.playednext.data.entity.mapper.DataLayerMapper
-import com.piticlistudio.playednext.data.entity.net.GiantbombGenre
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGenre
 import com.piticlistudio.playednext.domain.model.Genre
 import javax.inject.Inject
 

@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
-import com.piticlistudio.playednext.data.entity.net.GiantbombGameImage
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGameImage
 import com.piticlistudio.playednext.test.factory.DataFactory
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
 import org.junit.jupiter.api.Assertions.*
@@ -30,7 +30,6 @@ internal class GiantbombImageMapperTest {
             assertNotNull(result)
             with(result) {
                 assertEquals(response.medium_url, result?.url)
-                assertEquals(response.medium_url, result?.id)
             }
         }
 
@@ -52,7 +51,6 @@ internal class GiantbombImageMapperTest {
             assertNotNull(result)
             with(result) {
                 assertEquals(response.screen_url, result?.url)
-                assertEquals(response.screen_url, result?.id)
             }
         }
 
@@ -74,7 +72,6 @@ internal class GiantbombImageMapperTest {
             assertNotNull(result)
             with(result) {
                 assertEquals(response.screen_large_url, result?.url)
-                assertEquals(response.screen_large_url, result?.id)
             }
         }
 
@@ -96,7 +93,6 @@ internal class GiantbombImageMapperTest {
             assertNotNull(result)
             with(result) {
                 assertEquals(response.small_url, result?.url)
-                assertEquals(response.small_url, result?.id)
             }
         }
 
@@ -118,7 +114,6 @@ internal class GiantbombImageMapperTest {
             assertNotNull(result)
             with(result) {
                 assertEquals(response.original_url, result?.url)
-                assertEquals(response.original_url, result?.id)
             }
         }
 

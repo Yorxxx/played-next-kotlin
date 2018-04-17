@@ -1,29 +1,24 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.*
+import com.piticlistudio.playednext.data.entity.giantbomb.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.GiantbombCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.GiantbombCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GiantbombGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.GiantbombImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.GiantbombPlatformMapper
-import com.piticlistudio.playednext.data.entity.net.*
 import com.piticlistudio.playednext.domain.model.Collection
-import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
 import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeCover
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGiantbombGame
 import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGiantbombGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito.mock
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -59,7 +54,8 @@ internal class GiantbombGameMapperTest {
 
             doAnswer {
                 val arg = it.arguments[0] as GiantbombCompany
-                makeCompany(arg.name, arg.id) }
+                makeCompany(arg.name, arg.id)
+            }
                     .whenever(companyMapper).mapFromDataLayer(any())
 
             val result = mapper.mapFromDataLayer(game)
@@ -67,10 +63,10 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             game.developers?.forEachIndexed { index, giantbombCompany ->
                 verify(companyMapper).mapFromDataLayer(giantbombCompany)
-                assertEquals(giantbombCompany.id, result.developers?.get(index)?.id)
-                assertEquals(giantbombCompany.name, result.developers?.get(index)?.name)
+                assertEquals(giantbombCompany.id, result.developers.get(index).id)
+                assertEquals(giantbombCompany.name, result.developers.get(index).name)
             }
-            assertEquals(game.developers?.size, result.developers?.size)
+            assertEquals(game.developers?.size, result.developers.size)
         }
 
         @Test
@@ -83,7 +79,7 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             with(result.developers) {
                 assertNotNull(this)
-                assertTrue(this!!.isEmpty())
+                assertTrue(isEmpty())
             }
         }
 
@@ -92,7 +88,8 @@ internal class GiantbombGameMapperTest {
 
             doAnswer {
                 val arg = it.arguments[0] as GiantbombCompany
-                makeCompany(arg.name, arg.id) }
+                makeCompany(arg.name, arg.id)
+            }
                     .whenever(companyMapper).mapFromDataLayer(any())
 
             val result = mapper.mapFromDataLayer(game)
@@ -100,10 +97,10 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             game.publishers?.forEachIndexed { index, giantbombCompany ->
                 verify(companyMapper).mapFromDataLayer(giantbombCompany)
-                assertEquals(giantbombCompany.id, result.publishers?.get(index)?.id)
-                assertEquals(giantbombCompany.name, result.publishers?.get(index)?.name)
+                assertEquals(giantbombCompany.id, result.publishers.get(index).id)
+                assertEquals(giantbombCompany.name, result.publishers.get(index).name)
             }
-            assertEquals(game.publishers?.size, result.publishers?.size)
+            assertEquals(game.publishers?.size, result.publishers.size)
         }
 
         @Test
@@ -116,7 +113,7 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             with(result.publishers) {
                 assertNotNull(this)
-                assertTrue(this!!.isEmpty())
+                assertTrue(isEmpty())
             }
         }
 
@@ -125,7 +122,8 @@ internal class GiantbombGameMapperTest {
 
             doAnswer {
                 val arg = it.arguments[0] as GiantbombGenre
-                makeGenre(arg.name, arg.id) }
+                makeGenre(arg.name, arg.id)
+            }
                     .whenever(genreMapper).mapFromDataLayer(any())
 
             val result = mapper.mapFromDataLayer(game)
@@ -133,10 +131,10 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             game.genres?.forEachIndexed { index, genre ->
                 verify(genreMapper).mapFromDataLayer(genre)
-                assertEquals(genre.id, result.genres?.get(index)?.id)
-                assertEquals(genre.name, result.genres?.get(index)?.name)
+                assertEquals(genre.id, result.genres.get(index).id)
+                assertEquals(genre.name, result.genres.get(index).name)
             }
-            assertEquals(game.genres?.size, result.genres?.size)
+            assertEquals(game.genres?.size, result.genres.size)
         }
 
         @Test
@@ -149,7 +147,7 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             with(result.genres) {
                 assertNotNull(this)
-                assertTrue(this!!.isEmpty())
+                assertTrue(isEmpty())
             }
             verifyZeroInteractions(genreMapper)
         }
@@ -184,11 +182,25 @@ internal class GiantbombGameMapperTest {
         }
 
         @Test
+        fun `then should set null collection when empty franchises`() {
+
+            game = makeGiantbombGame(franchises = listOf())
+
+            val result = mapper.mapFromDataLayer(game)
+
+            assertNotNull(result)
+            assertNull(result.collection)
+            verifyZeroInteractions(collectionMapper)
+        }
+
+
+        @Test
         fun `then should request to map the platforms`() {
 
             doAnswer {
                 val arg = it.arguments[0] as GiantbombPlatform
-                makePlatform(arg.id, arg.name) }
+                makePlatform(arg.id, arg.name)
+            }
                     .whenever(platformMapper).mapFromDataLayer(any())
 
             val result = mapper.mapFromDataLayer(game)
@@ -196,10 +208,10 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             game.platforms?.forEachIndexed { index, platform ->
                 verify(platformMapper).mapFromDataLayer(platform)
-                assertEquals(platform.id, result.platforms?.get(index)?.id)
-                assertEquals(platform.name, result.platforms?.get(index)?.name)
+                assertEquals(platform.id, result.platforms.get(index).id)
+                assertEquals(platform.name, result.platforms.get(index).name)
             }
-            assertEquals(game.platforms?.size, result.platforms?.size)
+            assertEquals(game.platforms?.size, result.platforms.size)
         }
 
         @Test
@@ -212,7 +224,7 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             with(result.platforms) {
                 assertNotNull(this)
-                assertTrue(this!!.isEmpty())
+                assertTrue(isEmpty())
             }
             verifyZeroInteractions(platformMapper)
         }
@@ -227,7 +239,7 @@ internal class GiantbombGameMapperTest {
             val result = mapper.mapFromDataLayer(game)
 
             assertNotNull(result)
-            assertEquals(game.images?.size, result.images?.size)
+            assertEquals(game.images?.size, result.images.size)
             game.images?.forEachIndexed { index, image ->
                 verify(imagesMapper).mapFromDataLayer(image)
             }
@@ -243,7 +255,7 @@ internal class GiantbombGameMapperTest {
             assertNotNull(result)
             with(result.images) {
                 assertNotNull(this)
-                assertTrue(this!!.isEmpty())
+                assertTrue(isEmpty())
             }
         }
 
@@ -425,13 +437,13 @@ internal class GiantbombGameMapperTest {
         }
 
         @Test
-        fun `then should set the syncedAt value to last_updated value`() {
+        fun `then should set the syncedAt value to 0`() {
 
             val result = mapper.mapFromDataLayer(game)
 
             assertNotNull(result)
             assertNotNull(result.syncedAt)
-            assertEquals(game.date_last_updated.time, result.syncedAt)
+            assertEquals(0L, result.syncedAt)
         }
     }
 }

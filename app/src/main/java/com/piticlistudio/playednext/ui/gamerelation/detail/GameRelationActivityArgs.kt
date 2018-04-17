@@ -10,7 +10,9 @@ import com.piticlistudio.playednext.ui.ActivityArgs
  */
 data class GameRelationActivityArgs(val gameId: Int): ActivityArgs {
 
-    override fun intent(activity: Context): Intent = Intent(activity, GameRelationDetailActivity::class.java)
+    override fun intent(activity: Context): Intent = Intent(activity, GameRelationDetailActivity::class.java).apply {
+        putExtra(GAME_ID, gameId)
+    }
 
     companion object {
         fun deserializeFrom(intent: Intent): GameRelationActivityArgs {

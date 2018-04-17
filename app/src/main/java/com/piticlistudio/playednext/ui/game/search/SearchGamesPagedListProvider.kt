@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.ui.game.search
 
-import android.arch.paging.TiledDataSource
+import android.arch.lifecycle.MutableLiveData
+import android.arch.paging.PageKeyedDataSource
 import com.piticlistudio.playednext.domain.interactor.game.SearchGamesUseCase
 import com.piticlistudio.playednext.domain.interactor.game.SearchQuery
 import com.piticlistudio.playednext.domain.model.Game
@@ -11,30 +12,59 @@ import javax.inject.Inject
  * Created by e-jegi on 09/11/2017.
  */
 class SearchGamesPagedListProvider @Inject constructor(private val searchGamesUseCase: SearchGamesUseCase,
-                                                       private val query: String? = null) : TiledDataSource<Game>() {
+                                                       private val query: String? = null) : PageKeyedDataSource<Int, Game>() {
 
-    private var results = mutableListOf<Game>()
-    var listener: SearchGamesPagedListListener? = null
+    val loadState = MutableLiveData<SearchStatus>()
 
-    override fun countItems() = results.size
-
-    override fun loadRange(startPosition: Int, count: Int): MutableList<Game> {
-        results.clear()
+    override fun loadInitial(params: LoadInitialParams<Int>, callback: LoadInitialCallback<Int, Game>) {
         query?.takeIf { !query.isNullOrEmpty() }?.let {
             try {
-                results.addAll(searchGamesUseCase.execute(SearchQuery(it, startPosition, count)).blockingLast())
-                listener?.onSearchCompleted(it, startPosition, count)
+                loadState.postValue(SearchStatus.Loading())
+                val response = searchGamesUseCase.execute(SearchQuery(it, 0, params.requestedLoadSize)).blockingLast()
+                val nextPageKey = if (params.requestedLoadSize == response.size) response.size else null
+                callback.onResult(response, 0, response.size, null, nextPageKey)
+                loadState.postValue(SearchStatus.Success(response))
             } catch (e: Exception) {
-                listener?.onSearchFailed(e)
+                callback.onResult(listOf(), null, 1)
+                loadState.postValue(SearchStatus.Failure(e))
             }
-            return results
         }
-        listener?.onSearchCompleted(null, startPosition, count)
-        return results
+    }
+
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Game>) {
+        query?.takeIf { !query.isNullOrEmpty() }?.let {
+            try {
+                loadState.postValue(SearchStatus.LoadingMore())
+                val response = searchGamesUseCase.execute(SearchQuery(it, params.key, params.requestedLoadSize)).blockingLast()
+                val adjacentKey = (if (params.requestedLoadSize == response.size) params.key + response.size else null)
+                callback.onResult(response, adjacentKey)
+                loadState.postValue(SearchStatus.Success(response))
+            } catch (e: Exception) {
+                callback.onResult(listOf(), params.key + 1)
+                loadState.postValue(SearchStatus.Failure(e))
+            }
+        }
+    }
+
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Game>) {
+        query?.takeIf { !query.isNullOrEmpty() }?.let {
+            try {
+                loadState.postValue(SearchStatus.LoadingMore())
+                val response = searchGamesUseCase.execute(SearchQuery(it, params.key * params.requestedLoadSize, params.requestedLoadSize)).blockingLast()
+                val adjacentKey = (if (params.key > 1) params.key - 1 else null)
+                callback.onResult(response, adjacentKey)
+                loadState.postValue(SearchStatus.Success(response))
+            } catch (e: Exception) {
+                callback.onResult(listOf(), params.key - 1)
+                loadState.postValue(SearchStatus.Failure(e))
+            }
+        }
     }
 }
 
-interface SearchGamesPagedListListener {
-    fun onSearchCompleted(query: String?, startPosition: Int, count: Int)
-    fun onSearchFailed(error: Exception)
+sealed class SearchStatus {
+    class Loading : SearchStatus()
+    class LoadingMore : SearchStatus()
+    class Failure(val error: Throwable) : SearchStatus()
+    class Success(val items: List<Game>) : SearchStatus()
 }

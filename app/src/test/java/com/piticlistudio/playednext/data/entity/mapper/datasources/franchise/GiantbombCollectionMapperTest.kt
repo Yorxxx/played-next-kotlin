@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGiantbombFranchise
+import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeGiantbombCollection
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName
@@ -22,7 +22,7 @@ internal class GiantbombCollectionMapperTest {
         @Test
         fun `then should map into Collection`() {
 
-            val data = makeGiantbombFranchise()
+            val data = makeGiantbombCollection()
 
             val result = mapper.mapFromDataLayer(data)
 

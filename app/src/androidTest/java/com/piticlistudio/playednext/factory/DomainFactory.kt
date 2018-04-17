@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.factory
 
-import com.piticlistudio.playednext.data.entity.dao.*
+import com.piticlistudio.playednext.data.entity.room.*
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import net.bytebuddy.utility.RandomString
 import java.util.concurrent.ThreadLocalRandom
@@ -37,43 +37,43 @@ class DomainFactory {
             return items
         }
 
-        fun makeGameCache(id: Int = randomInt()): GameDao {
-            return GameDao(id, randomString(), randomString(), randomLong(), randomLong(),
+        fun makeGameCache(id: Int = randomInt()): RoomGame {
+            return RoomGame(id, randomString(), randomString(), randomLong(), randomLong(),
                     randomString(), randomString(), randomInt(), randomInt(), randomInt(), randomDouble(),
                     randomDouble(), randomInt(), randomDouble(), randomInt(), randomDouble(), randomInt(),
                     randomLong(), makeTimeToBeatCache(), makeCoverCache(), randomLong())
         }
 
-        fun makeCompanyDao(id: Int = randomInt()): CompanyDao {
-            return CompanyDao(id, randomString(), randomString())
+        fun makeCompanyDao(id: Int = randomInt()): RoomCompany {
+            return RoomCompany(id, randomString(), randomString())
         }
 
-        fun makeCollectionDao(id: Int = randomInt()): CollectionDao {
-            return CollectionDao(id, randomString(), randomString())
+        fun makeRoomGenre(id: Int = randomInt()): RoomGenre = RoomGenre(id, randomString(), randomString())
+
+        fun makeCollectionDao(id: Int = randomInt()): RoomCollection {
+            return RoomCollection(id, randomString(), randomString())
         }
 
-        fun makeCoverCache(): CoverDao {
-            return CoverDao(randomString(), randomInt(), randomInt())
+        fun makeCoverCache(): RoomImage {
+            return RoomImage(randomString(), randomInt(), randomInt())
         }
 
-        fun makeTimeToBeatCache(): TimeToBeatDao {
-            return TimeToBeatDao(randomInt(), randomInt(), randomInt())
+        fun makeTimeToBeatCache(): RoomTimeToBeat {
+            return RoomTimeToBeat(randomInt(), randomInt(), randomInt())
         }
 
-        fun makePlatformDao(id: Int = randomInt()): PlatformDao {
-            return PlatformDao(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
-        }
+        fun makeRoomPlatform(id: Int = randomInt()): RoomPlatform = RoomPlatform(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
 
-        fun makeRelationDao(gameId: Int = randomInt(), platformId: Int = randomInt()): GameRelationDao {
-            return GameRelationDao(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
+        fun makeRoomGameRelation(gameId: Int = randomInt(), platformId: Int = randomInt()): RoomGameRelation {
+            return RoomGameRelation(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
         }
 
         fun makeRelationStatus(): GameRelationStatus {
             return GameRelationStatus.values().get(randomInt() % GameRelationStatus.values().size)
         }
 
-        fun makeImageDao(id: String = randomString(), gameId: Int = randomInt()): ScreenshotDao {
-            return ScreenshotDao(id, gameId, randomString(), randomInt(), randomInt())
-        }
+        fun makeRoomImage(): RoomImage = RoomImage(randomString(), randomInt(), randomInt())
+
+        fun makeRoomGameImage(gameId: Int = randomInt(), id: Int? = randomInt()): RoomGameImage = RoomGameImage(makeRoomImage(), id, gameId)
     }
 }

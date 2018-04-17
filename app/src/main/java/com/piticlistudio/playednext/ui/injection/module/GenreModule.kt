@@ -1,9 +1,7 @@
 package com.piticlistudio.playednext.ui.injection.module
 
 import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.data.repository.GenreRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.dao.GenreDaoService
-import com.piticlistudio.playednext.domain.repository.GenreRepository
+import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -13,13 +11,7 @@ class GenreModule {
 
     @Provides
     @Singleton
-    fun provideDao(db: AppDatabase): GenreDaoService {
-        return db.genreDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideGenreRepository(repository: GenreRepositoryImpl): GenreRepository {
-        return repository
+    fun provideDao(db: AppDatabase): RoomGenreService {
+        return db.genreRoom()
     }
 }

@@ -13,6 +13,4 @@ interface RelationDatasourceRepository {
     fun save(data: GameRelation): Completable
 
     fun loadForGameAndPlatform(gameId: Int, platformId: Int): Flowable<List<GameRelation>>
-
-    fun loadForGame(gameId: Int): Flowable<List<GameRelation>>
 }

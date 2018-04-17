@@ -30,7 +30,7 @@ android {
         defaultPublishConfig 'debug'
 
         applicationId "com.piticlistudio.playednext"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 26
         testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
         versionCode 1000
@@ -46,9 +46,6 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
-        debug {
-            testCoverageEnabled = true
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -105,7 +102,6 @@ configurations.all {
 
 dependencies {
     implementation supportLibs
-    kapt 'com.android.databinding:compiler:2.3.3'
     implementation networkLibs
     implementation rxJavaLibs
 
@@ -141,20 +137,20 @@ dependencies {
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
-    implementation "android.arch.persistence.room:runtime:$versions.archComp"
-    implementation "android.arch.persistence.room:rxjava2:$versions.archComp"
-    kapt "android.arch.persistence.room:compiler:$versions.archComp"
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    implementation "android.arch.persistence.room:rxjava2:1.0.0"
+    kapt "android.arch.persistence.room:compiler:1.0.0"
 
     implementation "android.arch.lifecycle:extensions:$versions.archComp"
     testImplementation "android.arch.core:core-testing:$versions.archComp"
     implementation "android.arch.lifecycle:reactivestreams:$versions.archComp"
-    implementation "android.arch.paging:runtime:1.0.0-alpha3"
+    implementation "android.arch.paging:runtime:1.0.0-beta1"
 
     implementation picassoLibs
 
-    compile 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.0.0'
-    compile 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
-    compile "org.jetbrains.anko:anko:$anko_version"
-    compile "org.jetbrains.anko:anko-commons:$anko_version"
-    compile "org.jetbrains.anko:anko-design:$anko_version"
+    implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:2.0.0'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.2'
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-design:$anko_version"
 }

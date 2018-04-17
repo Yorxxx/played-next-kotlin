@@ -12,8 +12,11 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.game.Giantbom
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.GiantbombGenreMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.GiantbombImageMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.GiantbombPlatformMapper
-import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombGameDatasourceRepositoryImpl
-import com.piticlistudio.playednext.data.repository.datasource.net.giantbomb.GiantbombServiceFactory
+import com.piticlistudio.playednext.data.repository.GameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombGameDatasourceRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.giantbomb.GiantbombServiceFactory
+import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
 import com.piticlistudio.playednext.ui.injection.component.DaggerApplicationComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -49,26 +52,6 @@ class MvpStarterApplication : Application(), HasActivityInjector {
             Timber.plant(Timber.DebugTree())
             Stetho.initializeWithDefaults(this)
         }
-
-        val service = GiantbombServiceFactory.makeGameService()
-        val gameMapper = GiantbombGameMapper(companyMapper = GiantbombCompanyMapper(),
-                collectionMapper = GiantbombCollectionMapper(),
-                genreMapper = GiantbombGenreMapper(),
-                imagesMapper = GiantbombImageMapper(),
-                platformMapper = GiantbombPlatformMapper())
-        val repositoryImpl = GiantbombGameDatasourceRepositoryImpl(service, gameMapper)
-
-        repositoryImpl.search("mario", 0, 10)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onError = { Log.e("VIRUTA", "Received error ${it.localizedMessage}") },
-                        onNext = {
-                            it.forEachIndexed { index, game ->
-                                Log.d("VIRUTA", "${index} ---> ${game.name} with id ${game.id}")
-                            }
-                        }
-                )
 
         ReactiveNetwork.observeNetworkConnectivity(this)
                 .subscribeOn(Schedulers.io())

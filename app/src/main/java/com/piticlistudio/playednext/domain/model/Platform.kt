@@ -7,7 +7,6 @@ import android.graphics.Color
  */
 data class Platform(val id: Int,
                     val name: String,
-                    val slug: String? = null,
                     val url: String? = null,
                     val createdAt: Long = 0,
                     val updatedAt: Long = 0) {

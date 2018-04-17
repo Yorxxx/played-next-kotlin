@@ -7,7 +7,6 @@ import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameRelation
-import com.piticlistudio.playednext.ui.PlatformUIUtils
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -57,18 +56,18 @@ class GameRelationDetailViewModel @Inject constructor(private val loadRelationsF
     }
 
     private fun loadImageToShow(data: Game) {
-        data.images?.let {
+        data.images.let {
             if (it.isNotEmpty()) {
-                viewState.value = currentViewState().copy(showImage = it[0].mediumSizeUrl)
+                viewState.value = currentViewState().copy(showImage = it[0].url)
                 disposable = Flowable.interval(10, TimeUnit.SECONDS)
                         .take(it.size.toLong())
-                        .map { data.images!!.get(it.toInt()) }
+                        .map { data.images.get(it.toInt()) }
                         .repeat()
                         .observeOn(AndroidSchedulers.mainThread())
                         .toObservable()
                         .subscribeBy(
                                 onNext = {
-                                    viewState.value = currentViewState().copy(showImage = it.mediumSizeUrl)
+                                    viewState.value = currentViewState().copy(showImage = it.url)
                                 },
                                 onError = {
                                     viewState.value = currentViewState().copy()

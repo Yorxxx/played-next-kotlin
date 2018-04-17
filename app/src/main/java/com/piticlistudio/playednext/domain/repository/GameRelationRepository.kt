@@ -9,7 +9,5 @@ interface GameRelationRepository {
 
     fun loadForGameAndPlatform(gameId: Int, platformId: Int): Flowable<GameRelation>
 
-    fun loadForGame(gameId: Int): Flowable<List<GameRelation>>
-
     fun save(data: GameRelation): Completable
 }
