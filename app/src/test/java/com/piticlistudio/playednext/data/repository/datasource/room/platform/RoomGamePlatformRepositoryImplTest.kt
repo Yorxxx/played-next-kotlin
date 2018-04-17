@@ -33,8 +33,48 @@ internal class RoomGamePlatformRepositoryImplTest {
         }
 
         @Nested
-        @DisplayName("When we call loadForGame")
+        @DisplayName("When we call load")
         inner class LoadCalled {
+
+            private var observer: TestSubscriber<Platform>? = null
+            private val source = makeRoomPlatform()
+            private val result = makePlatform()
+
+            @BeforeEach
+            internal fun setUp() {
+                whenever(dao.find(10)).thenReturn(Flowable.just(source))
+                whenever(mapper.mapFromDataLayer(source)).thenReturn(result)
+                observer = repository.load(10).test()
+            }
+
+            @Test
+            @DisplayName("Then should request dao service")
+            fun shouldRequestRepository() {
+                verify(dao).find(10)
+            }
+
+            @Test
+            @DisplayName("Then should map response")
+            fun shouldMap() {
+                verify(mapper).mapFromDataLayer(source)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertComplete()
+                    assertValueCount(1)
+                    assertValue(result)
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call loadForGame")
+        inner class LoadForGameCalled {
 
             private var observer: TestSubscriber<List<Platform>>? = null
             private val source = makeRoomPlatform()

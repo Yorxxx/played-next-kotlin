@@ -9,13 +9,13 @@ import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGam
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
 import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImagesService
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.RoomGamePlatformService
-import com.piticlistudio.playednext.data.repository.datasource.room.relation.RelationDaoService
+import com.piticlistudio.playednext.data.repository.datasource.room.relation.RoomRelationService
 
 @Database(entities = arrayOf(RoomGame::class, RoomCompany::class, RoomGameDeveloper::class,
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
-        RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, GameRelationDao::class,
+        RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, RoomGameRelation::class,
         RoomGameImage::class),
-        version = 9, exportSchema = false)
+        version = 11, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): RoomGameService
@@ -28,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun platformRoom(): RoomGamePlatformService
 
-    abstract fun relationDao(): RelationDaoService
+    abstract fun relationDao(): RoomRelationService
 
     abstract fun imageRoom(): RoomGameImagesService
 }

@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.AppDatabase
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
 import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomPlatform
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRelationDao
+import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomGameRelation
 import junit.framework.Assert
 import junit.framework.Assert.fail
 import org.junit.After
@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RelationDaoServiceTest {
+class RoomRelationServiceTest {
 
     @JvmField
     @Rule
@@ -40,7 +40,7 @@ class RelationDaoServiceTest {
         database?.gamesDao()?.insert(game)
         database?.platformRoom()?.insert(platform)
 
-        val data = makeRelationDao(game.id, platform.id)
+        val data = makeRoomGameRelation(game.id, platform.id)
 
         val result = database?.relationDao()?.insert(data)
 
@@ -55,7 +55,7 @@ class RelationDaoServiceTest {
         database?.platformRoom()?.insert(platform)
 
         try {
-            val data = makeRelationDao(game.id, platform.id)
+            val data = makeRoomGameRelation(game.id, platform.id)
             database?.relationDao()?.insert(data)
             fail("should have thrown")
         } catch (e: Throwable) {
@@ -70,7 +70,7 @@ class RelationDaoServiceTest {
         database?.gamesDao()?.insert(game)
 
         try {
-            val data = makeRelationDao(game.id, platform.id)
+            val data = makeRoomGameRelation(game.id, platform.id)
             database?.relationDao()?.insert(data)
             fail("should have thrown")
         } catch (e: Throwable) {
@@ -83,7 +83,7 @@ class RelationDaoServiceTest {
         val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
         database?.platformRoom()?.insert(platform)
-        val relation = makeRelationDao(game.id, platform.id)
+        val relation = makeRoomGameRelation(game.id, platform.id)
         database?.relationDao()?.insert(relation)
 
         // Act
@@ -103,7 +103,7 @@ class RelationDaoServiceTest {
         val platform = makeRoomPlatform()
         database?.gamesDao()?.insert(game)
         database?.platformRoom()?.insert(platform)
-        val relation = makeRelationDao(game.id, platform.id)
+        val relation = makeRoomGameRelation(game.id, platform.id)
         database?.relationDao()?.insert(relation)
 
         // Act

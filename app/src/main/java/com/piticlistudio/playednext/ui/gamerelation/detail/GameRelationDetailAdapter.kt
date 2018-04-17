@@ -111,8 +111,8 @@ class GameRelationDetailAdapter @Inject constructor() : RecyclerView.Adapter<Rec
         fun bindTo(relations: List<GameRelation>) {
             relations.forEach {
                 val relation = it
-                it.platform?.let {
-                    when (relation.currentStatus) {
+                it.platform.let {
+                    when (relation.status) {
                         GameRelationStatus.PLAYING -> itemView.playingPlatforms.text = it.name
                         GameRelationStatus.UNPLAYED -> itemView.backloggedPlatforms.text = it.name
                         GameRelationStatus.BEATEN -> itemView.beatenPlatforms.text = it.name

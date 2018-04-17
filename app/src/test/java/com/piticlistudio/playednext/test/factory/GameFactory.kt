@@ -3,6 +3,7 @@ package com.piticlistudio.playednext.test.factory
 import com.piticlistudio.playednext.data.entity.giantbomb.*
 import com.piticlistudio.playednext.data.entity.igdb.*
 import com.piticlistudio.playednext.data.entity.room.RoomGame
+import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
 import com.piticlistudio.playednext.data.entity.room.RoomImage
 import com.piticlistudio.playednext.data.entity.room.RoomTimeToBeat
 import com.piticlistudio.playednext.domain.model.*
@@ -129,6 +130,16 @@ class GameFactory {
                     timeToBeat = timeToBeat,
                     cover = cover,
                     syncedAt = randomLong())
+        }
+
+        fun makeRoomGameProxy(): RoomGameProxy {
+            return RoomGameProxy(game = makeRoomGame(),
+                    collection = makeCollection(),
+                    developers = randomListOf(5){ makeCompany()},
+                    publishers = randomListOf(5){ makeCompany()},
+                    genres = randomListOf(3) { makeGenre() },
+                    images = randomListOf(10) { makeGameImage() },
+                    platforms = randomListOf(2) { makePlatform() })
         }
 
         fun makeIGDBGame(images: List<IGDBImage>? = randomListOf(12) { makeIGDBImage() },
