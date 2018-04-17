@@ -1,11 +1,8 @@
 package com.piticlistudio.playednext.data.entity.room
 
 import android.arch.persistence.room.*
+import com.piticlistudio.playednext.domain.model.*
 import com.piticlistudio.playednext.domain.model.Collection
-import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.domain.model.GameImage
-import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.domain.model.Platform
 
 @Entity(tableName = "game")
 data class RoomGame(@PrimaryKey val id: Int,
@@ -99,7 +96,11 @@ data class RoomGamePlatform(val gameId: Int, val platformId: Int)
                 (ForeignKey(entity = RoomGame::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
                 (ForeignKey(entity = RoomPlatform::class, parentColumns = arrayOf("id"), childColumns = arrayOf("platformId"), onDelete = ForeignKey.CASCADE))
         ))
-data class GameRelationDao(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
+data class RoomGameRelation(val gameId: Int, val platformId: Int, val status: Int, val created_at: Long, val updated_at: Long)
+
+data class RoomGameRelationProxy(val game: RoomGameProxy,
+                                 val platform: RoomPlatform,
+                                 val relation: RoomGameRelation)
 
 @Entity(tableName = "game_screenshots",
         foreignKeys = arrayOf(

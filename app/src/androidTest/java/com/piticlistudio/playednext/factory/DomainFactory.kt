@@ -64,8 +64,8 @@ class DomainFactory {
 
         fun makeRoomPlatform(id: Int = randomInt()): RoomPlatform = RoomPlatform(id, randomString(), randomString(), randomString(), randomLong(), randomLong())
 
-        fun makeRelationDao(gameId: Int = randomInt(), platformId: Int = randomInt()): GameRelationDao {
-            return GameRelationDao(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
+        fun makeRoomGameRelation(gameId: Int = randomInt(), platformId: Int = randomInt()): RoomGameRelation {
+            return RoomGameRelation(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
         }
 
         fun makeRelationStatus(): GameRelationStatus {

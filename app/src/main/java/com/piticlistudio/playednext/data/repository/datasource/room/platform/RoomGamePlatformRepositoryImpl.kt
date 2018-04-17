@@ -18,6 +18,11 @@ class RoomGamePlatformRepositoryImpl @Inject constructor(private val dao: RoomGa
         }
     }
 
+    fun load(id: Int): Flowable<Platform> {
+        return dao.find(id)
+                .map { mapper.mapFromDataLayer(it) }
+    }
+
     fun loadForGame(id: Int): Flowable<List<Platform>> {
         return dao.findForGame(id)
                 .map {

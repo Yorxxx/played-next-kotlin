@@ -22,4 +22,7 @@ interface RoomGamePlatformService {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertGamePlatform(data: RoomGamePlatform): Long
+
+    @Query("select * from platform WHERE id = :id")
+    fun find(id: Int): Flowable<RoomPlatform>
 }
