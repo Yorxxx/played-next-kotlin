@@ -4,7 +4,9 @@ import android.arch.persistence.room.EmptyResultSetException
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.repository.datasource.RelationDatasourceRepository
 import com.piticlistudio.playednext.domain.model.GameRelation
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
@@ -153,6 +155,44 @@ internal class GameRelationRepositoryImplTest {
                     assertNoErrors()
                     assertComplete()
                     assertNoValues()
+                }
+            }
+        }
+
+        @Nested
+        @DisplayName("When we call loadWithStatus")
+        inner class LoadWithStatusCalled {
+
+            var observer: TestSubscriber<List<GameRelation>>? = null
+            val status = GameRelationStatus.BEATEN
+            val data = randomListOf(10) { makeGameRelation() }
+            val data2 = randomListOf(10) { makeGameRelation() }
+
+            @BeforeEach
+            internal fun setUp() {
+                val flowable = Flowable.create<List<GameRelation>>({
+                    it.onNext(data)
+                    it.onNext(data2)
+                }, BackpressureStrategy.MISSING)
+                whenever(localImpl.loadWithStatus(any())).thenReturn(flowable)
+                observer = repository.loadWithStatus(status).test()
+            }
+
+            @Test
+            @DisplayName("Then should request local repository")
+            fun requestsLocalRepository() {
+                verify(localImpl).loadWithStatus(status)
+            }
+
+            @Test
+            @DisplayName("Then should emit without errors")
+            fun withoutErrors() {
+                assertNotNull(observer)
+                observer?.apply {
+                    assertNoErrors()
+                    assertNotComplete()
+                    assertValueAt(0, data)
+                    assertValueAt(1, data2)
                 }
             }
         }

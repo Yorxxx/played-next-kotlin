@@ -1,12 +1,12 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
 import com.piticlistudio.playednext.data.entity.room.RoomCompany
 import com.piticlistudio.playednext.data.entity.igdb.IGDBCompany
 import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombCompany
 import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomLong
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 
 class CompanyFactory {
 

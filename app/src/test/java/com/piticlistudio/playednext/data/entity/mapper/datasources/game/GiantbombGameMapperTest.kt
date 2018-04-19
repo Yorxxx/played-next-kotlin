@@ -10,9 +10,9 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.Gian
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeCollection
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGiantbombGame
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeGameImage
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import org.junit.jupiter.api.BeforeEach

@@ -12,4 +12,24 @@
 
     <color name="game_detail_backdrop_overlay">#77000000</color>
     <color name="radiobutton_checked">#FF5722</color>
+
+    <color name="gamerelation_backlog_color">#930907</color>
+    <color name="gamerelation_backlog_color_gradient_start">#930907</color>
+    <color name="gamerelation_backlog_color_gradient_end">#CC0F23</color>
+
+    <color name="gamerelation_current_color">#0177FF</color>
+    <color name="gamerelation_current_color_gradient_start">#0177FF</color>
+    <color name="gamerelation_current_color_gradient_end">#03C1FF</color>
+
+    <color name="gamerelation_played_color">#F66B4A</color>
+    <color name="gamerelation_played_color_gradient_start">#F66B4A</color>
+    <color name="gamerelation_played_color_gradient_end">#ECA74A</color>
+
+    <color name="gamerelation_beaten_color">#C3D636</color>
+    <color name="gamerelation_beaten_color_gradient_start">#C3D636</color>
+    <color name="gamerelation_beaten_color_gradient_end">#E7EEAE</color>
+
+    <color name="gamerelation_completed_color">#14A190</color>
+    <color name="gamerelation_completed_color_gradient_start">#14A190</color>
+    <color name="gamerelation_completed_color_gradient_end">#35E882</color>
 </resources>

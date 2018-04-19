@@ -1,6 +1,6 @@
 buildscript {
     ext.support_version = '26.1.0'
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.31'
     ext.anko_version = '0.10.1'
     repositories {
         google()
@@ -16,6 +16,7 @@ buildscript {
         classpath 'com.google.gms:google-services:3.1.0'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.0.31"
+        classpath 'com.quanturium.bouquet:bouquet-plugin:1.0.1'
     }
 }
 

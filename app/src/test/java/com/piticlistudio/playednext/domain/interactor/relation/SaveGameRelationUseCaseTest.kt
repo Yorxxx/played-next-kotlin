@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.repository.GameRelationRepository
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
 import io.reactivex.Completable
 import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.Assertions.assertNotNull

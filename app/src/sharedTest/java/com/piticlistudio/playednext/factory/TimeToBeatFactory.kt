@@ -3,7 +3,8 @@ package com.piticlistudio.playednext.test.factory
 import com.piticlistudio.playednext.data.entity.igdb.IGDBTimeToBeat
 import com.piticlistudio.playednext.data.entity.room.RoomTimeToBeat
 import com.piticlistudio.playednext.domain.model.TimeToBeat
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
 
 class TimeToBeatFactory {
 
