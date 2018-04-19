@@ -1,11 +1,11 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
 import com.piticlistudio.playednext.data.entity.room.RoomGameRelation
 import com.piticlistudio.playednext.data.entity.room.RoomGameRelationProxy
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomLong
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGameProxy
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
@@ -15,12 +15,13 @@ class GameRelationFactory {
 
     companion object Factory {
 
-        fun makeRoomGameRelation(): RoomGameRelation {
-            return RoomGameRelation(DataFactory.randomInt(), DataFactory.randomInt(), makeRelationStatus().ordinal, randomLong(), randomLong())
+        fun makeRoomGameRelation(gameId: Int = randomInt(),
+                                 platformId: Int = randomInt()): RoomGameRelation {
+            return RoomGameRelation(gameId, platformId, makeRelationStatus().ordinal, randomLong(), randomLong())
         }
 
-        fun makeGameRelation(): GameRelation {
-            return GameRelation(makeGame(), makePlatform(), makeRelationStatus(), randomLong(), randomLong())
+        fun makeGameRelation(status: GameRelationStatus = makeRelationStatus()): GameRelation {
+            return GameRelation(makeGame(), makePlatform(), status, randomLong(), randomLong())
         }
 
         fun makeRelationStatus(): GameRelationStatus {

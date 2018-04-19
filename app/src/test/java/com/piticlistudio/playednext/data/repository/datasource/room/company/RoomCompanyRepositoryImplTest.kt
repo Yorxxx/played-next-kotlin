@@ -3,9 +3,8 @@ package com.piticlistudio.playednext.data.repository.datasource.room.company
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.RoomCompanyMapper
 import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.test.factory.CompanyFactory
+import com.piticlistudio.playednext.factory.CompanyFactory
 import io.reactivex.Flowable
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertEquals

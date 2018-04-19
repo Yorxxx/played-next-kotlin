@@ -2,8 +2,8 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
 import com.piticlistudio.playednext.data.entity.room.RoomGameImage
 import com.piticlistudio.playednext.domain.model.GameImage
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeRoomGameImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeGameImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeRoomGameImage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

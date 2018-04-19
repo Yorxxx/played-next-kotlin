@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.room
 
 import android.arch.persistence.room.EmptyResultSetException
+import android.database.sqlite.SQLiteConstraintException
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.game.RoomGameMapper
 import com.piticlistudio.playednext.data.entity.room.RoomGame
@@ -8,6 +9,7 @@ import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.game.GameSaveException
+import com.piticlistudio.playednext.data.repository.datasource.room.game.GameUpdateException
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreRepositoryImpl
@@ -394,7 +396,6 @@ internal class RoomGameRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(daoService.insert(anyOrNull())).thenReturn(10L)
                 whenever(mapper.mapIntoDataLayerModel(source)).thenReturn(data)
                 whenever(companyRepositoryImpl.saveDeveloperForGame(anyInt(), anyOrNull())).thenReturn(Completable.complete())
                 whenever(companyRepositoryImpl.savePublisherForGame(anyInt(), anyOrNull())).thenReturn(Completable.complete())
@@ -412,77 +413,229 @@ internal class RoomGameRepositoryImplTest {
             }
 
             @Test
-            @DisplayName("Then inserts into DAO")
-            fun isInserted() {
+            @DisplayName("Then requests dao to insert")
+            fun requestsInsert() {
                 verify(daoService).insert(data.game)
             }
 
-            @Test
-            @DisplayName("Then requests to save developers")
-            fun savesDevelopers() {
-                source.developers.forEach {
-                    verify(companyRepositoryImpl).saveDeveloperForGame(source.id, it)
-                }
-            }
+            @Nested
+            @DisplayName("And insert succeeds")
+            inner class InsertSuccess {
 
-            @Test
-            @DisplayName("Then requests to save publishers")
-            fun savesPublishers() {
-                source.publishers.forEach {
-                    verify(companyRepositoryImpl).savePublisherForGame(source.id, it)
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(daoService.insert(anyOrNull())).thenReturn(10L)
+                    observer = repository.save(source).test()
                 }
-            }
 
-            @Test
-            @DisplayName("Then requests to save genres")
-            fun savesGenres() {
-                source.genres.forEach {
-                    verify(genreRepositoryImpl).saveGenreForGame(source.id, it)
+                @Test
+                @DisplayName("Then requests to save developers")
+                fun savesDevelopers() {
+                    source.developers.forEach {
+                        verify(companyRepositoryImpl).saveDeveloperForGame(source.id, it)
+                    }
                 }
-            }
 
-            @Test
-            @DisplayName("Then requests to save platforms")
-            fun savesPlatforms() {
-                source.platforms.forEach {
-                    verify(platformRepositoryImpl).saveForGame(source.id, it)
+                @Test
+                @DisplayName("Then requests to save publishers")
+                fun savesPublishers() {
+                    source.publishers.forEach {
+                        verify(companyRepositoryImpl).savePublisherForGame(source.id, it)
+                    }
                 }
-            }
 
-            @Test
-            @DisplayName("Then requests to save images")
-            fun savesImages() {
-                source.images.forEach {
-                    verify(imagesRepositoryImpl).saveForGame(it)
+                @Test
+                @DisplayName("Then requests to save genres")
+                fun savesGenres() {
+                    source.genres.forEach {
+                        verify(genreRepositoryImpl).saveGenreForGame(source.id, it)
+                    }
                 }
-            }
 
-            @Test
-            @DisplayName("Then requests to save collection")
-            fun savesCollection() {
-                source.collection?.let {
-                    verify(collectionRepositoryImpl).saveForGame(source.id, it)
+                @Test
+                @DisplayName("Then requests to save platforms")
+                fun savesPlatforms() {
+                    source.platforms.forEach {
+                        verify(platformRepositoryImpl).saveForGame(source.id, it)
+                    }
                 }
-            }
 
-            @Test
-            @DisplayName("Then emits completion")
-            fun emitsComplete() {
-                assertNotNull(observer)
-                observer?.apply {
-                    assertComplete()
-                    assertNoValues()
-                    assertNoErrors()
+                @Test
+                @DisplayName("Then requests to save images")
+                fun savesImages() {
+                    source.images.forEach {
+                        verify(imagesRepositoryImpl).saveForGame(it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then requests to save collection")
+                fun savesCollection() {
+                    source.collection?.let {
+                        verify(collectionRepositoryImpl).saveForGame(source.id, it)
+                    }
+                }
+
+                @Test
+                @DisplayName("Then emits completion")
+                fun emitsComplete() {
+                    assertNotNull(observer)
+                    observer?.apply {
+                        assertComplete()
+                        assertNoValues()
+                        assertNoErrors()
+                    }
+                }
+
+                @Nested
+                @DisplayName("And game does not have collection")
+                inner class WithoutCollection {
+
+                    private val source = makeGame(collection = null)
+
+                    @BeforeEach
+                    internal fun setUp() {
+                        reset(collectionRepositoryImpl)
+                        whenever(mapper.mapIntoDataLayerModel(source)).thenReturn(data)
+                        observer = repository.save(source).test()
+                    }
+
+                    @Test
+                    @DisplayName("Then emits completion")
+                    fun emitsError() {
+
+                        assertNotNull(observer)
+                        observer?.apply {
+                            assertNoValues()
+                            assertNoErrors()
+                            assertComplete()
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then skips collection saving")
+                    fun savesDevelopers() {
+                        verifyZeroInteractions(collectionRepositoryImpl)
+                    }
                 }
             }
 
             @Nested
-            @DisplayName("And fails to save")
+            @DisplayName("And insert fails because is already stored")
+            inner class AlreadyStored {
+
+                @BeforeEach
+                internal fun setUp() {
+                    whenever(daoService.insert(anyOrNull())).thenThrow(SQLiteConstraintException())
+                    observer = repository.save(source).test()
+                }
+
+                @Test
+                @DisplayName("Then tries to update")
+                fun triesToUpdate() {
+                    verify(daoService).update(data.game)
+                }
+
+                @Nested
+                @DisplayName("And update succeeds")
+                inner class UpdateSuccess {
+
+                    @BeforeEach
+                    internal fun setUp() {
+                        whenever(daoService.update(anyOrNull())).thenReturn(10)
+                        observer = repository.save(source).test()
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save developers")
+                    fun savesDevelopers() {
+                        source.developers.forEach {
+                            verify(companyRepositoryImpl).saveDeveloperForGame(source.id, it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save publishers")
+                    fun savesPublishers() {
+                        source.publishers.forEach {
+                            verify(companyRepositoryImpl).savePublisherForGame(source.id, it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save genres")
+                    fun savesGenres() {
+                        source.genres.forEach {
+                            verify(genreRepositoryImpl).saveGenreForGame(source.id, it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save platforms")
+                    fun savesPlatforms() {
+                        source.platforms.forEach {
+                            verify(platformRepositoryImpl).saveForGame(source.id, it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save images")
+                    fun savesImages() {
+                        source.images.forEach {
+                            verify(imagesRepositoryImpl).saveForGame(it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then requests to save collection")
+                    fun savesCollection() {
+                        source.collection?.let {
+                            verify(collectionRepositoryImpl).saveForGame(source.id, it)
+                        }
+                    }
+
+                    @Test
+                    @DisplayName("Then emits completion")
+                    fun emitsComplete() {
+                        assertNotNull(observer)
+                        observer?.apply {
+                            assertComplete()
+                            assertNoValues()
+                            assertNoErrors()
+                        }
+                    }
+                }
+
+                @Nested
+                @DisplayName("And update fails")
+                inner class UpdateFailed {
+
+                    @BeforeEach
+                    internal fun setUp() {
+                        whenever(daoService.update(anyOrNull())).thenReturn(0)
+                        observer = repository.save(source).test()
+                    }
+
+                    @Test
+                    @DisplayName("Then emits error")
+                    fun emitsError() {
+                        assertNotNull(observer)
+                        observer?.apply {
+                            assertError(GameUpdateException::class.java)
+                            assertNoValues()
+                        }
+                    }
+
+                }
+            }
+
+            @Nested
+            @DisplayName("And inserts fails to save")
             inner class SaveFailed {
 
                 @BeforeEach
                 internal fun setUp() {
-                    reset(daoService, companyRepositoryImpl, genreRepositoryImpl, platformRepositoryImpl, imagesRepositoryImpl, collectionRepositoryImpl)
+                    reset(daoService)
                     whenever(daoService.insert(anyOrNull())).thenReturn(0L)
                     observer = repository.save(source).test()
                 }
@@ -544,38 +697,6 @@ internal class RoomGameRepositoryImplTest {
                     source.collection?.let {
                         verify(collectionRepositoryImpl, never()).saveForGame(source.id, it)
                     }
-                }
-            }
-
-            @Nested
-            @DisplayName("And game does not have collection")
-            inner class WithoutCollection {
-
-                private val source = makeGame(collection = null)
-
-                @BeforeEach
-                internal fun setUp() {
-                    reset(collectionRepositoryImpl)
-                    whenever(mapper.mapIntoDataLayerModel(source)).thenReturn(data)
-                    observer = repository.save(source).test()
-                }
-
-                @Test
-                @DisplayName("Then emits completion")
-                fun emitsError() {
-
-                    assertNotNull(observer)
-                    observer?.apply {
-                        assertNoValues()
-                        assertNoErrors()
-                        assertComplete()
-                    }
-                }
-
-                @Test
-                @DisplayName("Then skips collection saving")
-                fun savesDevelopers() {
-                    verifyZeroInteractions(collectionRepositoryImpl)
                 }
             }
         }

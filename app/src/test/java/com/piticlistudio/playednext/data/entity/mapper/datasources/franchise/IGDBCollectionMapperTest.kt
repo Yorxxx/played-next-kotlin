@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.franchise
 
-import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.domain.model.Collection
 import com.piticlistudio.playednext.test.factory.CollectionFactory.Factory.makeIGDBCollection
 import org.junit.jupiter.api.Assertions.assertEquals

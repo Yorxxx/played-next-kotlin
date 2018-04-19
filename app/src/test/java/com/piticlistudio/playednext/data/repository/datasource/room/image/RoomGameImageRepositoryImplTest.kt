@@ -6,8 +6,8 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.data.entity.mapper.datasources.image.RoomGameImageMapper
 import com.piticlistudio.playednext.domain.model.GameImage
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeGameImage
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeRoomGameImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeGameImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeRoomGameImage
 import io.reactivex.Flowable
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber

@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
 import net.bytebuddy.utility.RandomString
 import java.util.*
@@ -8,8 +8,8 @@ class DataFactory {
 
     companion object Factory {
 
-        fun randomInt(): Int {
-            return ThreadLocalRandom.current().nextInt(0, 1000 + 1)
+        fun randomInt(bound: Int = 1000+1): Int {
+            return ThreadLocalRandom.current().nextInt(1, bound)
         }
 
         fun randomLong(): Long {
@@ -47,5 +47,10 @@ class DataFactory {
             }
             return items
         }
+
+        /**
+         * Returns a random element.
+         */
+        fun <E> List<E>.random(): E? = if (size > 0) get(Random().nextInt(size)) else null
     }
 }

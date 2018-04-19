@@ -5,6 +5,7 @@ import com.piticlistudio.playednext.ui.FooActivity
 import com.piticlistudio.playednext.ui.ViewModelFactory
 import com.piticlistudio.playednext.ui.game.search.di.GameSearchModule
 import com.piticlistudio.playednext.ui.gamerelation.detail.di.GameRelationDetailModule
+import com.piticlistudio.playednext.ui.gamerelation.overview.di.RelationOverviewModule
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -15,6 +16,6 @@ abstract class BuildersModule {
     @Binds
     abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
 
-    @ContributesAndroidInjector(modules = arrayOf(GameRelationDetailModule::class, GameSearchModule::class))
+    @ContributesAndroidInjector(modules = arrayOf(GameRelationDetailModule::class, GameSearchModule::class, RelationOverviewModule::class))
     abstract fun bindFooActivity(): FooActivity
 }

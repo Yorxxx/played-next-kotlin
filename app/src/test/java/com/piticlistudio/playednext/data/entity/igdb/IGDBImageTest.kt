@@ -1,8 +1,7 @@
 package com.piticlistudio.playednext.data.entity.igdb
 
-import com.piticlistudio.playednext.domain.model.GameImage
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

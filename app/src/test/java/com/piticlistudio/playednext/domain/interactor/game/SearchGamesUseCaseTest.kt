@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.repository.GameRepository
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable

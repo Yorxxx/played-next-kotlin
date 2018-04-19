@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource
 
 import com.piticlistudio.playednext.domain.model.GameRelation
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import io.reactivex.Completable
 import io.reactivex.Flowable
 
@@ -13,4 +14,6 @@ interface RelationDatasourceRepository {
     fun save(data: GameRelation): Completable
 
     fun loadForGameAndPlatform(gameId: Int, platformId: Int): Flowable<List<GameRelation>>
+
+    fun loadWithStatus(status: GameRelationStatus): Flowable<List<GameRelation>>
 }

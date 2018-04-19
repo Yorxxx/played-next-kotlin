@@ -2,8 +2,8 @@ package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
 import com.piticlistudio.playednext.data.entity.room.RoomCompany
 import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompanyRoom
+import com.piticlistudio.playednext.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.factory.CompanyFactory.Factory.makeCompanyRoom
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

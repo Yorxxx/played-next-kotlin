@@ -7,8 +7,8 @@ import com.piticlistudio.playednext.data.entity.room.RoomGameRelationProxy
 import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGameProxy
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeRoomGameRelationProxy
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeRoomGameRelationProxy
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
 import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
 import org.junit.jupiter.api.Assertions.assertEquals
