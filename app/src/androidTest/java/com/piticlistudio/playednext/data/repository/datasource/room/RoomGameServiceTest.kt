@@ -47,7 +47,7 @@ class RoomGameServiceTest : BaseRoomServiceTest() {
     @Test
     fun insertShouldStoreData() {
 
-        val game = makeRoomGame()
+        val game = makeRoomGame(id = 999999999)
 
         val result = database.gamesDao().insert(game)
 

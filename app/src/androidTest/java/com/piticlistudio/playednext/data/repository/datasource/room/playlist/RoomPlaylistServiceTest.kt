@@ -1,12 +1,9 @@
 package com.piticlistudio.playednext.data.repository.datasource.room.playlist
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.database.sqlite.SQLiteConstraintException
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.repository.datasource.room.BaseRoomServiceTest
-import com.piticlistudio.playednext.factory.PlatformFactory
 import com.piticlistudio.playednext.factory.PlaylistFactory.Factory.makeRoomPlaylist
-import junit.framework.Assert
 import junit.framework.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -31,39 +28,12 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
     }
 
     @Test
-    fun insertShouldAbortIfAPlaylistWithThatNameAlreadyExists() {
+    fun insertShouldReplaceExistingData() {
         val data = makeRoomPlaylist(getRandomStoredPlaylistName())
 
-        try {
-            database.playlistRoom().insert(data)
-            fail("should have failed")
-        } catch (e: SQLiteConstraintException) {
-
-        }
-    }
-
-    @Test
-    fun shouldUpdateData() {
-        val data = makeRoomPlaylist(getRandomStoredPlaylistName())
-
-        try {
-            val result = database.playlistRoom().update(data)
-            assertTrue(result > 0)
-        } catch (e: SQLiteConstraintException) {
-            fail(e.message)
-        }
-    }
-
-    @Test
-    fun shouldThrowIfNoDataToUpdate() {
-        val data = makeRoomPlaylist("abc")
-
-        try {
-            database.playlistRoom().update(data)
-            fail("should have failed")
-        } catch (e: SQLiteConstraintException) {
-
-        }
+        val result = database.playlistRoom().insert(data)
+        assertNotNull(result)
+        assertTrue(result > 0)
     }
 
     @Test
@@ -91,7 +61,8 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
     @Test
     fun shouldEmitAllPlaylistsWhenANewOneIsInserted() {
 
-        database.playlistRoom().findAll().test()?.apply {
+        val observer = database.playlistRoom().findAll().test()
+        observer?.apply {
             assertNoErrors()
             assertValueCount(1)
             assertValue { it.size == getStoredPlaylistNames().size }
@@ -99,7 +70,11 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
 
         database.playlistRoom().insert(makeRoomPlaylist())
 
-
+        observer?.apply {
+            assertNoErrors()
+            assertValueCount(2)
+            assertValue { it.size == getStoredPlaylistNames().size + 1 }
+        }
     }
 
     @Test
@@ -131,14 +106,26 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
         }
 
         val updatedPlaylist = makeRoomPlaylist(requestedName)
-        database.playlistRoom().update(updatedPlaylist)
+        database.playlistRoom().insert(updatedPlaylist)
 
         // Assert
         observer?.apply {
             assertNoErrors()
             assertNotComplete()
             assertValueCount(2)
-            assertValue { it.name == requestedName }
+        }
+    }
+
+    @Test
+    fun shouldEmitErrorIfPlaylistIsNotStored() {
+
+        val observer = database.playlistRoom().find("abc").test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoValues()
+            assertError(PlaylistRepositoryError.Delete::class.java)
+            assertComplete()
         }
     }
 }

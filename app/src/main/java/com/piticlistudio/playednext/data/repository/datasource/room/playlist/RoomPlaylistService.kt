@@ -7,11 +7,8 @@ import io.reactivex.Flowable
 @Dao
 interface RoomPlaylistService {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(data: RoomPlaylist): Long
-
-    @Update
-    fun update(data: RoomPlaylist): Int
 
     @Delete
     fun delete(data: RoomPlaylist): Int
