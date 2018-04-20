@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.data.repository.datasource.room
+package com.piticlistudio.playednext.data.repository.datasource
 
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.Playlist
@@ -15,7 +15,7 @@ interface PlaylistDatasourceRepository {
      * Inserts a new Playlist defined by [data]
      * @return a Completable when it succeeds or fails
      */
-    fun insert(data: Playlist): Completable
+    fun save(data: Playlist): Completable
 
     /**
      * Deletes a playlist

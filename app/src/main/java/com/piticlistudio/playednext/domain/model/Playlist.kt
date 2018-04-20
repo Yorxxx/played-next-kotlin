@@ -6,4 +6,5 @@ package com.piticlistudio.playednext.domain.model
  * and a list of [games]
  * For example, a Playlist with [name] "Backlog", could containg a list of games not played
  */
-data class Playlist(val name: String, val description: String?, val color: Int, val games: List<Game> = listOf())
+data class Playlist(val name: String, val description: String?, val color: Int, val games: List<Game> = listOf(),
+                    val createdAt: Long = System.currentTimeMillis(), val updatedAt: Long = System.currentTimeMillis())
