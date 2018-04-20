@@ -4,8 +4,9 @@ import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombFranchise
 import com.piticlistudio.playednext.data.entity.room.RoomCollection
 import com.piticlistudio.playednext.data.entity.igdb.IGDBCollection
 import com.piticlistudio.playednext.domain.model.Collection
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.factory.DataFactory
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 
 class CollectionFactory {
 

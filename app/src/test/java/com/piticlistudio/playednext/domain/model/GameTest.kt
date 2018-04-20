@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.domain.model
 
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeCompany
+import com.piticlistudio.playednext.factory.CompanyFactory.Factory.makeCompany
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -1,7 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.game
 
 import com.nhaarman.mockito_kotlin.*
-import com.piticlistudio.playednext.data.entity.igdb.IGDBGame
 import com.piticlistudio.playednext.data.entity.mapper.datasources.company.IGDBCompanyMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.franchise.IGDBCollectionMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.genre.IGDBGenreMapper
@@ -9,9 +8,8 @@ import com.piticlistudio.playednext.data.entity.mapper.datasources.image.IGDBIma
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.IGDBPlatformMapper
 import com.piticlistudio.playednext.data.entity.mapper.datasources.timetobeat.IGDBTimeToBeatMapper
 import com.piticlistudio.playednext.domain.model.Game
-import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeIGDBGame
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeImage
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

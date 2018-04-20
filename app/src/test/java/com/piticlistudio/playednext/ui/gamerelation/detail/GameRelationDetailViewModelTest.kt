@@ -3,24 +3,26 @@ package com.piticlistudio.playednext.ui.gamerelation.detail
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.*
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombEntityResponse
+import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGame
+import com.piticlistudio.playednext.data.entity.room.RoomGame
 import com.piticlistudio.playednext.domain.interactor.game.LoadGameUseCase
 import com.piticlistudio.playednext.domain.interactor.relation.LoadRelationsForGameUseCase
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.GameRelation
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomListOf
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 internal class GameRelationDetailViewModelTest {
 
@@ -57,30 +59,35 @@ internal class GameRelationDetailViewModelTest {
 
     @Test
     fun requestsUsecasesWithCorrectParameters() {
-        vm.loadRelationForGame(100)
+        vm.loadRelationForGame(game)
 
-        verify(loadGameUseCase).execute(100)
+        verify(loadGameUseCase).execute(game.id)
         verify(loadRelationsForGameUseCase).execute(game)
     }
 
     @Test
     fun showsSuccessViewState() {
 
-        vm.loadRelationForGame(randomInt())
+        vm.loadRelationForGame(game)
 
         val captor = argumentCaptor<ViewState>()
         verify(observer, times(3)).onChanged(captor.capture())
 
-        assertTrue {
-            captor.firstValue.isLoading && captor.firstValue.game == null && captor.firstValue.error == null
-                    && captor.firstValue.showImage == null && captor.firstValue.relations.isEmpty()
+        with(captor.firstValue) {
+            assertTrue(isLoading)
+            assertNotNull(game)
+            assertNull(error)
+            assertNull(showImage)
+            assertTrue(relations.isEmpty())
         }
 
-        assertTrue {
-            !captor.lastValue.isLoading && captor.lastValue.game != null && captor.lastValue.game!!.equals(game)
-                    && captor.lastValue.relations.equals(relations)
-                    && captor.lastValue.error == null
+        with(captor.lastValue) {
+            assertFalse(isLoading)
+            assertNotNull(game)
+            assertNull(error)
+            assertFalse(relations.isEmpty())
         }
+
         captor.allValues.forEach {
             assertNull(it.error)
         }
@@ -90,25 +97,28 @@ internal class GameRelationDetailViewModelTest {
     fun showsErrorViewStateWhenLoadingAGame() {
 
         val error = Throwable()
-        whenever(loadGameUseCase.execute(any())).thenReturn(Flowable.error(error))
-        vm.loadRelationForGame(randomInt())
+        val flowable = Flowable.create<Game>({
+            it.onError(error)
+        }, BackpressureStrategy.MISSING)
+        whenever(loadGameUseCase.execute(any())).thenReturn(flowable)
+        vm.loadRelationForGame(game)
 
         val captor = argumentCaptor<ViewState>()
         verify(observer, times(2)).onChanged(captor.capture())
 
-        assertTrue {
-            captor.firstValue.isLoading && captor.firstValue.game == null && captor.firstValue.error == null
-                    && captor.firstValue.showImage == null && captor.firstValue.relations.isEmpty()
+        with(captor.firstValue) {
+            assertTrue(isLoading)
+            assertNotNull(game)
+            assertNull(this.error)
+            assertNull(showImage)
+            assertTrue(relations.isEmpty())
         }
 
-        assertTrue {
-            !captor.lastValue.isLoading && captor.lastValue.game == null && captor.lastValue.relations.isEmpty()
-                    && captor.lastValue.error == error
-        }
-        captor.allValues.forEach {
-            assertNull(it.game)
-            assertTrue { it.relations.isEmpty() }
-            assertNull(it.showImage)
+        with(captor.lastValue) {
+            assertFalse(isLoading)
+            assertNotNull(game)
+            assertNotNull(error)
+            assertTrue(relations.isEmpty())
         }
     }
 
@@ -116,21 +126,32 @@ internal class GameRelationDetailViewModelTest {
     fun showsErrorViewStateWhenLoadingRelations() {
 
         val error = Throwable()
-        whenever(loadRelationsForGameUseCase.execute(any())).thenReturn(Flowable.error(error))
-        vm.loadRelationForGame(randomInt())
+        val flowable = Flowable.create<Game>({
+            it.onError(error)
+        }, BackpressureStrategy.MISSING)
+        whenever(loadGameUseCase.execute(any())).thenReturn(flowable)
+
+        vm.loadRelationForGame(game)
 
         val captor = argumentCaptor<ViewState>()
-        verify(observer, times(3)).onChanged(captor.capture())
+        verify(observer, times(2)).onChanged(captor.capture())
 
-        assertTrue {
-            captor.firstValue.isLoading && captor.firstValue.game == null && captor.firstValue.error == null
-                    && captor.firstValue.showImage == null && captor.firstValue.relations.isEmpty()
+        with(captor.firstValue) {
+            assertTrue(isLoading)
+            assertNotNull(game)
+            assertNull(this.error)
+            assertNull(showImage)
+            assertTrue(relations.isEmpty())
         }
 
-        assertTrue {
-            !captor.lastValue.isLoading && captor.lastValue.game == game && captor.lastValue.relations.isEmpty()
-                    && captor.lastValue.error == error
+        with(captor.lastValue) {
+            assertFalse(isLoading)
+            assertNotNull(game)
+            assertNotNull(error)
+            assertNull(showImage)
+            assertTrue(relations.isEmpty())
         }
+
         captor.allValues.forEach {
             assertTrue { it.relations.isEmpty() }
         }

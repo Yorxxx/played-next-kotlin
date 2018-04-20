@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
 import com.piticlistudio.playednext.data.entity.room.RoomGameImage
 import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGameImage
@@ -6,15 +6,15 @@ import com.piticlistudio.playednext.data.entity.igdb.IGDBImage
 import com.piticlistudio.playednext.data.entity.room.RoomImage
 import com.piticlistudio.playednext.domain.model.GameImage
 import com.piticlistudio.playednext.domain.model.Image
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 
 class GameImageFactory {
 
     companion object Factory {
 
-        fun makeRoomGameImage(): RoomGameImage {
-            return RoomGameImage(makeRoomImage(), randomInt(), randomInt())
+        fun makeRoomGameImage(gameId: Int = randomInt()): RoomGameImage {
+            return RoomGameImage(makeRoomImage(), randomInt(), gameId)
         }
 
         fun makeRoomImage(): RoomImage = RoomImage(randomString(), randomInt(), randomInt())

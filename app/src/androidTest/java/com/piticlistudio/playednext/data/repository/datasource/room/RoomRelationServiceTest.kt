@@ -1,48 +1,30 @@
 package com.piticlistudio.playednext.data.repository.datasource.room
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomPlatform
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeRoomGameRelation
+import com.piticlistudio.playednext.data.entity.room.RoomGameRelation
+import com.piticlistudio.playednext.domain.model.GameRelationStatus
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeRoomGameRelation
 import junit.framework.Assert
 import junit.framework.Assert.fail
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RoomRelationServiceTest {
+class RoomRelationServiceTest : BaseRoomServiceTest() {
 
     @JvmField
     @Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule();
 
-    private var database: AppDatabase? = null
-
-    @Before
-    fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), AppDatabase::class.java)
-                .allowMainThreadQueries()
-                .build()
-    }
-
     @Test
     fun insert_shouldStore() {
 
-        val game = makeGameCache()
-        val platform = makeRoomPlatform()
-        database?.gamesDao()?.insert(game)
-        database?.platformRoom()?.insert(platform)
+        val data = makeRoomGameRelation(getRandomStoredGameId(), getRandomStoredPlatformId())
 
-        val data = makeRoomGameRelation(game.id, platform.id)
-
-        val result = database?.relationDao()?.insert(data)
+        val result = database.relationDao().insert(data)
 
         Assert.assertNotNull(result)
     }
@@ -50,13 +32,11 @@ class RoomRelationServiceTest {
     @Test
     fun insert_failsIfGameIsNotStored() {
 
-        val game = makeGameCache()
-        val platform = makeRoomPlatform()
-        database?.platformRoom()?.insert(platform)
+        val notStoredGameId = getStoredGameIds().min()?.minus(1)
 
         try {
-            val data = makeRoomGameRelation(game.id, platform.id)
-            database?.relationDao()?.insert(data)
+            val data = makeRoomGameRelation(notStoredGameId!!, getRandomStoredPlatformId())
+            database.relationDao().insert(data)
             fail("should have thrown")
         } catch (e: Throwable) {
         }
@@ -65,13 +45,11 @@ class RoomRelationServiceTest {
     @Test
     fun insert_failsIfPlatformIsNotStored() {
 
-        val game = makeGameCache()
-        val platform = makeRoomPlatform()
-        database?.gamesDao()?.insert(game)
+        val notStoredPlatformId = getStoredPlatformIds().min()?.minus(1)
 
         try {
-            val data = makeRoomGameRelation(game.id, platform.id)
-            database?.relationDao()?.insert(data)
+            val data = makeRoomGameRelation(getRandomStoredGameId(), notStoredPlatformId!!)
+            database.relationDao().insert(data)
             fail("should have thrown")
         } catch (e: Throwable) {
         }
@@ -79,46 +57,42 @@ class RoomRelationServiceTest {
 
     @Test
     fun findForGameAndPlatform_shouldReturnRelation() {
-        val game = makeGameCache()
-        val platform = makeRoomPlatform()
-        database?.gamesDao()?.insert(game)
-        database?.platformRoom()?.insert(platform)
-        val relation = makeRoomGameRelation(game.id, platform.id)
-        database?.relationDao()?.insert(relation)
+
+        val gameId = storedRelation?.gameId
+        val platformId = storedRelation?.platformId
+
+        requireNotNull(gameId)
+        requireNotNull(platformId)
 
         // Act
-        val observer = database?.relationDao()?.findForGameAndPlatform(game.id, platform.id)?.test()
+        val observer = database.relationDao().findForGameAndPlatform(gameId!!, platformId!!).test()
         Assert.assertNotNull(observer)
         observer?.apply {
             assertValueCount(1)
             assertNotComplete()
             assertNoErrors()
-            assertValue { it.contains(relation) && it.size == 1 }
+            assertValue { it.isNotEmpty() }
         }
     }
 
     @Test
-    fun findForGameAndPlatform_returnsEmptyListIfNoMatch() {
-        val game = makeGameCache()
-        val platform = makeRoomPlatform()
-        database?.gamesDao()?.insert(game)
-        database?.platformRoom()?.insert(platform)
-        val relation = makeRoomGameRelation(game.id, platform.id)
-        database?.relationDao()?.insert(relation)
+    fun findWithStatus_returnsListWithRelations() {
 
-        // Act
-        val observer = database?.relationDao()?.findForGameAndPlatform(game.id, platform.id + 1)?.test()
-        Assert.assertNotNull(observer)
-        observer?.apply {
+        val result = database.relationDao().findWithStatus(GameRelationStatus.PLAYING.ordinal).test()
+
+        with(result!!) {
             assertValueCount(1)
             assertNotComplete()
             assertNoErrors()
-            assertValue { it.isEmpty() }
+            assertValue { it.isNotEmpty() }
+            assertValue {
+                it.find { !it.status.equals(GameRelationStatus.PLAYING.ordinal) } == null
+            }
         }
     }
 
     @After
     fun tearDown() {
-        database?.close()
+        database.close()
     }
 }

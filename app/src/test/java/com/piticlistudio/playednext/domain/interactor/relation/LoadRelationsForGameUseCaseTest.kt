@@ -9,8 +9,7 @@ import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.domain.repository.GameRelationRepository
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.GameRelationFactory.Factory.makeGameRelation
-import io.reactivex.BackpressureStrategy
+import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
 import io.reactivex.Flowable
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertNotNull

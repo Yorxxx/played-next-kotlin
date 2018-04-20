@@ -1,38 +1,26 @@
 package com.piticlistudio.playednext.data.repository.datasource.room
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.persistence.room.Room
 import android.database.sqlite.SQLiteConstraintException
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.piticlistudio.playednext.data.AppDatabase
-import com.piticlistudio.playednext.factory.DomainFactory.Factory.makeGameCache
+import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGame
 import junit.framework.Assert.*
 import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RoomGameServiceTest {
+class RoomGameServiceTest : BaseRoomServiceTest() {
 
     @JvmField
     @Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private var database: AppDatabase? = null
-
-    @Before
-    fun setUp() {
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), AppDatabase::class.java)
-                .allowMainThreadQueries()
-                .build()
-    }
 
     @Test
     fun findByIdShouldReturnEmptyListWhenNoMatches() {
-        val observer = database?.gamesDao()?.findById(2)?.test()
+        val observer = database.gamesDao().findById(-1).test()
 
         assertNotNull(observer)
         observer?.apply {
@@ -43,41 +31,38 @@ class RoomGameServiceTest {
     }
 
     @Test
-    fun findByIdShouldReturnDataIfPresent() {
-        val game = makeGameCache()
+    fun findByIdShouldReturnData() {
 
-        database?.gamesDao()?.insert(game)
-
-        val observer = database?.gamesDao()?.findById(game.id.toLong())?.test()
+        val observer = database.gamesDao().findById(getRandomStoredGameId().toLong()).test()
 
         assertNotNull(observer)
         observer?.apply {
             assertNoErrors()
             assertValueCount(1)
             assertNotComplete()
-            assertValue { it.size == 1 && it.contains(game) }
+            assertValue { it.size == 1 }
         }
     }
 
     @Test
     fun insertShouldStoreData() {
 
-        val game = makeGameCache()
+        val game = makeRoomGame()
 
-        val result = database?.gamesDao()?.insert(game)
+        val result = database.gamesDao().insert(game)
 
         assertNotNull(result)
-        assertEquals(game.id, result!!.toInt())
+        assertEquals(game.id, result.toInt())
     }
 
     @Test
     fun insertShouldabortIfAlreadyStored() {
 
-        val game = makeGameCache()
+        val id = getRandomStoredGameId()
+        val game = makeRoomGame(id)
 
-        database?.gamesDao()?.insert(game)
         try {
-            database?.gamesDao()?.insert(game)
+            database.gamesDao().insert(game)
             fail("should have thrown")
         } catch (e: Throwable) {
             assertNotNull(e)
@@ -88,11 +73,10 @@ class RoomGameServiceTest {
     @Test
     fun updateShouldUpdateData() {
 
-        val game = makeGameCache()
-        val game2 = makeGameCache(game.id)
+        val id = getRandomStoredGameId()
+        val game = makeRoomGame(id)
 
-        database?.gamesDao()?.insert(game)
-        val result = database?.gamesDao()?.update(game2)
+        val result = database.gamesDao().update(game)
 
         assertNotNull(result)
         assertEquals(1, result)
@@ -101,35 +85,28 @@ class RoomGameServiceTest {
     @Test
     fun updateShouldAbortIfDataIsNotStored() {
 
-        val game = makeGameCache()
+        val id = getStoredGameIds().min()?.minus(1)
+        val game = makeRoomGame(id = id!!)
 
-        val result = database?.gamesDao()?.update(game)
+        val result = database.gamesDao().update(game)
         assertEquals(0, result)
     }
 
     @Test
     fun findAllShouldReturnAllStoredGames() {
-        val game1 = makeGameCache()
-        val game2 = makeGameCache()
-        val game3 = makeGameCache()
-
-        database?.gamesDao()?.insert(game1)
-        database?.gamesDao()?.insert(game2)
-        database?.gamesDao()?.insert(game3)
-
-        val observer = database?.gamesDao()?.findAll()?.test()
+        val observer = database.gamesDao().findAll().test()
 
         assertNotNull(observer)
         observer?.apply {
             assertNotComplete()
             assertValueCount(1)
             assertNoErrors()
-            assertValue { it.size == 3 && it.containsAll(listOf(game1, game2, game3)) }
+            assertValue { it.size == getStoredGameIds().size }
         }
     }
 
     @After
     fun tearDown() {
-        database?.close()
+        database.close()
     }
 }

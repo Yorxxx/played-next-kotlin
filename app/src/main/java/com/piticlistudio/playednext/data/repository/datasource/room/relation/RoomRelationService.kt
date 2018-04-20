@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
+import com.piticlistudio.playednext.data.entity.room.RoomGame
 import com.piticlistudio.playednext.data.entity.room.RoomGameRelation
 import io.reactivex.Flowable
 
@@ -15,4 +16,7 @@ interface RoomRelationService {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(data: RoomGameRelation): Long
+
+    @Query("select * from game_relation where status = :status")
+    fun findWithStatus(status: Int): Flowable<List<RoomGameRelation>>
 }

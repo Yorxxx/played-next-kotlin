@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.image
 
 import com.piticlistudio.playednext.domain.model.Image
-import com.piticlistudio.playednext.test.factory.GameImageFactory.Factory.makeIGDBImage
+import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeIGDBImage
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

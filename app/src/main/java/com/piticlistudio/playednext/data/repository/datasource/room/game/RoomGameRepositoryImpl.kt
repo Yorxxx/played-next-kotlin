@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.data.repository.datasource.room.game
 
 import android.arch.persistence.room.EmptyResultSetException
+import android.database.sqlite.SQLiteConstraintException
 import com.piticlistudio.playednext.data.entity.mapper.datasources.game.RoomGameMapper
 import com.piticlistudio.playednext.data.entity.room.RoomGame
 import com.piticlistudio.playednext.data.entity.room.RoomGameProxy
@@ -43,7 +44,8 @@ class RoomGameRepositoryImpl @Inject constructor(private val dao: RoomGameServic
                                         developers = t2,
                                         collection = t4.firstOrNull(),
                                         publishers = t3))
-                            }) }
+                            })
+                }
     }
 
     private fun loadRoomGame(id: Int): Flowable<RoomGame> {
@@ -65,18 +67,27 @@ class RoomGameRepositoryImpl @Inject constructor(private val dao: RoomGameServic
     override fun save(domainModel: Game): Completable {
         return Completable.defer {
             val entity = mapper.mapIntoDataLayerModel(domainModel)
-            if (dao.insert(entity.game) > 0L) {
-                Completable.complete()
-            } else {
-                Completable.error(GameSaveException())
+            try {
+                if (dao.insert(entity.game) > 0L) {
+                    Completable.complete()
+                } else {
+                    Completable.error(GameSaveException())
+                }
+            } catch (e: SQLiteConstraintException) {
+                if (dao.update(entity.game) > 0) {
+                    Completable.complete()
+                } else {
+                    Completable.error(GameUpdateException())
+                }
             }
+
         }.andThen(Completable.defer {
-                    Completable.concat(mutableListOf<Completable>().apply {
-                        domainModel.developers.forEach {
-                            add(companyRepositoryImpl.saveDeveloperForGame(domainModel.id, it))
-                        }
-                    })
-                })
+            Completable.concat(mutableListOf<Completable>().apply {
+                domainModel.developers.forEach {
+                    add(companyRepositoryImpl.saveDeveloperForGame(domainModel.id, it))
+                }
+            })
+        })
                 .andThen(Completable.defer {
                     Completable.concat(mutableListOf<Completable>().apply {
                         domainModel.publishers.forEach {
@@ -94,14 +105,14 @@ class RoomGameRepositoryImpl @Inject constructor(private val dao: RoomGameServic
                 .andThen(Completable.defer {
                     Completable.concat(mutableListOf<Completable>().apply {
                         domainModel.genres.forEach {
-                            add(genreRepositoryImpl.saveGenreForGame(domainModel.id,it))
+                            add(genreRepositoryImpl.saveGenreForGame(domainModel.id, it))
                         }
                     })
                 })
                 .andThen(Completable.defer {
                     Completable.concat(mutableListOf<Completable>().apply {
                         domainModel.platforms.forEach {
-                            add(platformRepositoryImpl.saveForGame(domainModel.id,it))
+                            add(platformRepositoryImpl.saveForGame(domainModel.id, it))
                         }
                     })
                 })
@@ -116,3 +127,4 @@ class RoomGameRepositoryImpl @Inject constructor(private val dao: RoomGameServic
 }
 
 class GameSaveException : RuntimeException()
+class GameUpdateException : RuntimeException()

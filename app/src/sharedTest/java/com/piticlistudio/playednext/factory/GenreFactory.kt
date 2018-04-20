@@ -4,8 +4,9 @@ import com.piticlistudio.playednext.data.entity.room.RoomGenre
 import com.piticlistudio.playednext.data.entity.igdb.IGDBGenre
 import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombGenre
 import com.piticlistudio.playednext.domain.model.Genre
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomInt
-import com.piticlistudio.playednext.test.factory.DataFactory.Factory.randomString
+import com.piticlistudio.playednext.factory.DataFactory
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 
 class GenreFactory {
 

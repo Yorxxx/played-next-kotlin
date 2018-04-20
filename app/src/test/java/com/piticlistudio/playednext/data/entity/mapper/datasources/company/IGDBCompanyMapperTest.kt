@@ -1,7 +1,7 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.company
 
 import com.piticlistudio.playednext.domain.model.Company
-import com.piticlistudio.playednext.test.factory.CompanyFactory.Factory.makeIGDBCompany
+import com.piticlistudio.playednext.factory.CompanyFactory.Factory.makeIGDBCompany
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
