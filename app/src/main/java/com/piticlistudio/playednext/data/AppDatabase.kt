@@ -9,16 +9,19 @@ import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGam
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
 import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImagesService
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.RoomGamePlatformService
+import com.piticlistudio.playednext.data.repository.datasource.room.playlist.RoomPlaylistService
 import com.piticlistudio.playednext.data.repository.datasource.room.relation.RoomRelationService
 
 @Database(entities = arrayOf(RoomGame::class, RoomCompany::class, RoomGameDeveloper::class,
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
         RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, RoomGameRelation::class,
-        RoomGameImage::class),
-        version = 11, exportSchema = false)
+        RoomGameImage::class, RoomPlaylist::class, RoomPlaylistGameRelation::class),
+        version = 12, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): RoomGameService
+
+    abstract fun playlistRoom(): RoomPlaylistService
 
     abstract fun companyRoom(): RoomCompanyService
 

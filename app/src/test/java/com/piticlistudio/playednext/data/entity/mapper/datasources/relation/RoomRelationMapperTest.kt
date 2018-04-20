@@ -9,8 +9,8 @@ import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGameProxy
 import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGameRelation
 import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeRoomGameRelationProxy
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeRoomPlatform
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach

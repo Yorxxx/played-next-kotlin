@@ -4,7 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.support.test.runner.AndroidJUnit4
 import com.piticlistudio.playednext.data.entity.room.RoomGamePlatform
 import com.piticlistudio.playednext.data.repository.datasource.room.BaseRoomServiceTest
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeRoomPlatform
 import junit.framework.Assert
 import org.junit.After
 import org.junit.Rule

@@ -30,9 +30,9 @@ import com.piticlistudio.playednext.factory.GameImageFactory.Factory.makeRoomIma
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeGiantbombGenre
 import com.piticlistudio.playednext.test.factory.GenreFactory.Factory.makeIGDBGenre
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeIGDBPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeGiantbombPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeIGDBPlatform
 import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeIGDBTimeToBeat
 import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeRoomTimeToBeat
 import com.piticlistudio.playednext.test.factory.TimeToBeatFactory.Factory.makeTimeToBeat

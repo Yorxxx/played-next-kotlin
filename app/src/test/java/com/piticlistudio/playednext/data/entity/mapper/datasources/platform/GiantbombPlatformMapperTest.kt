@@ -1,6 +1,6 @@
 package com.piticlistudio.playednext.data.entity.mapper.datasources.platform
 
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeGiantbombPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeGiantbombPlatform
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName

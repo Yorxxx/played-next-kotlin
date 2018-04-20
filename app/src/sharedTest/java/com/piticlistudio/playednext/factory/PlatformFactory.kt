@@ -1,4 +1,4 @@
-package com.piticlistudio.playednext.test.factory
+package com.piticlistudio.playednext.factory
 
 import com.piticlistudio.playednext.data.entity.room.RoomPlatform
 import com.piticlistudio.playednext.data.entity.giantbomb.GiantbombPlatform
