@@ -9,7 +9,8 @@ import com.piticlistudio.playednext.factory.DataFactory
 import com.piticlistudio.playednext.factory.GameImageFactory
 import com.piticlistudio.playednext.factory.GameRelationFactory
 import com.piticlistudio.playednext.test.factory.*
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlaylistFactory.Factory.makeRoomPlaylist
 import org.junit.Before
 import java.util.*
 
@@ -44,6 +45,11 @@ abstract class BaseRoomServiceTest {
 
     protected var storedRelation: RoomGameRelation? = null
 
+    private val storedPlaylistNames = mutableSetOf<String>()
+    protected fun getStoredPlaylistNames(): Set<String> = storedPlaylistNames
+    protected fun getRandomStoredPlaylistName(): String = getStoredPlaylistNames().toList().random() ?: ""
+    protected var storedPlaylist: RoomPlaylist? = null
+
     @Before
     fun setUp() {
         database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), AppDatabase::class.java)
@@ -61,12 +67,18 @@ abstract class BaseRoomServiceTest {
         storedImageIds.clear()
         storedGenreIds.clear()
         storedPlatformIds.clear()
+        storedPlaylistNames.clear()
 
         repeat(count) {
             val game = GameFactory.makeRoomGame(id = it)
             database.gamesDao().insert(game).apply {
                 storedGameIds.add(game.id)
             }
+            val playlist = makeRoomPlaylist()
+            database.playlistRoom().insert(playlist).apply {
+                storedPlaylistNames.add(playlist.name)
+            }
+            storedPlaylist = playlist
 
             populateDatabaseWithPlatformsForGameWithId(game.id)
             populateDatabaseWithCompaniesForGameWithId(game.id)
@@ -137,6 +149,10 @@ abstract class BaseRoomServiceTest {
     private fun populateDatabaseWithRelationForGameWithId(gameId: Int) {
         storedRelation = GameRelationFactory.makeRoomGameRelation(gameId, getRandomStoredPlatformId())
         database.relationDao().insert(storedRelation!!)
+    }
+
+    private fun populateDatabaseWithPlaylists() {
+
     }
 }
 

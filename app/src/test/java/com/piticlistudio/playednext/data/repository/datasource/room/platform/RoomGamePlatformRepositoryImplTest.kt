@@ -3,10 +3,9 @@ package com.piticlistudio.playednext.data.repository.datasource.room.platform
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.data.entity.mapper.datasources.platform.RoomPlatformMapper
 import com.piticlistudio.playednext.domain.model.Platform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeRoomPlatform
 import io.reactivex.Flowable
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
 import io.reactivex.subscribers.TestSubscriber
 import org.junit.jupiter.api.Assertions.assertEquals

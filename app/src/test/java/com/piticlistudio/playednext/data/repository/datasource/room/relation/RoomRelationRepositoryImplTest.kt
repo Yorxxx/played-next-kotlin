@@ -14,7 +14,7 @@ import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeGame
 import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeRoomGameRelation
 import com.piticlistudio.playednext.factory.GameRelationFactory.Factory.makeRoomGameRelationProxy
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makePlatform
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable

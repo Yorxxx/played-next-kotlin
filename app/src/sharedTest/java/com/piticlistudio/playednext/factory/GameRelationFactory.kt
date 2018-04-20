@@ -8,8 +8,8 @@ import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.factory.DataFactory.Factory.randomLong
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeGame
 import com.piticlistudio.playednext.test.factory.GameFactory.Factory.makeRoomGameProxy
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makePlatform
-import com.piticlistudio.playednext.test.factory.PlatformFactory.Factory.makeRoomPlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makePlatform
+import com.piticlistudio.playednext.factory.PlatformFactory.Factory.makeRoomPlatform
 
 class GameRelationFactory {
 
