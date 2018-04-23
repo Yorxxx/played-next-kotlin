@@ -18,5 +18,5 @@ interface RoomPlaylistService {
     fun findAll(): Flowable<List<RoomPlaylistEntity>>
 
     @Query("select * from playlist where name = :name")
-    fun find(name: String): Flowable<RoomPlaylistEntity>
+    fun find(name: String): Flowable<List<RoomPlaylistEntity>>
 }

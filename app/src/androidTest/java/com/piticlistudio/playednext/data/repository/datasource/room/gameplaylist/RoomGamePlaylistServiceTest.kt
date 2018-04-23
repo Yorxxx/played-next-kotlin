@@ -74,12 +74,13 @@ class RoomGamePlaylistServiceTest : BaseRoomServiceTest() {
     @Test
     fun findShouldReturnAllItemsGivenAPlaylist() {
 
-        val gamesInPlaylist = randomInt()
         val playlistName = getRandomStoredPlaylistName()
-        repeat(gamesInPlaylist) {
-            val data = RoomPlaylistGameRelationEntity(playlistName, getRandomStoredGameId())
-
-            database.gamePlaylistRoom().insert(data)
+        val gamesInPlaylist = 10
+        getStoredGameIds().take(gamesInPlaylist).forEach {
+            val data = RoomPlaylistGameRelationEntity(playlistName, it)
+            if (database.gamePlaylistRoom().insert(data) == 0L) {
+                fail("Failed arranging test")
+            }
         }
 
         val observer = database.gamePlaylistRoom().find(playlistName).test()
@@ -96,10 +97,12 @@ class RoomGamePlaylistServiceTest : BaseRoomServiceTest() {
     @Test
     fun deletingAPlaylistShouldDeleteAllItems() {
 
-        val gamesInPlaylist = randomInt()
-        repeat(gamesInPlaylist) {
-            val data = RoomPlaylistGameRelationEntity(storedPlaylist!!.name, getRandomStoredGameId())
-            database.gamePlaylistRoom().insert(data)
+        val gamesInPlaylist = 10
+        getStoredGameIds().take(gamesInPlaylist).forEach {
+            val data = RoomPlaylistGameRelationEntity(storedPlaylist!!.name, it)
+            if (database.gamePlaylistRoom().insert(data) == 0L) {
+                fail("Failed arranging test")
+            }
         }
 
         val observer = database.gamePlaylistRoom().find(storedPlaylist!!.name).test()

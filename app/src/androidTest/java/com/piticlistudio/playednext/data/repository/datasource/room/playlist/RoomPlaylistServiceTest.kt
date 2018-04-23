@@ -87,7 +87,7 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
         observer?.apply {
             assertNoErrors()
             assertValueCount(2)
-            assertValue { it.size == getStoredPlaylistNames().size + 1 }
+            assertValueAt(1, { it.size == getStoredPlaylistNames().size + 1 })
         }
     }
 
@@ -102,7 +102,21 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
             assertNoErrors()
             assertNotComplete()
             assertValueCount(1)
-            assertValue { it.name == requestedName }
+            assertValue { it.size == 1 && it.first().name == requestedName }
+        }
+    }
+
+    @Test
+    fun shouldEmitEmptyListWhenNoMatches() {
+
+        val observer = database.playlistRoom().find("foo").test()
+
+        assertNotNull(observer)
+        observer?.apply {
+            assertNoErrors()
+            assertNotComplete()
+            assertValueCount(1)
+            assertValue { it.isEmpty() }
         }
     }
 
@@ -116,7 +130,7 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
             assertNoErrors()
             assertNotComplete()
             assertValueCount(1)
-            assertValue { it.name == requestedName }
+            assertValue { it.size == 1 && it.first().name == requestedName }
         }
 
         val updatedPlaylist = makeRoomPlaylist(requestedName)
@@ -127,19 +141,6 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
             assertNoErrors()
             assertNotComplete()
             assertValueCount(2)
-        }
-    }
-
-    @Test
-    fun shouldEmitErrorIfPlaylistIsNotStored() {
-
-        val observer = database.playlistRoom().find("abc").test()
-
-        assertNotNull(observer)
-        observer?.apply {
-            assertNoValues()
-            assertError(PlaylistRepositoryError.Delete::class.java)
-            assertComplete()
         }
     }
 }

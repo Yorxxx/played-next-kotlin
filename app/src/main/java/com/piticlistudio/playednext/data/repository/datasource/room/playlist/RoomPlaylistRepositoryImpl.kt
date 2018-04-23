@@ -65,14 +65,18 @@ class RoomPlaylistRepositoryImpl @Inject constructor(private val dao: RoomPlayli
 
     override fun find(name: String): Flowable<Playlist> {
         return dao.find(name)
-                .map { dataLayerMapper.mapFromDataLayer(it) }
-                .flatMap { playlist: Playlist ->
-                    relationDao.find(playlist.name)
-                            .flatMapIterable { it }
-                            .flatMap { roomGameRepositoryImpl.load(it.gameId) }
-                            .toList()
-                            .map { playlist.copy(games = it) }
-                            .toFlowable()
+                .flatMapSingle {
+                    Flowable.fromIterable(it)
+                            .map { dataLayerMapper.mapFromDataLayer(it) }
+                            .flatMap { playlist: Playlist ->
+                                relationDao.find(playlist.name)
+                                        .flatMapIterable { it }
+                                        .flatMap { roomGameRepositoryImpl.load(it.gameId) }
+                                        .toList()
+                                        .map { playlist.copy(games = it) }
+                                        .toFlowable()
+                            }
+                            .firstOrError()
                 }
     }
 }
