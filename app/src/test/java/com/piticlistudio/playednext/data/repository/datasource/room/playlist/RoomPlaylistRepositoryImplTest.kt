@@ -174,7 +174,7 @@ internal class RoomPlaylistRepositoryImplTest {
 
             @BeforeEach
             internal fun setUp() {
-                whenever(dao.find(any())).thenReturn(Flowable.just(makeRoomPlaylist()))
+                whenever(dao.find(any())).thenReturn(Flowable.just(listOf(makeRoomPlaylist())))
                 observer = repository.find(request).test()
             }
 
@@ -194,8 +194,8 @@ internal class RoomPlaylistRepositoryImplTest {
 
                 @BeforeEach
                 internal fun setUp() {
-                    val flowable = Flowable.create<RoomPlaylistEntity>({
-                        it.onNext(daoData)
+                    val flowable = Flowable.create<List<RoomPlaylistEntity>>({
+                        it.onNext(listOf(daoData))
                     }, BackpressureStrategy.MISSING)
                     whenever(dataLayerMapper.mapFromDataLayer(any())).thenReturn(mappedData)
                     whenever(dao.find(any())).thenReturn(flowable)
