@@ -8,7 +8,6 @@ import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.factory.PlaylistFactory.Factory.makePlaylist
 import io.reactivex.Flowable
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
