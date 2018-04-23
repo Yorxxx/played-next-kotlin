@@ -1,8 +1,14 @@
 package com.piticlistudio.playednext.data.repository.datasource.room.playlist
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
+import android.database.sqlite.SQLiteConstraintException
 import android.support.test.runner.AndroidJUnit4
+import com.piticlistudio.playednext.data.entity.room.RoomPlaylistEntity
+import com.piticlistudio.playednext.data.entity.room.RoomPlaylistGameRelationEntity
 import com.piticlistudio.playednext.data.repository.datasource.room.BaseRoomServiceTest
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomLong
+import com.piticlistudio.playednext.factory.DataFactory.Factory.randomString
 import com.piticlistudio.playednext.factory.PlaylistFactory.Factory.makeRoomPlaylist
 import junit.framework.Assert.*
 import org.junit.Rule
@@ -42,6 +48,14 @@ class RoomPlaylistServiceTest : BaseRoomServiceTest() {
         requireNotNull(storedPlaylist)
         val result = database.playlistRoom().delete(storedPlaylist!!)
         assertEquals(1, result)
+    }
+
+    @Test
+    fun requestingToDeleteANonStoredDataReturnsZero() {
+
+        val nonExistingData = makeRoomPlaylist("foo")
+        val result = database.playlistRoom().delete(nonExistingData)
+        assertEquals(0, result)
     }
 
     @Test

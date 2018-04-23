@@ -2,9 +2,11 @@ package com.piticlistudio.playednext.data.repository.datasource.room.playlist
 
 import com.piticlistudio.playednext.data.entity.mapper.DataLayerMapper
 import com.piticlistudio.playednext.data.entity.mapper.DomainLayerMapper
-import com.piticlistudio.playednext.data.entity.room.RoomPlaylist
+import com.piticlistudio.playednext.data.entity.room.RoomPlaylistEntity
+import com.piticlistudio.playednext.data.entity.room.RoomPlaylistGameRelationEntity
 import com.piticlistudio.playednext.data.repository.datasource.PlaylistDatasourceRepository
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameRepositoryImpl
+import com.piticlistudio.playednext.data.repository.datasource.room.gameplaylist.RoomGamePlaylistService
 import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.Playlist
 import io.reactivex.Completable
@@ -12,54 +14,65 @@ import io.reactivex.Flowable
 import javax.inject.Inject
 
 class RoomPlaylistRepositoryImpl @Inject constructor(private val dao: RoomPlaylistService,
-                                                     private val domainLayerMapper: DomainLayerMapper<Playlist, RoomPlaylist>,
-                                                     private val dataLayerMapper: DataLayerMapper<RoomPlaylist, Playlist>,
-                                                     private val roomGameRepositoryImpl: RoomGameRepositoryImpl): PlaylistDatasourceRepository {
+                                                     private val relationDao: RoomGamePlaylistService,
+                                                     private val domainLayerMapper: DomainLayerMapper<Playlist, RoomPlaylistEntity>,
+                                                     private val dataLayerMapper: DataLayerMapper<RoomPlaylistEntity, Playlist>,
+                                                     private val roomGameRepositoryImpl: RoomGameRepositoryImpl) : PlaylistDatasourceRepository {
 
     override fun save(data: Playlist): Completable {
         return Completable.defer {
-            val mapped = domainLayerMapper.mapIntoDataLayerModel(data)
-            if (dao.insert(mapped) == 0L) {
-                Completable.error(PlaylistRepositoryError.Save())
+            dao.insert(domainLayerMapper.mapIntoDataLayerModel(data))
+            Completable.complete()
+        }.andThen(Completable.defer {
+            data.games.forEach {
+                relationDao.insert(RoomPlaylistGameRelationEntity(data.name, it.id))
             }
-            else {
-                Completable.complete()
-            }
-        }
+            Completable.complete()
+        })
     }
 
     override fun delete(data: Playlist): Completable {
         return Completable.defer {
-            val mapped = domainLayerMapper.mapIntoDataLayerModel(data)
-            if (dao.delete(mapped) == 0) {
-                Completable.error(PlaylistRepositoryError.Delete())
-            }
-            else {
-                Completable.complete()
-            }
+            dao.delete(domainLayerMapper.mapIntoDataLayerModel(data))
+            Completable.complete()
         }
     }
 
-    override fun addGameToPlaylist(game: Game, playlist: Playlist): Completable {
+    override fun saveGameToPlaylist(game: Game, playlist: Playlist): Completable {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun removeGameFromPlaylist(game: Game, playlist: Playlist): Completable {
+    override fun deleteGameFromPlaylist(game: Game, playlist: Playlist): Completable {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun findAll(): Flowable<List<Playlist>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dao.findAll()
+                .flatMapSingle {
+                    Flowable.fromIterable(it)
+                            .map { dataLayerMapper.mapFromDataLayer(it) }
+                            .flatMap { playlist: Playlist ->
+                                relationDao.find(playlist.name)
+                                        .flatMapIterable { it }
+                                        .flatMap { roomGameRepositoryImpl.load(it.gameId) }
+                                        .toList()
+                                        .map { playlist.copy(games = it) }
+                                        .toFlowable()
+                            }
+                            .toList()
+                }
     }
 
     override fun find(name: String): Flowable<Playlist> {
         return dao.find(name)
                 .map { dataLayerMapper.mapFromDataLayer(it) }
-
+                .flatMap { playlist: Playlist ->
+                    relationDao.find(playlist.name)
+                            .flatMapIterable { it }
+                            .flatMap { roomGameRepositoryImpl.load(it.gameId) }
+                            .toList()
+                            .map { playlist.copy(games = it) }
+                            .toFlowable()
+                }
     }
-}
-
-sealed class PlaylistRepositoryError: RuntimeException() {
-    class Save: PlaylistRepositoryError()
-    class Delete: PlaylistRepositoryError()
 }

@@ -6,6 +6,7 @@ import com.piticlistudio.playednext.data.entity.room.*
 import com.piticlistudio.playednext.data.repository.datasource.room.franchise.RoomCollectionService
 import com.piticlistudio.playednext.data.repository.datasource.room.company.RoomCompanyService
 import com.piticlistudio.playednext.data.repository.datasource.room.game.RoomGameService
+import com.piticlistudio.playednext.data.repository.datasource.room.gameplaylist.RoomGamePlaylistService
 import com.piticlistudio.playednext.data.repository.datasource.room.genre.RoomGenreService
 import com.piticlistudio.playednext.data.repository.datasource.room.image.RoomGameImagesService
 import com.piticlistudio.playednext.data.repository.datasource.room.platform.RoomGamePlatformService
@@ -15,7 +16,7 @@ import com.piticlistudio.playednext.data.repository.datasource.room.relation.Roo
 @Database(entities = arrayOf(RoomGame::class, RoomCompany::class, RoomGameDeveloper::class,
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
         RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, RoomGameRelation::class,
-        RoomGameImage::class, RoomPlaylist::class, RoomPlaylistGameRelation::class),
+        RoomGameImage::class, RoomPlaylistEntity::class, RoomPlaylistGameRelationEntity::class),
         version = 12, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -34,4 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun relationDao(): RoomRelationService
 
     abstract fun imageRoom(): RoomGameImagesService
+
+    abstract fun gamePlaylistRoom(): RoomGamePlaylistService
+
 }

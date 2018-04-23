@@ -1,6 +1,7 @@
 package com.piticlistudio.playednext.factory
 
-import com.piticlistudio.playednext.data.entity.room.RoomPlaylist
+import com.piticlistudio.playednext.data.entity.room.RoomPlaylistEntity
+import com.piticlistudio.playednext.domain.model.Game
 import com.piticlistudio.playednext.domain.model.Playlist
 import com.piticlistudio.playednext.factory.DataFactory.Factory.randomInt
 import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
@@ -12,15 +13,16 @@ class PlaylistFactory {
 
     companion object Factory {
 
-        fun makeRoomPlaylist(name: String = randomString()): RoomPlaylist {
-            return RoomPlaylist(name, randomString(), randomInt(), randomLong(), randomLong())
+        fun makeRoomPlaylist(name: String = randomString()): RoomPlaylistEntity {
+            return RoomPlaylistEntity(name, randomString(), randomInt(), randomLong(), randomLong())
         }
 
-        fun makePlaylist(): Playlist {
-            return Playlist(name = randomString(),
+        fun makePlaylist(name: String = randomString(),
+                         games: List<Game> = randomListOf(5){ makeGame() }): Playlist {
+            return Playlist(name,
                     description = randomString(),
                     color = randomInt(),
-                    games = randomListOf(5){ makeGame() },
+                    games = games,
                     createdAt = randomLong(),
                     updatedAt = randomLong())
         }
