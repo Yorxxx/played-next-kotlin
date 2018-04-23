@@ -25,12 +25,12 @@ interface PlaylistDatasourceRepository {
     /**
      * Adds the [game] to the specified [playlist]
      */
-    fun addGameToPlaylist(game: Game, playlist: Playlist): Completable
+    fun saveGameToPlaylist(game: Game, playlist: Playlist): Completable
 
     /**
      * Removes the [game] from the specified [playlist]
      */
-    fun removeGameFromPlaylist(game: Game, playlist: Playlist): Completable
+    fun deleteGameFromPlaylist(game: Game, playlist: Playlist): Completable
 
     /**
      * Finds all stored playlists

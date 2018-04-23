@@ -48,7 +48,7 @@ abstract class BaseRoomServiceTest {
     private val storedPlaylistNames = mutableSetOf<String>()
     protected fun getStoredPlaylistNames(): Set<String> = storedPlaylistNames
     protected fun getRandomStoredPlaylistName(): String = getStoredPlaylistNames().toList().random() ?: ""
-    protected var storedPlaylist: RoomPlaylist? = null
+    protected var storedPlaylist: RoomPlaylistEntity? = null
 
     @Before
     fun setUp() {
@@ -74,6 +74,7 @@ abstract class BaseRoomServiceTest {
             database.gamesDao().insert(game).apply {
                 storedGameIds.add(game.id)
             }
+
             val playlist = makeRoomPlaylist()
             database.playlistRoom().insert(playlist).apply {
                 storedPlaylistNames.add(playlist.name)

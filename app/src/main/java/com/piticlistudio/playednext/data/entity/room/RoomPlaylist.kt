@@ -9,7 +9,7 @@ import android.arch.persistence.room.PrimaryKey
  * Each playlist is unique by its [name]
  */
 @Entity(tableName = "playlist")
-data class RoomPlaylist(@PrimaryKey val name: String, val description: String?, val color: Int, val created_at: Long, val updated_at: Long)
+data class RoomPlaylistEntity(@PrimaryKey val name: String, val description: String?, val color: Int, val created_at: Long, val updated_at: Long)
 
 /**
  * Defines the relation between a [RoomGame] and a [RoomPlaylist]
@@ -19,6 +19,6 @@ data class RoomPlaylist(@PrimaryKey val name: String, val description: String?, 
         primaryKeys = arrayOf("playlistName", "gameId"),
         foreignKeys = arrayOf(
                 (ForeignKey(entity = RoomGame::class, parentColumns = arrayOf("id"), childColumns = arrayOf("gameId"), onDelete = ForeignKey.CASCADE)),
-                (ForeignKey(entity = RoomPlaylist::class, parentColumns = arrayOf("name"), childColumns = arrayOf("playlistName"), onDelete = ForeignKey.CASCADE))
+                (ForeignKey(entity = RoomPlaylistEntity::class, parentColumns = arrayOf("name"), childColumns = arrayOf("playlistName"), onDelete = ForeignKey.CASCADE))
         ))
-data class RoomPlaylistGameRelation(val playlistName: String, val gameId: Int, val created_at: Long, val updated_at: Long)
+data class RoomPlaylistGameRelationEntity(val playlistName: String, val gameId: Int)
