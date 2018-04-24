@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.piticlistudio.playednext.R
-import com.piticlistudio.playednext.ui.gamerelation.overview.RelationOverviewFragment
+import com.piticlistudio.playednext.ui.playlists.overview.PlaylistsOverviewFragment
 import com.piticlistudio.playednext.util.ext.setContentFragment
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
@@ -29,7 +29,7 @@ class FooActivity : AppCompatActivity(), HasSupportFragmentInjector, FragmentMan
         title = null
 
         supportFragmentManager.addOnBackStackChangedListener(this)
-        setContentFragment(R.id.content, { RelationOverviewFragment() })
+        setContentFragment(R.id.content, { PlaylistsOverviewFragment() })
     }
 
     override fun supportFragmentInjector() = fragmentInjector

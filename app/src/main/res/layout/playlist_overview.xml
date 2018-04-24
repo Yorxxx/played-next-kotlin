@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.piticlistudio.playednext.ui.playlists.overview.ViewState" />
+
+        <import type="android.view.View" />
+    </data>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/playlists_overview_title"
+            android:textAppearance="@android:style/TextAppearance.Material.Headline"
+            android:visibility="@{ model.showTitle ? View.VISIBLE : View.INVISIBLE }"
+            tools:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gamerelation_overview_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/textView4"
+            tools:itemCount="10"
+            tools:layoutManager="android.support.v7.widget.GridLayoutManager"
+            tools:listitem="@layout/playlist_overview_item"
+            tools:spanCount="2" />
+
+        <include
+            layout="@layout/playlist_overview_empty"
+            android:visibility="@{ model.showEmptyView ? View.VISIBLE : View.GONE }"
+            tools:visibility="gone" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

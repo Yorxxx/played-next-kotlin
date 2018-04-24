@@ -13,4 +13,6 @@
     <dimen name="game_detail_fab_margin">16dp</dimen>
     <dimen name="game_detail_loading_size">128dp</dimen>
 
+    <dimen name="playlist_overview_item_height">140dp</dimen>
+
 </resources>

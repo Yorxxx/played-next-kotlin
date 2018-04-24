@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.piticlistudio.playednext.domain.interactor.playlists.LoadAllPlaylistsUseCase
+import com.piticlistudio.playednext.domain.model.Game
+import com.piticlistudio.playednext.domain.model.GameRelation
 import com.piticlistudio.playednext.ui.playlists.overview.mapper.PlaylistsOverviewModelMapper
 import com.piticlistudio.playednext.ui.playlists.overview.model.PlaylistsOverviewModel
 import io.reactivex.Flowable
@@ -26,6 +28,10 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
     fun getError(): LiveData<String> = error
     private val overview = MutableLiveData<List<PlaylistsOverviewModel>>()
     fun getOverview(): LiveData<List<PlaylistsOverviewModel>> = overview
+    private val viewState = MutableLiveData<ViewState>()
+    fun getViewState(): LiveData<ViewState> = viewState
+
+    private fun currentViewState(): ViewState = viewState.value!!
 
     fun start() {
         disposable = useCase.execute()
@@ -36,17 +42,25 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    loading.postValue(true)
-                    error.postValue(null)
+                    viewState.postValue(ViewState(isLoading = true, error = null, items = emptyList()))
+//                    loading.postValue(true)
+//                    error.postValue(null)
                 }
                 .doOnEach {
-                    loading.postValue(false)
+                    viewState.postValue(currentViewState().copy(isLoading = false))
+//                    loading.postValue(false)
                 }
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 .subscribeBy(
-                        onNext = { overview.postValue(it) },
-                        onError = { error.postValue(it.message) }
+                        onNext = {
+                            viewState.postValue(currentViewState().copy(items = it, showEmptyView = it.isEmpty(), showTitle = it.isNotEmpty()))
+//                            overview.postValue(error = it.me)
+                        },
+                        onError = {
+                            viewState.postValue(currentViewState().copy(error = it.message))
+//                            error.postValue(it.message)
+                        }
                 )
     }
 
@@ -54,3 +68,7 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
         disposable?.dispose()
     }
 }
+
+data class ViewState(val isLoading: Boolean = false, val items: List<PlaylistsOverviewModel>,
+                     val error: String? = null, val showEmptyView: Boolean = false,
+                     val showTitle: Boolean = true)

@@ -1,0 +1,15 @@
+{
+  "data" :[
+    {"count": 10, "title" : "completed", "color": "#ff33aa", "subtitle": "Destiny 2, Uncharted 4..."},
+    {"count": 145, "title" : "backlog", "color": "#930907", "subtitle": "Gears of War 4, Assassin's Creed Origins..."},
+    {"count": 0, "title" : "100%", "color": "#0177FF", "subtitle": "Dark Souls, Uncharted 2..."},
+    {"count": 72, "title" : "owned", "color": "#C3D636", "subtitle": "Forza Horizon 3, Horizon Zero Dawn..."},
+    {"count": 8, "title" : "wishlist", "color": "#14A190", "subtitle": "Celeste, Dragon Quest Builders..."},
+    {"count": 32, "title" : "Playstation Plus", "color": "#fab297", "subtitle": "Mad max, Just Cause 3..."},
+    {"count": 17, "title" : "Games with Gold", "color": "#afd7b4", "subtitle": "Superhot, Assassin's Creed Syndicate..."},
+    {"count": 204, "title" : "Xbox Game Pass", "color": "#c0c0c0", "subtitle": "Rise of the Tomb Raider"},
+    {"count": 1, "title" : "Playing", "color": "#c0d6e4", "subtitle": "God of War"},
+    {"count": 0, "title" : "Abandoned", "color": "#fffbc9", "subtitle": ""},
+    {"count": 2, "title" : "Play later", "color": "#dd3131", "subtitle": "Monster Hunter World and Starcraft"}
+  ]
+}

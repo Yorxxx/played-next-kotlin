@@ -32,4 +32,10 @@
     <string name="gamesearch_hint">Enter game name</string>
     <string name="gamesearch_nonetwork_available">No Internet available. Cannot perform any search</string>
     <string name="gamesearch_retry">Retry</string>
+
+    <!-- Playlists overview -->
+    <string name="playlists_overview_title">Playlists</string>
+    <string name="playlists_overview_empty_title">You don\'t have playlists</string>
+    <string name="playlists_overview_empty_subtitle">Why don\'t we create a new playlist? Just tap the plus button</string>
+
 </resources>
