@@ -22,12 +22,6 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
                                                      private val mapper: PlaylistsOverviewModelMapper) : ViewModel() {
 
     private var disposable: Disposable? = null
-    private val loading = MutableLiveData<Boolean>()
-    fun getLoading(): LiveData<Boolean> = loading
-    private val error = MutableLiveData<String>()
-    fun getError(): LiveData<String> = error
-    private val overview = MutableLiveData<List<PlaylistsOverviewModel>>()
-    fun getOverview(): LiveData<List<PlaylistsOverviewModel>> = overview
     private val viewState = MutableLiveData<ViewState>()
     fun getViewState(): LiveData<ViewState> = viewState
 
@@ -43,23 +37,18 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     viewState.postValue(ViewState(isLoading = true, error = null, items = emptyList()))
-//                    loading.postValue(true)
-//                    error.postValue(null)
                 }
                 .doOnEach {
                     viewState.postValue(currentViewState().copy(isLoading = false))
-//                    loading.postValue(false)
                 }
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 .subscribeBy(
                         onNext = {
                             viewState.postValue(currentViewState().copy(items = it, showEmptyView = it.isEmpty(), showTitle = it.isNotEmpty()))
-//                            overview.postValue(error = it.me)
                         },
                         onError = {
                             viewState.postValue(currentViewState().copy(error = it.message))
-//                            error.postValue(it.message)
                         }
                 )
     }
@@ -69,6 +58,8 @@ class PlaylistsOverviewViewModel @Inject constructor(private val useCase: LoadAl
     }
 }
 
-data class ViewState(val isLoading: Boolean = false, val items: List<PlaylistsOverviewModel>,
-                     val error: String? = null, val showEmptyView: Boolean = false,
+data class ViewState(val isLoading: Boolean = false,
+                     val items: List<PlaylistsOverviewModel>,
+                     val error: String? = null,
+                     val showEmptyView: Boolean = false,
                      val showTitle: Boolean = true)

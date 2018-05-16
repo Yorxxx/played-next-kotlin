@@ -59,9 +59,6 @@ class PlaylistsOverviewFragment : Fragment() {
         (activity as FooActivity).run {
             showToolbar(false)
         }
-//        val parent: AppCompatActivity = activity as AppCompatActivity
-//        parent.setSupportActionBar(toolbar)
-
         gamerelation_overview_recyclerview.adapter = adapter
         gamerelation_overview_recyclerview.layoutManager = GridLayoutManager(activity, 2)
         gamerelation_overview_recyclerview.addItemDecoration(SpacesItemDecoration(32, 1))
@@ -70,30 +67,5 @@ class PlaylistsOverviewFragment : Fragment() {
     private fun render(viewState: ViewState) {
         binding?.model = viewState
         adapter.submitList(viewState.items)
-//        when (viewState.isLoading) {
-//            true -> gamerelation_detail_loading.show()
-//            false -> gamerelation_detail_loading.hide()
-//        }
-//        viewState.game?.let {
-//            binding?.game = it
-//            adapter.game = it
-//            platformadapter.platforms = it.platforms ?: listOf()
-//        }
-//        adapter.relations = viewState.relations
-//
-//        when (viewState.error) {
-//            null -> {
-//                Log.d("GameRelationDetailFragm", "No error")
-//            }
-//            else -> {
-//                Log.d("GameRelationDetailFragm", "Error found ${viewState.error}")
-//            }
-//        }
-//        viewState.showImage?.let {
-//            if (!isAppBarCollapsed)
-//                Picasso.with(context)
-//                        .load(it)
-//                        .into(backdrop)
-//        }
     }
 }

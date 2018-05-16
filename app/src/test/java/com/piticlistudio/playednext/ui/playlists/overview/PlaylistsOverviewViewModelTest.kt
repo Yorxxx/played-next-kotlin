@@ -4,8 +4,6 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
 import com.nhaarman.mockito_kotlin.*
 import com.piticlistudio.playednext.domain.interactor.playlists.LoadAllPlaylistsUseCase
-import com.piticlistudio.playednext.domain.model.GameRelation
-import com.piticlistudio.playednext.domain.model.GameRelationStatus
 import com.piticlistudio.playednext.domain.model.Playlist
 import com.piticlistudio.playednext.factory.DataFactory.Factory.randomListOf
 import com.piticlistudio.playednext.factory.PlaylistFactory.Factory.makePlaylist
@@ -14,12 +12,10 @@ import com.piticlistudio.playednext.ui.playlists.overview.model.PlaylistsOvervie
 import com.piticlistudio.playednext.util.RxSchedulersOverrideRule
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.ReplaySubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 
 internal class PlaylistsOverviewViewModelTest {
 
@@ -35,87 +31,110 @@ internal class PlaylistsOverviewViewModelTest {
     private val useCase: LoadAllPlaylistsUseCase = mock()
     private val mapper: PlaylistsOverviewModelMapper = mock()
 
-    val overviewObserver: Observer<List<PlaylistsOverviewModel>> = mock()
-    val loadingObserver: Observer<Boolean> = mock()
-    val errorObserver: Observer<String> = mock()
-    val useCaseResult = randomListOf { makePlaylist() }
-
-    val useCaseSubject = PublishSubject.create<List<Playlist>>()
+    private val viewStateObserver: Observer<ViewState> = mock()
+    private val useCaseSubject = ReplaySubject.create<List<Playlist>>()
 
     @Before
     internal fun setUp() {
         reset(useCase, mapper)
         vm = PlaylistsOverviewViewModel(useCase, mapper)
-        doAnswer {
-            val playlist = it.arguments[0] as Playlist
-            return@doAnswer PlaylistsOverviewModel(playlist.name, playlist.games.size, playlist.color)
-        }.whenever(mapper).mapIntoPresentationModel(any())
-
-        whenever(useCase.execute()).thenReturn(useCaseSubject.toFlowable(BackpressureStrategy.MISSING))
 
         vm = PlaylistsOverviewViewModel(useCase, mapper)
-        vm.getLoading().observeForever(loadingObserver)
-        vm.getError().observeForever(errorObserver)
-        vm.getOverview().observeForever(overviewObserver)
+        vm.getViewState().observeForever(viewStateObserver)
+    }
+
+    @Test
+    fun `should emit mapped result from usecase`() {
+
+        val data = randomListOf { makePlaylist() }
+        val mapResponse = PlaylistsOverviewModel("a", 1, 1)
+        ArrangeBuilder().withMapperResponse(mapResponse)
+                .withUseCaseResponse(data)
 
         vm.start()
 
-        useCaseSubject.onNext(useCaseResult)
-    }
-
-    @Test
-    fun `should execute usecase`() {
-        verify(useCase).execute()
-    }
-
-    @Test
-    fun `should request mapper to map usecase response`() {
-        verify(mapper, times(useCaseResult.size)).mapIntoPresentationModel(any())
-        useCaseResult.forEach {
-            verify(mapper).mapIntoPresentationModel(it)
+        // Assert
+        inOrder(mapper, useCase, viewStateObserver) {
+            verify(useCase).execute()
+            verify(viewStateObserver).onChanged(argForWhich {
+                isLoading && error == null && items.isEmpty()
+            })
+            verify(mapper, times(data.size)).mapIntoPresentationModel(argForWhich {
+                data.contains(this)
+            })
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && error == null && items.isEmpty()
+            })
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && error == null && items.size == data.size && items.all { it == mapResponse } && !showEmptyView && showTitle
+            })
         }
     }
 
     @Test
-    fun `should show loading and hide it after emission`() {
-        val captor = argumentCaptor<Boolean>()
-        verify(loadingObserver, times(2)).onChanged(captor.capture())
+    fun `should emit empty view when there are no playlists`() {
 
-        assertEquals(2, captor.allValues.size)
-        assertTrue(captor.firstValue)
-        assertFalse(captor.lastValue)
+        val data = emptyList<Playlist>()
+        ArrangeBuilder().withUseCaseResponse(data)
+
+        vm.start()
+
+        // Assert
+        inOrder(mapper, useCase, viewStateObserver) {
+            verify(useCase).execute()
+            verify(viewStateObserver).onChanged(argForWhich {
+                isLoading && error == null && items.isEmpty()
+            })
+            verifyZeroInteractions(mapper)
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && error == null && items.isEmpty() && !showEmptyView && showTitle
+            })
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && error == null && items.isEmpty() && showEmptyView && !showTitle
+            })
+        }
     }
 
     @Test
-    fun `should emit overview model`() {
-        val captor = argumentCaptor<List<PlaylistsOverviewModel>>()
-        verify(overviewObserver).onChanged(captor.capture())
+    fun `should show error when usecase fails`() {
 
-        assertEquals(1, captor.allValues.size)
+        val error = Throwable("foo")
+        ArrangeBuilder().withUseCaseResponse(error)
 
-        val anotherUseCaseResult = randomListOf { makePlaylist() }
-        useCaseSubject.onNext(anotherUseCaseResult)
+        vm.start()
 
-        verify(overviewObserver, times(2)).onChanged(captor.capture())
+        // Assert
+        inOrder(mapper, useCase, viewStateObserver) {
+            verify(useCase).execute()
+            verify(viewStateObserver).onChanged(argForWhich {
+                isLoading && this.error == null && items.isEmpty()
+            })
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && this.error == null && items.isEmpty()
+            })
+            verifyZeroInteractions(mapper)
+            verify(viewStateObserver).onChanged(argForWhich {
+                !isLoading && this.error == error.message && items.isEmpty() && !showEmptyView && showTitle
+            })
+        }
     }
 
-    @Test
-    fun `stop() should dispose from usecase`() {
+    private inner class ArrangeBuilder {
 
-        val captor = argumentCaptor<List<PlaylistsOverviewModel>>()
-        verify(overviewObserver).onChanged(captor.capture())
-        verify(loadingObserver, times(2)).onChanged(argumentCaptor<Boolean>().capture())
-        verify(errorObserver).onChanged(argumentCaptor<String>().capture())
+        fun withMapperResponse(response: PlaylistsOverviewModel): ArrangeBuilder {
+            doAnswer { response }.whenever(mapper).mapIntoPresentationModel(any())
+            return this
+        }
 
-        assertEquals(1, captor.allValues.size)
+        fun withUseCaseResponse(response: List<Playlist>): ArrangeBuilder {
+            whenever(useCase.execute()).thenReturn(useCaseSubject.toFlowable(BackpressureStrategy.DROP))
+            useCaseSubject.onNext(response)
+            return this
+        }
 
-        // Act
-        vm.stop()
-
-        val anotherUseCaseResult = randomListOf { makePlaylist() }
-        useCaseSubject.onNext(anotherUseCaseResult)
-        verifyNoMoreInteractions(overviewObserver)
-        verifyNoMoreInteractions(loadingObserver)
-        verifyNoMoreInteractions(errorObserver)
+        fun withUseCaseResponse(response: Throwable): ArrangeBuilder {
+            whenever(useCase.execute()).thenReturn(Flowable.error(response))
+            return this
+        }
     }
 }

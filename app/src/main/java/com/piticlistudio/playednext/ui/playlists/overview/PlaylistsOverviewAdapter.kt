@@ -1,6 +1,5 @@
 package com.piticlistudio.playednext.ui.playlists.overview
 
-import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.recyclerview.extensions.ListAdapter

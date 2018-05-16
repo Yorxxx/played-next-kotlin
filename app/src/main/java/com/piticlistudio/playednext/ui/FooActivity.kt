@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
-class FooActivity : AppCompatActivity(), HasSupportFragmentInjector, FragmentManager.OnBackStackChangedListener {
+class FooActivity : AppCompatActivity(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -28,32 +28,10 @@ class FooActivity : AppCompatActivity(), HasSupportFragmentInjector, FragmentMan
         setSupportActionBar(toolbar)
         title = null
 
-        supportFragmentManager.addOnBackStackChangedListener(this)
         setContentFragment(R.id.content, { PlaylistsOverviewFragment() })
     }
 
     override fun supportFragmentInjector() = fragmentInjector
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        when (supportFragmentManager.backStackEntryCount) {
-            0 -> super.onBackPressed()
-            else -> supportFragmentManager.popBackStack()
-        }
-    }
-
-    override fun onBackStackChanged() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(supportFragmentManager.backStackEntryCount > 1)
-    }
 
     fun showToolbar(show: Boolean) {
         supportActionBar?.let {
