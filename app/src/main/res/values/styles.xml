@@ -64,6 +64,34 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <!-- All playlists view -->
+    <style name="AppTheme.OverlayOverview">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.OverlayOverview.Title" parent="AppTheme.OverlayOverview">
+        <item name="android:maxLines">2</item>
+        <item name="android:fontFamily">@font/lato</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="AppTheme.OverlayOverview.Count" parent="AppTheme.OverlayOverview">
+        <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">@font/lato_bold</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.OverlayOverview.Subtitle" parent="AppTheme.OverlayOverview">
+        <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">@font/lato</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 
     <!-- Relation Overview -->
     <style name="AppTheme.RelationOverview">

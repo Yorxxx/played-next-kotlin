@@ -17,7 +17,7 @@ import com.piticlistudio.playednext.data.repository.datasource.room.relation.Roo
         RoomGamePublisher::class, RoomGenre::class, RoomGameGenre::class, RoomCollection::class,
         RoomGameCollection::class, RoomPlatform::class, RoomGamePlatform::class, RoomGameRelation::class,
         RoomGameImage::class, RoomPlaylistEntity::class, RoomPlaylistGameRelationEntity::class),
-        version = 12, exportSchema = false)
+        version = 13, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun gamesDao(): RoomGameService

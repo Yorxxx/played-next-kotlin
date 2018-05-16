@@ -21,7 +21,8 @@ import javax.inject.Singleton
         CollectionModule::class,
         PlatformModule::class,
         GameRelationModule::class,
-        GameImagesModule::class))
+        GameImagesModule::class,
+        PlaylistModule::class))
 interface ApplicationComponent: AndroidInjector<MvpStarterApplication> {
 
     @Component.Builder
